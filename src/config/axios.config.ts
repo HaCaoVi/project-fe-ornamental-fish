@@ -1,8 +1,8 @@
-import { refreshTokenActionHook } from "@/hooks/auth.hook";
-import { getCookie } from "@/lib/helpers/cookie.helper";
-import { IBackendRes } from "@/types/backend";
+import { refreshTokenActionHook } from "@hooks/auth.hook";
+import { getCookie } from "@lib/helpers/cookie.helper";
+import { IBackendRes } from "../types/backend";
 import { Mutex } from "async-mutex";
-import axiosClient, { AxiosRequestConfig } from "axios";
+import axiosClient from "axios";
 
 interface AccessTokenResponse {
     access_token: string;

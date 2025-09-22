@@ -1,4 +1,4 @@
-import { AuthContext } from "@/context/auth.context";
+import { AuthContext } from "@contexts/auth.context";
 import { useContext } from "react";
 
 export const refreshTokenActionHook = (message: string) => {
@@ -6,4 +6,4 @@ export const refreshTokenActionHook = (message: string) => {
     setRefreshTokenAction(true, message);
 };
 
-export const useAuthContext = () => useContext(AuthContext);
+export const useAuthContext = () => useContext(AuthContext)!;

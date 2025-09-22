@@ -1,8 +1,8 @@
 "use client";
 
-import { getAccountAPI, loginAPI } from "@/lib/api/auth";
-import { setCookie } from "@/lib/helpers/cookie.helper";
-import { IBackendRes, ILogin, IUserLogin } from "@/types/backend";
+import { getAccountAPI, loginAPI } from "@lib/api/auth";
+import { setCookie } from "@lib/helpers/cookie.helper";
+import type { IBackendRes, ILogin, IUserLogin } from "../types/backend";
 import { createContext, useState, ReactNode, useEffect } from "react";
 
 interface AuthContextType {

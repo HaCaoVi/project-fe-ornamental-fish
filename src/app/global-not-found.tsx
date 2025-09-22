@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@components/ui/button'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import '../styles/globals.css';
+import '@styles/globals.css';
 export const metadata: Metadata = {
     title: 'Not Found',
     description: 'The page you are looking for does not exist.',

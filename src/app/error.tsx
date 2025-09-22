@@ -2,9 +2,9 @@
 
 import { useEffect } from "react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { Button } from "@components/ui/button"
 import { AlertTriangle, Home, RotateCcw } from "lucide-react"
-import '../styles/globals.css';
+import '@styles/globals.css';
 
 interface ErrorProps {
     error: Error & { digest?: string }

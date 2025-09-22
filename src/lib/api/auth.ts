@@ -1,5 +1,5 @@
-import instance from "@/config/axios.config";
-import { IBackendRes, ILogin, IUserLogin } from "@/types/backend";
+import instance from "@config/axios.config";
+import { IBackendRes, ILogin, IUserLogin } from "../../types/backend";
 
 export const loginAPI = async (
     username: string,
