@@ -1,13 +1,19 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { AuthContext } from "@/context/auth.context"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import { ADMIN_ROLE, STAFF_ROLE } from "@/lib/constants/constant"
 
 export default function LoginPage() {
+    const router = useRouter()
+    const { login } = useContext(AuthContext)!
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -38,7 +44,7 @@ export default function LoginPage() {
         }
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
         const newErrors = {
@@ -62,7 +68,16 @@ export default function LoginPage() {
 
         // If no errors, log form data
         if (!newErrors.email && !newErrors.password) {
-            console.log("Sign In Form Data:", formData)
+            const res = await login(formData.email, formData.password);
+
+            if (res.statusCode === 201 && res.data) {
+                toast.success(res.message)
+                if (res.data.user.role.name === ADMIN_ROLE || res.data.user.role.name === STAFF_ROLE) {
+                    return router.replace("/dashboard")
+                } else {
+                    return router.replace("/")
+                }
+            }
         }
     }
 
