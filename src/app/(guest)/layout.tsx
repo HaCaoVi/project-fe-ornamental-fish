@@ -19,7 +19,6 @@ export default function RootLayout({
             <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1">
                 {children}
             </main>
-            <Toaster position="top-center" />
             <Footer />
         </div>
     );

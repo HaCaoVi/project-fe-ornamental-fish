@@ -1,8 +1,11 @@
 "use client"
 
 import type React from "react"
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import Link from "next/link"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,79 +13,49 @@ import { AuthContext } from "@/context/auth.context"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { ADMIN_ROLE, STAFF_ROLE } from "@/lib/constants/constant"
+import { notify } from "@/lib/helpers/notify"
+
+// Validation schema with zod
+const loginSchema = z.object({
+    email: z.string()
+        .min(1, { message: "Email is required" })
+        .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: "Please enter a valid email address" }),
+    password: z.string()
+        .min(1, { message: "Password is required" }),
+})
+
+type LoginFormValues = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
     const router = useRouter()
     const { login } = useContext(AuthContext)!
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<LoginFormValues>({
+        resolver: zodResolver(loginSchema),
+        mode: "onChange",
     })
-    const [errors, setErrors] = useState({
-        email: "",
-        password: "",
-    })
 
-    const validateEmail = (email: string) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        return emailRegex.test(email)
-    }
+    const onSubmit = async (data: LoginFormValues) => {
+        const res = await login(data.email, data.password)
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }))
-
-        // Clear error when user starts typing
-        if (errors[name as keyof typeof errors]) {
-            setErrors((prev) => ({
-                ...prev,
-                [name]: "",
-            }))
-        }
-    }
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-
-        const newErrors = {
-            email: "",
-            password: "",
-        }
-
-        // Validate email
-        if (!formData.email) {
-            newErrors.email = "Email is required"
-        } else if (!validateEmail(formData.email)) {
-            newErrors.email = "Please enter a valid email address"
-        }
-
-        // Validate password
-        if (!formData.password) {
-            newErrors.password = "Password is required"
-        }
-
-        setErrors(newErrors)
-
-        // If no errors, log form data
-        if (!newErrors.email && !newErrors.password) {
-            const res = await login(formData.email, formData.password);
-
-            if (res.statusCode === 201 && res.data) {
-                toast.success(res.message)
-                if (res.data.user.role.name === ADMIN_ROLE || res.data.user.role.name === STAFF_ROLE) {
-                    return router.replace("/dashboard")
-                } else {
-                    return router.replace("/")
-                }
+        if (res.statusCode === 201 && res.data) {
+            notify.success(res.message)
+            if (res.data.user.role.name === ADMIN_ROLE || res.data.user.role.name === STAFF_ROLE) {
+                router.replace("/dashboard")
+            } else {
+                router.replace("/")
             }
+        } else {
+            notify.error(res.message)
         }
     }
 
     return (
-        <div className="max-h-screen flex items-center justify-center bg-background ">
+        <div className="max-h-screen flex items-center justify-center bg-background">
             <Card className="w-full max-w-xl space-y-6 p-8 border-gray-200 shadow-md rounded-xl">
                 <CardHeader className="space-y-2">
                     <CardTitle className="text-3xl font-bold text-center">Sign In</CardTitle>
@@ -91,41 +64,40 @@ export default function LoginPage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                        {/* Email field */}
                         <div className="space-y-2">
                             <label htmlFor="email" className="text-md font-medium">
                                 Email
                             </label>
                             <Input
                                 id="email"
-                                name="email"
                                 type="email"
                                 placeholder="Enter your email"
-                                value={formData.email}
-                                onChange={handleInputChange}
+                                {...register("email")}
                                 className={`border-gray-200 h-12 text-base ${errors.email ? "border-destructive" : ""}`}
                             />
-                            {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+                            {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
                         </div>
 
+                        {/* Password field */}
                         <div className="space-y-2">
                             <label htmlFor="password" className="text-md font-medium">
                                 Password
                             </label>
                             <Input
                                 id="password"
-                                name="password"
                                 type="password"
                                 placeholder="Enter your password"
-                                value={formData.password}
-                                onChange={handleInputChange}
+                                {...register("password")}
                                 className={`border-gray-200 h-12 text-base ${errors.password ? "border-destructive" : ""}`}
                             />
-                            {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
+                            {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
                         </div>
 
-                        <Button type="submit" className="w-full h-12 text-lg">
-                            Sign In
+                        {/* Submit button */}
+                        <Button type="submit" className="w-full h-12 text-lg" disabled={isSubmitting}>
+                            {isSubmitting ? "Signing In..." : "Sign In"}
                         </Button>
                     </form>
 
