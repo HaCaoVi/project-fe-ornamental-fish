@@ -18,5 +18,12 @@ export interface IUserLogin {
         _id: string,
         name: string
     },
-    permissions: any[]
+    permissions: IPermissionLogin[]
+}
+
+export interface IPermissionLogin {
+    _id: string,
+    apiPath: string,
+    method: string,
+    module: string
 }
