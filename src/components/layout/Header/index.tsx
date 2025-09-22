@@ -4,12 +4,18 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Menu, X, Search } from "lucide-react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-
+    const router = useRouter()
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
+    }
+
+    const navigateLoginPage = () => {
+        return router.push("/login")
     }
 
     return (
@@ -28,24 +34,24 @@ export default function Header() {
 
                     {/* Desktop Navigation */}
                     <nav className="hidden md:flex items-center space-x-8">
-                        <a href="/" className="text-foreground hover:text-primary transition-colors duration-200 font-medium">
+                        <Link href="/" className="text-foreground hover:text-primary transition-colors duration-200 font-medium">
                             Home
-                        </a>
-                        <a href="/about" className="text-foreground hover:text-primary transition-colors duration-200 font-medium">
+                        </Link>
+                        <Link href="/about" className="text-foreground hover:text-primary transition-colors duration-200 font-medium">
                             Product
-                        </a>
-                        <a
+                        </Link>
+                        <Link
                             href="/services"
                             className="text-foreground hover:text-primary transition-colors duration-200 font-medium"
                         >
                             Blog
-                        </a>
-                        <a
+                        </Link>
+                        <Link
                             href="/contact"
                             className="text-foreground hover:text-primary transition-colors duration-200 font-medium"
                         >
                             Contact
-                        </a>
+                        </Link>
                     </nav>
 
                     {/* Search Bar & Login Button */}
@@ -58,7 +64,7 @@ export default function Header() {
                                 className="pl-10 w-64 bg-muted/50 border-border focus:bg-background transition-colors"
                             />
                         </div>
-                        <Button className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-medium px-6">
+                        <Button onClick={navigateLoginPage} className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-medium px-6">
                             Login
                         </Button>
                     </div>
