@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import '@styles/globals.css';
 export const metadata: Metadata = {
-    title: 'Not Found',
+    title: 'Not Found Page',
     description: 'The page you are looking for does not exist.',
 }
 

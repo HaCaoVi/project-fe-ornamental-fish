@@ -1,6 +1,16 @@
 import ProtectedRoute from "@config/protected-route.config";
+import { Metadata } from "next";
+import DashboardShell from "@components/features/DashboardShell";
 
-// app/dashboard/layout.tsx
+export const metadata: Metadata = {
+    title: "Dashboard Page",
+};
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-    return <ProtectedRoute allowedRoles={["ADMIN"]}>{children}</ProtectedRoute>;
+
+    return (
+        <ProtectedRoute allowedRoles={["ADMIN"]}>
+            <DashboardShell>{children}</DashboardShell>
+        </ProtectedRoute>
+    )
 }

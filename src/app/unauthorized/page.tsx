@@ -4,6 +4,11 @@ import Link from "next/link"
 import { Button } from "@components/ui/button"
 import { ShieldX, Home, LogIn, Lock } from "lucide-react"
 import { useEffect, useState } from "react"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Unauthorized Page",
+};
 
 export default function Unauthorized() {
     const [isVisible, setIsVisible] = useState(false)
