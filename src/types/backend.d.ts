@@ -5,6 +5,16 @@ export interface IBackendRes<T> {
     data?: T;
 }
 
+export interface IPagination<T> {
+    meta: {
+        current: number,
+        pageSize: number,
+        pages: number,
+        total: number,
+    },
+    result: T
+}
+
 export interface ILogin {
     access_token: string,
     user: IUserLogin
