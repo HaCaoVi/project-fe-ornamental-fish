@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-import { useContext } from "react"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -13,6 +12,7 @@ import { AuthContext } from "@contexts/auth.context"
 import { useRouter } from "next/navigation"
 import { ADMIN_ROLE, STAFF_ROLE } from "@lib/constants/constant"
 import { notify } from "@lib/helpers/notify"
+import { useAuthContext } from "@hooks/auth.hook"
 
 // Validation schema with zod
 const loginSchema = z.object({
@@ -27,7 +27,7 @@ type LoginFormValues = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
     const router = useRouter()
-    const { login } = useContext(AuthContext)!
+    const { login } = useAuthContext()
 
     const {
         register,

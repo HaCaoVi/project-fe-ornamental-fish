@@ -1,5 +1,4 @@
-import { refreshTokenActionHook } from "@hooks/auth.hook";
-import { getCookie } from "@lib/helpers/cookie.helper";
+import { deleteCookie, getCookie, setCookie } from "@lib/helpers/cookie.helper";
 import { IBackendRes } from "../types/backend";
 import { Mutex } from "async-mutex";
 import axiosClient from "axios";
@@ -22,8 +21,12 @@ const NO_RETRY_HEADER = 'x-no-retry';
 
 const handleRefreshToken = async (): Promise<string | null> => {
     return await mutex.runExclusive(async () => {
-        const res = await instance.get<IBackendRes<AccessTokenResponse>>('/api/v1/auth/refresh');
-        if (res && res.data && res.data.data) return res.data.data.access_token;
+        const res = await instance.get<any, IBackendRes<AccessTokenResponse>>('/api/v1/auth/refresh-token');
+        if (res && res.data) {
+            deleteCookie("access_token")
+            setCookie("access_token", res.data.access_token);
+            return res.data.access_token;
+        }
         else return null;
     });
 };
@@ -67,11 +70,12 @@ instance.interceptors.response.use(
             error.config
             && error.response
             && +error.response.status === 400
-            && error.config.url === '/api/v1/auth/refresh'
+            && error.config.url === '/api/v1/auth/refresh-token'
             && location.pathname.startsWith("/dashboard")
         ) {
             const message = error?.response?.data?.message ?? "Your session has expired. Please log in again.";
-            refreshTokenActionHook(message)
+            // setRefreshTokenAction(true, message)
+
         }
 
         return error?.response?.data ?? Promise.reject(error);
