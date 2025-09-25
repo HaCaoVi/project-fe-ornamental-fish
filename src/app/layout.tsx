@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   title: "Home Page",
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <AuthProvider>
       <html lang="en">
@@ -23,3 +23,4 @@ export default function RootLayout({
     </AuthProvider>
   );
 }
+export default RootLayout;

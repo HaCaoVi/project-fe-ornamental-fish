@@ -9,7 +9,7 @@ interface Props {
     children: React.ReactNode;
 }
 
-export default function ProtectedRoute({ allowedRoles, children }: Props) {
+const ProtectedRoute = ({ allowedRoles, children }: Props) => {
     const { user, isLoading } = useAuthContext()!;
     const router = useRouter();
 
@@ -24,3 +24,4 @@ export default function ProtectedRoute({ allowedRoles, children }: Props) {
 
     return <>{children}</>;
 }
+export default ProtectedRoute;

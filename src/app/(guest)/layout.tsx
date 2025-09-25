@@ -7,11 +7,11 @@ export const metadata: Metadata = {
     title: "Home Page",
 };
 
-export default function RootLayout({
+const GuestLayout = ({
     children,
 }: Readonly<{
     children: React.ReactNode;
-}>) {
+}>) => {
     return (
         <div className="min-h-screen bg-background flex flex-col">
             <Header />
@@ -22,3 +22,4 @@ export default function RootLayout({
         </div>
     );
 }
+export default GuestLayout;

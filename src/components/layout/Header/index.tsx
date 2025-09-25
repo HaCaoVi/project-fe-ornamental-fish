@@ -7,7 +7,7 @@ import { Menu, X, Search } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
-export default function Header() {
+const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const router = useRouter()
     const toggleMenu = () => {
@@ -127,3 +127,4 @@ export default function Header() {
         </header>
     )
 }
+export default Header;

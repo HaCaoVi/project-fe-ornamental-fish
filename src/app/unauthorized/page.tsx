@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: "Unauthorized Page",
 };
 
-export default function Unauthorized() {
+const UnauthorizedPage = () => {
     const [isVisible, setIsVisible] = useState(false)
 
     useEffect(() => {
@@ -114,3 +114,4 @@ export default function Unauthorized() {
         </div>
     )
 }
+export default UnauthorizedPage;

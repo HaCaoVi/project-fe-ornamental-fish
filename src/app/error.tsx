@@ -11,7 +11,7 @@ interface ErrorProps {
     reset: () => void
 }
 
-export default function Error({ error, reset }: ErrorProps) {
+const ErrorPage = ({ error, reset }: ErrorProps) => {
     useEffect(() => {
         console.error(error)
     }, [error])
@@ -92,3 +92,4 @@ export default function Error({ error, reset }: ErrorProps) {
         </div>
     )
 }
+export default ErrorPage;

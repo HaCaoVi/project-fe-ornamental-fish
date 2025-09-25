@@ -5,7 +5,7 @@ import { Sidebar } from "@components/layout/Sidebar/dashboard.sidebar"
 import { useState } from "react"
 import ProtectedRoute from "@config/protected-route.config";
 
-export default function DashboardShell({ children }: { children: React.ReactNode }) {
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
@@ -38,3 +38,4 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         </ProtectedRoute>
     );
 }
+export default DashboardLayout;

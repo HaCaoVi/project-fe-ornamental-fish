@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     title: "Dashboard Page",
 };
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <ProtectedRoute allowedRoles={["ADMIN"]}>
@@ -14,3 +14,4 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </ProtectedRoute>
     )
 }
+export default DashboardLayout;

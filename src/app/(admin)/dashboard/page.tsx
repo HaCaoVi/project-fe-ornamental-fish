@@ -1,11 +1,10 @@
-"use client"
-
 import { DashboardContent } from "@components/layout/Test/dashboard-content"
 
-export default function DashboardPage() {
+const DashboardPage = () => {
     return (
         <>
             <DashboardContent />
         </>
     )
 }
+export default DashboardPage

@@ -4,12 +4,13 @@ export const metadata: Metadata = {
     title: "Register Page",
 };
 
-export default function RootLayout({
+const RegisterLayout = ({
     children,
 }: Readonly<{
     children: React.ReactNode;
-}>) {
+}>) => {
     return (
         <>{children}</>
     );
 }
+export default RegisterLayout;

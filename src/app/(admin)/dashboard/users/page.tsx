@@ -1,6 +1,6 @@
 import { DashboardContent } from "@components/layout/Test/dashboard-content"
 
-const AnalyticsPage = () => {
+const UserPage = () => {
     return (
         <div className="flex h-screen bg-background">
             <div className="flex flex-1 flex-col overflow-hidden">
@@ -11,4 +11,4 @@ const AnalyticsPage = () => {
         </div>
     )
 }
-export default AnalyticsPage;
+export default UserPage;

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     description: 'The page you are looking for does not exist.',
 }
 
-export default function GlobalNotFound() {
+const GlobalNotFoundPage = () => {
     return (
         <html lang="en">
             <body>
@@ -92,3 +92,4 @@ export default function GlobalNotFound() {
         </html>
     )
 }
+export default GlobalNotFoundPage;

@@ -4,12 +4,13 @@ export const metadata: Metadata = {
     title: "Login Page",
 };
 
-export default function RootLayout({
+const LoginLayout = ({
     children,
 }: Readonly<{
     children: React.ReactNode;
-}>) {
+}>) => {
     return (
         <>{children}</>
     );
 }
+export default LoginLayout;

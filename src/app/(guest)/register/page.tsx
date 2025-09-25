@@ -8,7 +8,7 @@ import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
 
-export default function SignUpPage() {
+const RegisterPage = () => {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -200,7 +200,7 @@ export default function SignUpPage() {
                     </div>
                 </CardContent>
             </Card>
-
         </div>
     )
 }
+export default RegisterPage;

@@ -1,7 +1,7 @@
 import Footer from "@components/layout/Footer";
 import Header from "@components/layout/Header";
 
-export default function Home() {
+const Home = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
@@ -34,3 +34,4 @@ export default function Home() {
     </div>
   );
 }
+export default Home;
