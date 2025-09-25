@@ -1,11 +1,8 @@
-import { deleteCookie, getCookie, setCookie } from "@lib/helpers/cookie.helper";
-import { IBackendRes } from "../types/backend";
+"use server"
+import { refreshTokenAPI } from "@lib/api/auth";
 import { Mutex } from "async-mutex";
 import axiosClient from "axios";
-
-interface AccessTokenResponse {
-    access_token: string;
-}
+import { cookies } from "next/headers";
 
 /**
  * Creates an initial 'axios' instance with custom settings.
@@ -20,19 +17,21 @@ const mutex = new Mutex();
 const NO_RETRY_HEADER = 'x-no-retry';
 
 const handleRefreshToken = async (): Promise<string | null> => {
+    const cookieStore = await cookies()
     return await mutex.runExclusive(async () => {
-        const res = await instance.get<any, IBackendRes<AccessTokenResponse>>('/api/v1/auth/refresh-token');
+        const res = await refreshTokenAPI()
         if (res && res.data) {
-            deleteCookie("access_token")
-            setCookie("access_token", res.data.access_token);
+            cookieStore.set("access_token", res.data.access_token);
             return res.data.access_token;
         }
         else return null;
     });
 };
 
-instance.interceptors.request.use(function (config) {
-    const accessToken = getCookie("access_token");
+instance.interceptors.request.use(async (config) => {
+    const cookieStore = await cookies()
+
+    const accessToken = cookieStore.get("access_token")?.value
     if (accessToken) {
         config.headers.Authorization = 'Bearer ' + accessToken;
     }
@@ -61,7 +60,6 @@ instance.interceptors.response.use(
             error.config.headers[NO_RETRY_HEADER] = 'true'
             if (access_token) {
                 error.config.headers['Authorization'] = `Bearer ${access_token}`;
-                localStorage.setItem('access_token', access_token)
                 return instance.request(error.config);
             }
         }
@@ -71,7 +69,6 @@ instance.interceptors.response.use(
             && error.response
             && +error.response.status === 400
             && error.config.url === '/api/v1/auth/refresh-token'
-            && location.pathname.startsWith("/dashboard")
         ) {
             const message = error?.response?.data?.message ?? "Your session has expired. Please log in again.";
             // setRefreshTokenAction(true, message)
