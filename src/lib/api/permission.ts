@@ -2,10 +2,10 @@
 
 import instance from "@config/axios.config";
 import { IBackendRes, IPagination } from "../../types/backend";
-import { IRole } from "../../types/model";
+import { IPermission } from "../../types/model";
 import { isEmptyObject } from "@lib/helpers/valid.helper";
 
-export const listRoleAPI = async (
+export const listPermissionAPI = async (
     current: number,
     pageSize: number,
     filters?: any,
@@ -24,13 +24,6 @@ export const listRoleAPI = async (
         query.filters = JSON.stringify(filters)
     }
     const params = new URLSearchParams(query).toString()
-    const url = `/api/v1/roles/list-role?${params}`
-    return instance.get<any, IBackendRes<IPagination<IRole[]>>>(url);
-};
-
-export const createRoleAPI = async (name: string, description: string, isActive: boolean, permissions: string[]) => {
-    const url = `/api/v1/roles/create-role`
-    return instance.post<any, IBackendRes<IRole>>(url, {
-        name, description, isActive, permissions
-    });
+    const url = `/api/v1/permissions/list-permission?${params}`
+    return instance.get<any, IBackendRes<IPagination<IPermission[]>>>(url);
 };

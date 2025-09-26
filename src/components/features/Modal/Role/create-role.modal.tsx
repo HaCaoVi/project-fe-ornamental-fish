@@ -24,22 +24,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@comp
 import { Plus, Save, X } from "lucide-react"
 import ModulePermissions from "./module-permissions"
 import { notify } from "@lib/helpers/notify"
-
-interface IPermission {
-    _id: string
-    name: string
-    apiPath: string
-    method: string
-    module: string
-}
-
-interface IRole {
-    _id?: string
-    name: string
-    description: string
-    isActive: boolean
-    permissions: IPermission[]
-}
+import { listPermissionAPI } from "@lib/api/permission"
+import { IPermission, IRole } from "../../../../types/model"
 
 interface RoleModalProps {
     isOpen?: boolean
@@ -81,31 +67,29 @@ const RoleModal = ({ isOpen, onOpenChange, role, onSubmit, onReload }: RoleModal
         },
     })
 
-    // Mock permissions
     useEffect(() => {
-        const mockPermissions: IPermission[] = [
-            { _id: "1", name: "Create Role", apiPath: "/api/v1/roles", method: "POST", module: "ROLES" },
-            { _id: "2", name: "List Roles", apiPath: "/api/v1/roles", method: "GET", module: "ROLES" },
-            { _id: "3", name: "Get Role", apiPath: "/api/v1/roles/:id", method: "GET", module: "ROLES" },
-            { _id: "4", name: "Update Role", apiPath: "/api/v1/roles/:id", method: "PATCH", module: "ROLES" },
-            { _id: "5", name: "Delete Role", apiPath: "/api/v1/roles/:id", method: "DELETE", module: "ROLES" },
-            { _id: "6", name: "Create User", apiPath: "/api/v1/users", method: "POST", module: "USERS" },
-            { _id: "7", name: "List Users", apiPath: "/api/v1/users", method: "GET", module: "USERS" },
-            { _id: "8", name: "Update User", apiPath: "/api/v1/users/:id", method: "PATCH", module: "USERS" },
-        ]
+        if (open) {
+            (async () => {
+                const res = await listPermissionAPI(1, 100)
 
-        const groupedPermissions = mockPermissions.reduce((acc, permission) => {
-            const existingModule = acc.find((item) => item.module === permission.module)
-            if (existingModule) {
-                existingModule.permissions.push(permission)
-            } else {
-                acc.push({ module: permission.module, permissions: [permission] })
-            }
-            return acc
-        }, [] as { module: string; permissions: IPermission[] }[])
+                if (res.statusCode === 200 && res.data) {
+                    const groupedPermissions = res.data.result.reduce((acc, permission) => {
+                        const existingModule = acc.find((item) => item.module === permission.module)
+                        if (existingModule) {
+                            existingModule.permissions.push(permission)
+                        } else {
+                            acc.push({ module: permission.module, permissions: [permission] })
+                        }
+                        return acc
+                    }, [] as { module: string; permissions: IPermission[] }[])
 
-        setListPermissions(groupedPermissions)
-    }, [])
+                    setListPermissions(groupedPermissions)
+                    return;
+                }
+                setListPermissions([])
+            })()
+        }
+    }, [open])
 
     // Cập nhật form khi edit
     useEffect(() => {
@@ -117,7 +101,7 @@ const RoleModal = ({ isOpen, onOpenChange, role, onSubmit, onReload }: RoleModal
             })
 
             const permissions: Record<string, boolean> = {}
-            role.permissions?.forEach((permission) => {
+            role.permissions?.forEach((permission: any) => {
                 permissions[permission._id] = true
             })
             setSelectedPermissions(permissions)
@@ -138,13 +122,12 @@ const RoleModal = ({ isOpen, onOpenChange, role, onSubmit, onReload }: RoleModal
             const checkedPermissions = Object.keys(selectedPermissions).filter(
                 (key) => selectedPermissions[key] && key.match(/^[0-9a-fA-F]{24}$|^\d+$/),
             )
+            console.log("checkedPermissions>>>> : ", checkedPermissions);
 
-            // await onSubmit?.({
-            //     ...data,
-            //     permissions: checkedPermissions,
-            // })
-
-            notify.success(role?._id ? "Role updated successfully" : "Role created successfully")
+            await onSubmit?.({
+                ...data,
+                permissions: checkedPermissions,
+            })
 
             handleClose()
             onReload?.()

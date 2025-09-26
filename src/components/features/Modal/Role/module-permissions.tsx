@@ -94,13 +94,13 @@ const ModulePermissions = ({ listPermissions, selectedPermissions, onPermissionC
         <TooltipProvider>
             <div className="space-y-4">
                 {listPermissions.map((moduleItem, index) => {
-                    const isOpen = openModules[moduleItem.module] ?? true
+                    const isOpen = openModules[moduleItem.module] ?? false
                     const isModuleSelected = selectedPermissions[moduleItem.module] ?? false
 
                     return (
                         <Card key={index} className="border border-gray-200">
-                            <Collapsible open={isOpen} onOpenChange={() => toggleModule(moduleItem.module)}>
-                                <CollapsibleTrigger className="w-full">
+                            <Collapsible open={isOpen} onOpenChange={() => toggleModule(moduleItem.module)} className="cursor-pointer">
+                                <CollapsibleTrigger className="w-full" asChild>
                                     <div className="flex items-center justify-between px-4 hover:bg-muted/50 transition-colors">
                                         <div className="flex items-center gap-3">
                                             {isOpen ? (

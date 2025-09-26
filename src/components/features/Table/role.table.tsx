@@ -7,22 +7,12 @@ import { Pencil, Trash2, Plus, Search, Filter, Users, Shield, UserCheck } from "
 import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@components/ui/dialog"
-import { Label } from "@components/ui/label"
-import { Textarea } from "@components/ui/textarea"
-import { Switch } from "@components/ui/switch"
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
 import { Badge } from "@components/ui/badge"
 import dayjs from 'dayjs';
 import CreateRoleModal from "../Modal/Role/create-role.modal"
+import { createRoleAPI } from "@lib/api/role"
+import { notify } from "@lib/helpers/notify"
 
 interface IProps {
     data: any[]
@@ -51,6 +41,19 @@ const RoleTable = ({ data, meta }: IProps) => {
         return matchesSearch && matchesStatus && matchesRole
     })
 
+    const handleCreateRole = async (data: any) => {
+        try {
+            const { name, description, isActive, permissions } = data
+            const res = await createRoleAPI(name, description, isActive, permissions)
+            if (res.statusCode === 201) {
+                notify.success(res.message)
+            } else {
+                notify.warning(res.message)
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     const resetFilters = () => {
         setSearchTerm("")
@@ -201,7 +204,7 @@ const RoleTable = ({ data, meta }: IProps) => {
                                 Manage user roles and permissions across your system
                             </p>
                         </div>
-                        <CreateRoleModal isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
+                        <CreateRoleModal onSubmit={handleCreateRole} isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
                     </div>
 
                     <Card className="border border-gray-200 shadow-lg bg-white/80 dark:border-transparent dark:bg-slate-900/50 backdrop-blur-sm rounded-2xl">
