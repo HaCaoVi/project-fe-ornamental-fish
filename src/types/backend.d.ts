@@ -5,13 +5,15 @@ export interface IBackendRes<T> {
     data?: T;
 }
 
+export interface IMeta {
+    current: number,
+    pageSize: number,
+    pages: number,
+    total: number,
+}
+
 export interface IPagination<T> {
-    meta: {
-        current: number,
-        pageSize: number,
-        pages: number,
-        total: number,
-    },
+    meta: IMeta,
     result: T
 }
 

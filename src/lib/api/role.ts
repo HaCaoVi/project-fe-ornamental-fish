@@ -1,14 +1,27 @@
 import instance from "@config/axios.config";
 import { IBackendRes, IPagination } from "../../types/backend";
 import { IRole } from "../../types/model";
+import { isEmptyObject } from "@lib/helpers/valid.helper";
 
 export const listRoleAPI = async (
     current: number,
     pageSize: number,
-    populate?: string,
+    filters?: any,
     sort?: string,
+    populate?: string,
     fields?: string
 ) => {
-    const url = `/api/v1/roles/list-role?current=${current}&pageSize=${pageSize}&sort=${sort}&populate=${populate}&fields=${fields}`;
+    const query: Record<string, string> = {
+        current: String(current),
+        pageSize: String(pageSize),
+    }
+    if (populate) query.populate = populate
+    if (sort) query.sort = sort
+    if (fields) query.fields = fields
+    if (filters && !isEmptyObject(filters)) {
+        query.filters = JSON.stringify(filters)
+    }
+    const params = new URLSearchParams(query).toString()
+    const url = `/api/v1/roles/list-role?${params}`
     return instance.get<any, IBackendRes<IPagination<IRole[]>>>(url);
 };

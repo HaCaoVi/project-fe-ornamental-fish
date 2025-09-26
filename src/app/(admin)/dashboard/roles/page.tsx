@@ -1,36 +1,24 @@
 "use server"
 
-import { Column, TableCustomize } from "@components/layout/Table";
+import RoleTable from "@components/features/Table/role.table";
 import { listRoleAPI } from "@lib/api/role";
 
-const RoleDashboard = async () => {
-    const res = await listRoleAPI(1, 10, "permissions");
-    const result = res.statusCode === 200 && res.data ? res.data.result : []
-    console.log(">>>result: ", res);
+const RoleDashboard = async ({ searchParams }: any) => {
+    const { current, pageSize, sort, ...filters } = await searchParams;
+    console.log(filters);
 
-    const columns: Column[] = [
-        {
-            key: "1",
-            label: "ID",
-        },
-        {
-            key: "name",
-            label: "Name",
-            sortable: true,
-        },
-        {
-            key: "description",
-            label: "Description",
-            sortable: true,
-        },
-        {
-            key: "isActive",
-            label: "Active",
-            sortable: true,
-        },
-    ]
+    const res = await listRoleAPI(current, pageSize, filters, sort, "permissions");
+
+
+    const result = res.statusCode === 200 && res.data ? res.data.result : []
+    const meta = {
+        current: res.data?.meta?.current || 1,
+        pageSize: res.data?.meta?.pageSize || 10,
+        pages: res.data?.meta?.pages || 1,
+        total: res.data?.meta?.total || 1,
+    }
     return (
-        <TableCustomize columns={columns} data={result} />
+        <RoleTable data={result} meta={meta} />
     )
 }
 
