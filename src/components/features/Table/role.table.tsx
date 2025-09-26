@@ -22,6 +22,7 @@ import { Switch } from "@components/ui/switch"
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
 import { Badge } from "@components/ui/badge"
 import dayjs from 'dayjs';
+import CreateRoleModal from "../Modal/Role/create-role.modal"
 
 interface IProps {
     data: any[]
@@ -33,11 +34,7 @@ const RoleTable = ({ data, meta }: IProps) => {
     const [statusFilter, setStatusFilter] = useState("all")
     const [roleFilter, setRoleFilter] = useState("all")
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [newRole, setNewRole] = useState({
-        name: "",
-        description: "",
-        isActive: true,
-    })
+
 
     const filteredData = data.filter((item) => {
         const matchesSearch =
@@ -54,12 +51,6 @@ const RoleTable = ({ data, meta }: IProps) => {
         return matchesSearch && matchesStatus && matchesRole
     })
 
-    const handleAddRole = () => {
-        // Here you would typically call an API to add the role
-        console.log("Adding new role:", newRole)
-        setIsModalOpen(false)
-        setNewRole({ name: "", description: "", isActive: true })
-    }
 
     const resetFilters = () => {
         setSearchTerm("")
@@ -210,83 +201,7 @@ const RoleTable = ({ data, meta }: IProps) => {
                                 Manage user roles and permissions across your system
                             </p>
                         </div>
-                        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                            <DialogTrigger asChild>
-                                <Button
-                                    size="lg"
-                                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-200 rounded-xl px-6 py-3 font-semibold"
-                                >
-                                    <Plus className="h-5 w-5 mr-2" />
-                                    Add New Role
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-[500px] rounded-2xl border-0 shadow-2xl">
-                                <DialogHeader className="space-y-3 pb-6">
-                                    <DialogTitle className="text-2xl font-bold text-center">Add New Role</DialogTitle>
-                                    <DialogDescription className="text-center text-base text-muted-foreground">
-                                        Create a new role with specific permissions and access levels for your system.
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="space-y-6 py-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="name" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                                            Role Name
-                                        </Label>
-                                        <Input
-                                            id="name"
-                                            value={newRole.name}
-                                            onChange={(e) => setNewRole((prev) => ({ ...prev, name: e.target.value }))}
-                                            className="h-12 rounded-xl border-slate-200 dark:border-slate-800 focus:border-blue-500 dark:focus:border-blue-400 transition-colors"
-                                            placeholder="Enter role name (e.g., Admin, Staff)"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="description" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                                            Description
-                                        </Label>
-                                        <Textarea
-                                            id="description"
-                                            value={newRole.description}
-                                            onChange={(e) => setNewRole((prev) => ({ ...prev, description: e.target.value }))}
-                                            className="min-h-[100px] rounded-xl border-slate-200 dark:border-slate-800 focus:border-blue-500 dark:focus:border-blue-400 transition-colors resize-none"
-                                            placeholder="Describe the role's responsibilities and permissions..."
-                                            rows={4}
-                                        />
-                                    </div>
-                                    <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl">
-                                        <div className="space-y-1">
-                                            <Label htmlFor="status" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                                                Active Status
-                                            </Label>
-                                            <p className="text-xs text-muted-foreground">Enable this role for immediate use</p>
-                                        </div>
-                                        <Switch
-                                            id="status"
-                                            checked={newRole.isActive}
-                                            onCheckedChange={(checked) => setNewRole((prev) => ({ ...prev, isActive: checked }))}
-                                            className="data-[state=checked]:bg-blue-600"
-                                        />
-                                    </div>
-                                </div>
-                                <DialogFooter className="gap-3 pt-6">
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() => setIsModalOpen(false)}
-                                        className="flex-1 h-12 rounded-xl font-semibold"
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        onClick={handleAddRole}
-                                        className="flex-1 h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-xl font-semibold"
-                                    >
-                                        Create Role
-                                    </Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
+                        <CreateRoleModal isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
                     </div>
 
                     <Card className="border border-gray-200 shadow-lg bg-white/80 dark:border-transparent dark:bg-slate-900/50 backdrop-blur-sm rounded-2xl">

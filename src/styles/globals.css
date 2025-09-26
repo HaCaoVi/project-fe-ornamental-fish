@@ -207,3 +207,71 @@
     transform: translateY(-15px) rotate(0.5deg);
   }
 }
+
+@keyframes collapsible-down {
+  from {
+    height: 0
+  }
+
+  to {
+    height: var(--radix-collapsible-content-height)
+  }
+}
+
+@keyframes collapsible-up {
+  from {
+    height: var(--radix-collapsible-content-height)
+  }
+
+  to {
+    height: 0
+  }
+}
+
+.animate-collapsible-down {
+  animation: collapsible-down 0.3s ease-out forwards;
+}
+
+.animate-collapsible-up {
+  animation: collapsible-up 0.3s ease-out forwards;
+}
+
+/* Ẩn scrollbar nhưng vẫn scroll được */
+.scroll-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-hidden {
+  -ms-overflow-style: none;
+  /* IE + Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Custom scrollbar cơ bản */
+.scroll-custom::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scroll-custom::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-custom::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.6);
+  /* gray-400 */
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+}
+
+.scroll-custom::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(107, 114, 128, 0.8);
+  /* gray-500 */
+}
+
+/* Firefox */
+.scroll-custom {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.6) transparent;
+}
