@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@lib/utils"
+import { cn } from "@components/lib/utils"
 import { Button } from "@components/ui/button"
 import { LayoutDashboard, BarChart3, Users, Settings, X, Crown, ShieldCheck } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"

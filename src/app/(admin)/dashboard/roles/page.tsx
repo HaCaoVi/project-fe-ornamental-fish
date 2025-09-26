@@ -5,7 +5,6 @@ import { listRoleAPI } from "@lib/api/role";
 
 const RoleDashboard = async ({ searchParams }: any) => {
     const { current, pageSize, sort, ...filters } = await searchParams;
-    console.log(filters);
 
     const res = await listRoleAPI(current, pageSize, filters, sort, "permissions");
 
