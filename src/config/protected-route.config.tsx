@@ -12,10 +12,13 @@ interface Props {
 const ProtectedRoute = ({ allowedRoles, children }: Props) => {
     const { user, isLoading } = useAuthContext()!;
     const router = useRouter();
+    console.log("allowedRoles>>>: ", allowedRoles);
+    console.log("user>>>: ", user);
 
     useEffect(() => {
         if (!isLoading) {
             if (!user) router.push("/login");
+
             else if (!allowedRoles.includes(user.role.name)) router.push("/unauthorized");
         }
     }, [user, isLoading]);

@@ -2,17 +2,25 @@ export interface IRole {
     _id: string,
     name: string,
     description: string,
-    isActive: boolean,
-    permissions: string[] | IPermission[] | []
 }
 
-export interface IPermission {
+export interface IUser {
     _id: string,
     name: string,
-    apiPath: string,
-    method: string,
-    module: string,
-    deletedAt: string,
-    createdAt?: string,
+    email: string,
+    birthday: string,
+    gender: "MALE" | "FEMALE" | "OTHER",
+    address: string,
+    accountType: string,
+    role: IRole,
+    isActivated: boolean,
+    isDeleted: boolean,
+    isBanned: boolean,
+    createdBy: string,
+    updatedBy: string,
+    deletedBy: string,
+    bannedBy: string,
+    createdAt: string,
     updatedAt: string,
+    deletedAt: string,
 }

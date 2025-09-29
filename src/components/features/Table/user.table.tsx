@@ -3,73 +3,73 @@
 import { useEffect, useState } from "react"
 import { type Column, TableCustomize } from "@components/layout/Table"
 import type { IMeta } from "../../../types/backend"
-import { Pencil, Trash2, Plus, Search, Filter, Users, Shield, UserCheck } from "lucide-react"
+import { Pencil, Trash2, Plus, Search, Filter, Users, Shield, LockKeyhole, LockKeyholeOpen } from "lucide-react"
 import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
 import { Badge } from "@components/ui/badge"
 import dayjs from 'dayjs';
-import CreateRoleModal from "../Modal/Role/create-role.modal"
-import { createRoleAPI } from "@lib/api/role"
-import { notify } from "@lib/helpers/notify"
+import { listRoleAPI } from "@lib/api/role"
 import { useRouter, useSearchParams } from "next/navigation"
+import { IRole, IUser } from "../../../types/model"
+import { CreateUserModal } from "../Modal/User/create-user.modal"
+import { UpdateUserModal } from "../Modal/User/update-user.modal"
+import { banOrUnBanUserAPI, deleteUserAPI } from "@lib/api/user"
+import { notify } from "@lib/helpers/notify"
 
 interface IProps {
     data: any[]
     meta: IMeta
 }
 
-const RoleTable = ({ data, meta }: IProps) => {
-    const [searchTerm, setSearchTerm] = useState("")
-    const [statusFilter, setStatusFilter] = useState("all")
-    const [roleFilter, setRoleFilter] = useState("all")
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    console.log(data);
+const UserTable = ({ data, meta }: IProps) => {
+    const [searchTerm, setSearchTerm] = useState("");
+    const [statusFilter, setStatusFilter] = useState("*");
+    const [roleFilter, setRoleFilter] = useState("*");
+    const [listRole, setListRole] = useState<IRole[]>([]);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const [editingUser, setEditingUser] = useState<IUser | null>(null);
 
-    const router = useRouter()
-    const searchParams = useSearchParams()
     useEffect(() => {
-        if (searchTerm.length >= 0) {
-            const params = new URLSearchParams(searchParams.toString())
-            params.set("name", searchTerm)
-            router.push(`?${params.toString()}`)
-        }
-    }, [searchTerm])
-
-    // const filteredData = data.filter((item) => {
-    //     const matchesSearch =
-    //         item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    //         item.description?.toLowerCase().includes(searchTerm.toLowerCase())
-
-    //     const matchesStatus =
-    //         statusFilter === "all" ||
-    //         (statusFilter === "active" && item.isActive) ||
-    //         (statusFilter === "inactive" && !item.isActive)
-
-    //     const matchesRole = roleFilter === "all" || item.name?.toLowerCase() === roleFilter.toLowerCase()
-
-    //     return matchesSearch && matchesStatus && matchesRole
-    // })
-
-    const handleCreateRole = async (data: any) => {
-        try {
-            const { name, description, isActive, permissions } = data
-            const res = await createRoleAPI(name, description, isActive, permissions)
-            if (res.statusCode === 201) {
-                notify.success(res.message)
-            } else {
-                notify.warning(res.message)
+        (async () => {
+            try {
+                const res = await listRoleAPI();
+                if (res.statusCode === 200 && res.data) {
+                    setListRole(res.data)
+                }
+            } catch (error) {
+                console.error("Fetch role error: ", error);
             }
-        } catch (error) {
-            console.error(error);
+        })()
+    }, [])
+
+    useEffect(() => {
+        const params = new URLSearchParams(searchParams.toString());
+
+        if (searchTerm) params.set("search", searchTerm);
+        else params.delete("search");
+
+        let filters: any = {};
+        if (statusFilter !== "*") filters.isActivated = statusFilter === "active";
+        if (roleFilter !== "*") filters.role = roleFilter;
+
+        if (Object.keys(filters).length > 0) {
+            params.set("filters", JSON.stringify(filters));
+        } else {
+            params.delete("filters");
         }
-    }
+
+        router.push(`?${params.toString()}`);
+    }, [searchTerm, statusFilter, roleFilter]);
 
     const resetFilters = () => {
-        setSearchTerm("")
-        setStatusFilter("all")
-        setRoleFilter("all")
+        setSearchTerm("");
+        setStatusFilter("*");
+        setRoleFilter("*");
     }
 
     const getRoleConfig = (roleName: string) => {
@@ -91,10 +91,10 @@ const RoleTable = ({ data, meta }: IProps) => {
             }
         } else if (name === "customer") {
             return {
-                icon: UserCheck,
+                icon: Users,
                 className:
-                    "bg-gradient-to-r from-emerald-50 to-emerald-100 text-emerald-700 border-emerald-200 dark:from-emerald-950/50 dark:to-emerald-900/50 dark:text-emerald-300 dark:border-emerald-800",
-                dotColor: "bg-emerald-500",
+                    "bg-gradient-to-r from-slate-50 to-slate-100 text-slate-700 border-slate-200 dark:from-slate-950/50 dark:to-slate-900/50 dark:text-slate-300 dark:border-slate-800",
+                dotColor: "bg-slate-500",
             }
         }
 
@@ -106,17 +106,37 @@ const RoleTable = ({ data, meta }: IProps) => {
         }
     }
 
+    const handleDeleteUser = async (userId: string) => {
+        try {
+            const res = await deleteUserAPI(userId);
+            if (res.statusCode !== 200) return notify.error(res.message);
+            notify.success(res.message)
+        } catch (error) {
+
+        }
+    }
+
+    const handleBanOrUnBanUser = async (userId: string, banUserAPI: boolean) => {
+        try {
+            const res = await banOrUnBanUserAPI(userId, banUserAPI);
+            if (res.statusCode !== 200) return notify.error(res.message);
+            notify.success(res.message)
+        } catch (error) {
+
+        }
+    }
+
     const columns: Column[] = [
         {
             key: "_id",
             label: "ID",
         },
         {
-            key: "name",
-            label: "Role Name",
+            key: "email",
+            label: "Email",
             sortable: true,
-            render: (value) => {
-                const config = getRoleConfig(value)
+            render: (value, row: IUser) => {
+                const config = getRoleConfig(row.role.name)
                 const IconComponent = config.icon
 
                 return (
@@ -132,18 +152,18 @@ const RoleTable = ({ data, meta }: IProps) => {
             },
         },
         {
-            key: "description",
-            label: "Description",
+            key: "name",
+            label: "Name",
             render: (value) => (
                 <div className="max-w-xs">
-                    <p className="text-md dark:text-white text-muted-foreground leading-relaxed line-clamp-2">
+                    <p className="text-md font-medium dark:text-white text-muted-foreground leading-relaxed line-clamp-2">
                         {value || "No description provided"}
                     </p>
                 </div>
             ),
         },
         {
-            key: "isActive",
+            key: "isActivated",
             label: "Status",
             render: (value) => (
                 <Badge
@@ -160,14 +180,14 @@ const RoleTable = ({ data, meta }: IProps) => {
         },
         {
             key: "createdAt",
-            label: "Created",
+            label: "Created At",
             render: (value) => (
                 <div>{dayjs(value).format('DD-MM-YYYY HH:mm:ss')}</div>
             ),
         },
         {
             key: "updatedAt",
-            label: "Updated",
+            label: "Updated At",
             render: (value) => (
                 <div>{dayjs(value).format('DD-MM-YYYY HH:mm:ss')}</div>
             ),
@@ -175,28 +195,62 @@ const RoleTable = ({ data, meta }: IProps) => {
         {
             key: "action",
             label: "Actions",
-            render: (value, row) => {
+            render: (value, row: IUser) => {
+                console.log(row);
+
                 return (
                     <div className="flex items-center gap-2">
                         <Button
+                            onClick={() => {
+                                setIsUpdateModalOpen(true)
+                                setEditingUser(row)
+                            }
+                            }
                             variant="ghost"
                             size="sm"
                             className="h-9 w-9 p-0 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 dark:hover:text-blue-400 transition-all duration-200 rounded-lg group border border-transparent hover:border-blue-200 dark:hover:border-blue-800"
-                            title="Edit role"
+                            title="Edit user"
                         >
                             <Pencil className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-                            <span className="sr-only">Edit role</span>
+                            <span className="sr-only">Edit user</span>
+
                         </Button>
+
+                        {
+                            row.isBanned ?
+                                <Button
+                                    onClick={() => handleBanOrUnBanUser(row._id, false)}
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-9 w-9 p-0 text-slate-500 hover:text-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-950/30 dark:hover:text-yellow-400 transition-all duration-200 rounded-lg group border border-transparent hover:border-yellow-200 dark:hover:border-yellow-800"
+                                    title="Ban user"
+                                >
+                                    <LockKeyhole className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+                                    <span className="sr-only">Ban user</span>
+                                </Button>
+                                :
+                                <Button
+                                    onClick={() => handleBanOrUnBanUser(row._id, true)}
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-9 w-9 p-0 text-slate-500 hover:text-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-950/30 dark:hover:text-yellow-400 transition-all duration-200 rounded-lg group border border-transparent hover:border-yellow-200 dark:hover:border-yellow-800"
+                                    title="UnBan user"
+                                >
+                                    <LockKeyholeOpen className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+                                    <span className="sr-only">UnBan user</span>
+                                </Button>
+                        }
                         <Button
+                            onClick={() => handleDeleteUser(row._id)}
                             variant="ghost"
                             size="sm"
                             className="h-9 w-9 p-0 text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 dark:hover:text-red-400 transition-all duration-200 rounded-lg group border border-transparent hover:border-red-200 dark:hover:border-red-800"
-                            title="Delete role"
+                            title="Delete user"
                         >
                             <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-                            <span className="sr-only">Delete role</span>
+                            <span className="sr-only">Delete user</span>
                         </Button>
-                    </div>
+                    </div >
                 )
             },
         },
@@ -209,13 +263,16 @@ const RoleTable = ({ data, meta }: IProps) => {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                         <div className="space-y-2">
                             <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-slate-900 to-slate-600 dark:from-slate-100 dark:to-slate-400 bg-clip-text text-transparent">
-                                Role Management
+                                User Management
                             </h1>
                             <p className="text-lg text-muted-foreground font-medium">
                                 Manage user roles and permissions across your system
                             </p>
                         </div>
-                        <CreateRoleModal onSubmit={handleCreateRole} isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
+                        <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2">
+                            <Plus className="h-4 w-4" />
+                            Create User
+                        </Button>
                     </div>
 
                     <Card className="border border-gray-200 shadow-lg bg-white/80 dark:border-transparent dark:bg-slate-900/50 backdrop-blur-sm rounded-2xl">
@@ -243,7 +300,7 @@ const RoleTable = ({ data, meta }: IProps) => {
                                                 <SelectValue placeholder="Status" />
                                             </SelectTrigger>
                                             <SelectContent className="rounded-xl">
-                                                <SelectItem value="all">All Status</SelectItem>
+                                                <SelectItem value="*">All Status</SelectItem>
                                                 <SelectItem value="active">Active Only</SelectItem>
                                                 <SelectItem value="inactive">Inactive Only</SelectItem>
                                             </SelectContent>
@@ -254,10 +311,10 @@ const RoleTable = ({ data, meta }: IProps) => {
                                                 <SelectValue placeholder="Role Type" />
                                             </SelectTrigger>
                                             <SelectContent className="rounded-xl">
-                                                <SelectItem value="all">All Roles</SelectItem>
-                                                <SelectItem value="admin">Admin</SelectItem>
-                                                <SelectItem value="staff">Staff</SelectItem>
-                                                <SelectItem value="customer">Customer</SelectItem>
+                                                <SelectItem value="*">All Roles</SelectItem>
+                                                {listRole.length > 0 && listRole.map((item) => (
+                                                    <SelectItem key={item._id} value={item._id}>{item.name}</SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -277,7 +334,7 @@ const RoleTable = ({ data, meta }: IProps) => {
                     <Card className="border border-gray-200 shadow-xl bg-white dark:border-transparent dark:bg-slate-900/50  rounded-2xl overflow-hidden p-5">
                         <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-4">
                             <CardTitle className="text-lg font-semibold text-slate-800 dark:text-slate-200">
-                                Roles Overview ({meta.total} {meta.total === 1 ? "role" : "roles"})
+                                Users Overview ({meta.total} {meta.total === 1 ? "user" : "users"})
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="p-0">
@@ -286,8 +343,17 @@ const RoleTable = ({ data, meta }: IProps) => {
                     </Card>
                 </div>
             </div>
+            <CreateUserModal onOpenChange={setIsCreateModalOpen} open={isCreateModalOpen} listRole={listRole} />
+            {editingUser && (
+                <UpdateUserModal
+                    open={isUpdateModalOpen}
+                    onOpenChange={setIsUpdateModalOpen}
+                    user={editingUser}
+                    listRole={listRole}
+                />
+            )}
         </div>
     )
 }
 
-export default RoleTable
+export default UserTable;

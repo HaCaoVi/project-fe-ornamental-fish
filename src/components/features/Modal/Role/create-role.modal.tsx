@@ -24,7 +24,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@comp
 import { Plus, Save, X } from "lucide-react"
 import ModulePermissions from "./module-permissions"
 import { notify } from "@lib/helpers/notify"
-import { listPermissionAPI } from "@lib/api/permission"
+// import { listPermissionAPI } from "@lib/api/permission"
 import { IPermission, IRole } from "../../../../types/model"
 
 interface RoleModalProps {
@@ -67,29 +67,29 @@ const RoleModal = ({ isOpen, onOpenChange, role, onSubmit, onReload }: RoleModal
         },
     })
 
-    useEffect(() => {
-        if (open) {
-            (async () => {
-                const res = await listPermissionAPI(1, 100)
+    // useEffect(() => {
+    //     if (open) {
+    //         (async () => {
+    //             const res = await listPermissionAPI(1, 100)
 
-                if (res.statusCode === 200 && res.data) {
-                    const groupedPermissions = res.data.result.reduce((acc, permission) => {
-                        const existingModule = acc.find((item) => item.module === permission.module)
-                        if (existingModule) {
-                            existingModule.permissions.push(permission)
-                        } else {
-                            acc.push({ module: permission.module, permissions: [permission] })
-                        }
-                        return acc
-                    }, [] as { module: string; permissions: IPermission[] }[])
+    //             if (res.statusCode === 200 && res.data) {
+    //                 const groupedPermissions = res.data.result.reduce((acc, permission) => {
+    //                     const existingModule = acc.find((item) => item.module === permission.module)
+    //                     if (existingModule) {
+    //                         existingModule.permissions.push(permission)
+    //                     } else {
+    //                         acc.push({ module: permission.module, permissions: [permission] })
+    //                     }
+    //                     return acc
+    //                 }, [] as { module: string; permissions: IPermission[] }[])
 
-                    setListPermissions(groupedPermissions)
-                    return;
-                }
-                setListPermissions([])
-            })()
-        }
-    }, [open])
+    //                 setListPermissions(groupedPermissions)
+    //                 return;
+    //             }
+    //             setListPermissions([])
+    //         })()
+    //     }
+    // }, [open])
 
     // Cập nhật form khi edit
     useEffect(() => {

@@ -6,10 +6,13 @@ import { Input } from "@components/ui/input"
 import { Menu, X, Search } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useAuthContext } from "@hooks/auth.hook"
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const router = useRouter()
+    const { user, isLoading } = useAuthContext();
+
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
     }
@@ -115,11 +118,15 @@ const Header = () => {
                             </div>
 
                             {/* Mobile Login Button */}
-                            <div className="px-3 py-2">
-                                <Button className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground font-medium">
-                                    Login
-                                </Button>
-                            </div>
+                            {isLoading || !user
+                                ? <div className="px-3 py-2">
+                                    <Button className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground font-medium">
+                                        Login
+                                    </Button>
+                                </div>
+                                :
+                                null}
+
                         </div>
                     </div>
                 )}

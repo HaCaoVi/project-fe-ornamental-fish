@@ -1,6 +1,8 @@
-"use client"
+"use server"
 
+import UserTable from "@components/features/Table/user.table"
 import { Column, TableCustomize } from "@components/layout/Table"
+import { listUserAPI } from "@lib/api/user"
 
 // Sample data for demonstration
 const sampleData = [
@@ -22,41 +24,21 @@ const sampleMeta = {
     pages: 10,
     total: 5,
 }
+const UserDashboard = async ({ searchParams }: any) => {
+    const { current, pageSize, sort, search, _id, ...filters } = await searchParams;
 
-const columns: Column[] = [
-    { key: "id", label: "ID" },
-    { key: "name", label: "Name" },
-    { key: "email", label: "Email" },
-    { key: "role", label: "Role" },
-    {
-        key: "status",
-        label: "Status",
-        render: (value: string) => (
-            <span
-                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${value === "Active"
-                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                    : value === "Inactive"
-                        ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
-                        : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-                    }`}
-            >
-                {value}
-            </span>
-        ),
-    },
-]
+    const res = await listUserAPI(current, pageSize, filters, search, sort, "role");
 
-export default function Home() {
+    const data = res.statusCode === 200 && res.data ? res.data.result : []
+    const meta = {
+        current: res.data?.meta?.current || 1,
+        pageSize: res.data?.meta?.pageSize || 10,
+        pages: res.data?.meta?.pages || 1,
+        total: res.data?.meta?.total || 1,
+    }
     return (
-        <main className="container mx-auto py-8 px-4">
-            <div className="space-y-6">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Data Table</h1>
-                    <p className="text-muted-foreground">A responsive, customizable data table with pagination</p>
-                </div>
-
-                <TableCustomize data={sampleData} meta={sampleMeta} columns={columns} />
-            </div>
-        </main>
+        <UserTable data={data} meta={meta} />
     )
 }
+
+export default UserDashboard;

@@ -4,10 +4,9 @@ import RoleTable from "@components/features/Table/role.table";
 import { listRoleAPI } from "@lib/api/role";
 
 const RoleDashboard = async ({ searchParams }: any) => {
-    const { current, pageSize, sort, ...filters } = await searchParams;
+    const { current, pageSize, sort, search, _id, ...filters } = await searchParams;
 
-    const res = await listRoleAPI(current, pageSize, filters, sort, "permissions");
-
+    const res = await listRoleAPI(current, pageSize, filters, { name: `/${search}/i`, _id: `/${search}/i` }, sort, "permissions");
 
     const result = res.statusCode === 200 && res.data ? res.data.result : []
     const meta = {
