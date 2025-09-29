@@ -46,6 +46,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const fetchUser = async () => {
             try {
                 const res = await getAccountAPI();
+                console.log("Res>>>>", res);
+
                 if (res.statusCode === 200 && res.data) {
                     setUser(res.data);
                 } else {

@@ -1,21 +1,53 @@
-"use server"
+"use server";
 
-import instance from "@config/axios.config";
 import { IBackendRes, ILogin, IUserLogin } from "../../types/backend";
+import sendRequest from "@config/fetch.config";
+import { cookies } from "next/headers";
 
-export const loginAPI = async (
-    username: string,
-    password: string
-) => {
-    const url = `/api/v1/auth/login`;
-    return instance.post<any, IBackendRes<ILogin>>(url, { username, password });
+const cookieOptions: any = {
+    httpOnly: true,
+    sameSite: "strict",
+    // secure: process.env.NODE_ENV === "production",
+};
+
+export const loginAPI = async (username: string, password: string) => {
+    const cookieStore = await cookies();
+
+    const res = await sendRequest<IBackendRes<ILogin>>("/api/v1/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+    });
+    if (res.statusCode === 201 && res.data) {
+        cookieStore.set("refresh_token", res.data.refresh_token, cookieOptions);
+        cookieStore.set("access_token", res.data.access_token, cookieOptions);
+    }
+
+    return res;
 };
 
 export const getAccountAPI = async () => {
-    const url = `/api/v1/auth/account`;
-    return instance.get<any, IBackendRes<IUserLogin>>(url);
+    return sendRequest<IBackendRes<IUserLogin>>("/api/v1/auth/account", {
+        method: "GET",
+    });
 };
 
 export const refreshTokenAPI = async () => {
-    return instance.get<any, IBackendRes<any>>('/api/v1/auth/refresh-token');
-}
+    const cookieStore = await cookies();
+    const refreshToken = cookieStore.get("refresh_token")?.value;
+
+    if (!refreshToken) throw new Error("No refresh token found");
+
+    const res = await sendRequest<IBackendRes<any>>("/api/v1/auth/refresh", {
+        method: "GET",
+        headers: {
+            Cookie: `refresh_token=${refreshToken}`,
+        },
+    });
+
+    if (res.statusCode === 200 && res.data) {
+        cookieStore.set("refresh_token", res.data.refresh_token, cookieOptions);
+        cookieStore.set("access_token", res.data.access_token, cookieOptions);
+    }
+
+    return res;
+};

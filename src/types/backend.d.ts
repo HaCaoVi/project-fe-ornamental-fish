@@ -18,6 +18,7 @@ export interface IPagination<T> {
 }
 
 export interface ILogin {
+    refresh_token: string,
     access_token: string,
     user: IUserLogin
 }
@@ -30,12 +31,4 @@ export interface IUserLogin {
         _id: string,
         name: string
     },
-    permissions: IPermissionLogin[]
-}
-
-export interface IPermissionLogin {
-    _id: string,
-    apiPath: string,
-    method: string,
-    module: string
 }
