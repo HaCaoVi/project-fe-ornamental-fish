@@ -247,7 +247,7 @@ export function UpdateUserModal({ open, onOpenChange, listRole, user }: UpdateUs
                         </Button>
                         <Button type="submit" disabled={isSubmitting}>
                             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Create User
+                            Update User
                         </Button>
                     </DialogFooter>
                 </form>

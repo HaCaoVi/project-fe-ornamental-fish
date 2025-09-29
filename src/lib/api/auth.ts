@@ -18,8 +18,14 @@ export const loginAPI = async (username: string, password: string) => {
         body: JSON.stringify({ username, password }),
     });
     if (res.statusCode === 201 && res.data) {
-        cookieStore.set("refresh_token", res.data.refresh_token, cookieOptions);
-        cookieStore.set("access_token", res.data.access_token, cookieOptions);
+        cookieStore.set("refresh_token", res.data.refresh_token, {
+            ...cookieOptions,
+            maxAge: 60 * 60 * 24 * 30,
+        });
+        cookieStore.set("access_token", res.data.access_token, {
+            ...cookieOptions,
+            maxAge: 30,
+        });
     }
 
     return res;
@@ -35,7 +41,7 @@ export const refreshTokenAPI = async () => {
     const cookieStore = await cookies();
     const refreshToken = cookieStore.get("refresh_token")?.value;
 
-    if (!refreshToken) throw new Error("No refresh token found");
+    if (!refreshToken) return null;
 
     const res = await sendRequest<IBackendRes<any>>("/api/v1/auth/refresh", {
         method: "GET",
@@ -45,8 +51,14 @@ export const refreshTokenAPI = async () => {
     });
 
     if (res.statusCode === 200 && res.data) {
-        cookieStore.set("refresh_token", res.data.refresh_token, cookieOptions);
-        cookieStore.set("access_token", res.data.access_token, cookieOptions);
+        cookieStore.set("refresh_token", res.data.refresh_token, {
+            ...cookieOptions,
+            maxAge: 60 * 60 * 24 * 30,
+        });
+        cookieStore.set("access_token", res.data.access_token, {
+            ...cookieOptions,
+            maxAge: 30,
+        });
     }
 
     return res;

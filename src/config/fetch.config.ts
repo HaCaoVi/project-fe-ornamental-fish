@@ -11,7 +11,7 @@ const NO_RETRY_HEADER = "x-no-retry";
 const handleRefreshToken = async (): Promise<string | null> => {
     return await mutex.runExclusive(async () => {
         const res = await refreshTokenAPI();
-        if (res.statusCode === 200 && res.data) {
+        if (res && res.statusCode === 200 && res.data) {
             return res.data.access_token;
         }
         return null;
