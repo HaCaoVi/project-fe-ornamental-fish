@@ -13,7 +13,7 @@ const CategoryPage = async ({ params, searchParams }: any) => {
         current: res.data?.meta?.current || 1,
         pageSize: res.data?.meta?.pageSize || 10,
         pages: res.data?.meta?.pages || 1,
-        total: res.data?.meta?.total || 1,
+        total: res.data?.meta?.total || 0,
     }
 
     return (

@@ -166,7 +166,7 @@ const CategoryTable = ({ data, meta }: IProps) => {
                     <Card className="border border-gray-200 shadow-xl bg-white dark:border-transparent dark:bg-slate-900/50  rounded-2xl overflow-hidden p-5">
                         <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-4">
                             <CardTitle className="text-lg font-semibold text-slate-800 dark:text-slate-200">
-                                Categories Overview ({meta.total} {meta.total === 1 ? "category" : "categories"})
+                                Categories Overview ({meta.total} {meta.total <= 1 ? "category" : "categories"})
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="p-0">
