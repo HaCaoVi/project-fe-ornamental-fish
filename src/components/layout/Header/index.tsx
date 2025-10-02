@@ -6,12 +6,13 @@ import { Input } from "@components/ui/input"
 import { Menu, X, Search } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useAuthContext } from "@hooks/auth.hook"
+import { useAppContext, useAuthContext } from "@hooks/app.hook"
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const router = useRouter()
     const { user, isLoading } = useAuthContext();
+    const { categories } = useAppContext();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -40,9 +41,30 @@ const Header = () => {
                         <Link href="/" className="text-foreground hover:text-primary transition-colors duration-200 font-medium">
                             Home
                         </Link>
-                        <Link href="/about" className="text-foreground hover:text-primary transition-colors duration-200 font-medium">
-                            Product
-                        </Link>
+                        <div className="relative group">
+                            <button className="text-foreground hover:text-primary transition-colors duration-200 font-medium">
+                                Product
+                            </button>
+                            {/* Dropdown menu */}
+                            <div className="absolute left-1/2 -translate-x-1/2 mt-5 w-48 bg-background border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <ul className="py-2">
+                                    {categories.length > 0 ? (
+                                        categories.map((cat) => (
+                                            <li key={cat._id}>
+                                                <Link
+                                                    href={`/products/${cat._id}`}
+                                                    className="block px-4 py-2 text-foreground hover:bg-muted hover:text-primary transition-colors duration-150"
+                                                >
+                                                    {cat.name}
+                                                </Link>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <li className="px-4 py-2 text-muted-foreground">No categories</li>
+                                    )}
+                                </ul>
+                            </div>
+                        </div>
                         <Link
                             href="/services"
                             className="text-foreground hover:text-primary transition-colors duration-200 font-medium"

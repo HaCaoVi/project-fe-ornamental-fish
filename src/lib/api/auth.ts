@@ -12,7 +12,6 @@ const cookieOptions: any = {
 
 export const loginAPI = async (username: string, password: string) => {
     const cookieStore = await cookies();
-
     const res = await sendRequest<IBackendRes<ILogin>>("/api/v1/auth/login", {
         method: "POST",
         body: JSON.stringify({ username, password }),
@@ -32,16 +31,16 @@ export const loginAPI = async (username: string, password: string) => {
 };
 
 export const getAccountAPI = async () => {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("access_token")?.value;
+    if (!accessToken) return null;
     return sendRequest<IBackendRes<IUserLogin>>("/api/v1/auth/account", {
         method: "GET",
     });
 };
 
-export const refreshTokenAPI = async () => {
+export const refreshTokenAPI = async (refreshToken: string) => {
     const cookieStore = await cookies();
-    const refreshToken = cookieStore.get("refresh_token")?.value;
-
-    if (!refreshToken) return null;
 
     const res = await sendRequest<IBackendRes<any>>("/api/v1/auth/refresh", {
         method: "GET",

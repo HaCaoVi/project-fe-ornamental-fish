@@ -8,9 +8,9 @@ const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const mutex = new Mutex();
 const NO_RETRY_HEADER = "x-no-retry";
 
-const handleRefreshToken = async (): Promise<string | null> => {
+const handleRefreshToken = async (refreshToken: string): Promise<string | null> => {
     return await mutex.runExclusive(async () => {
-        const res = await refreshTokenAPI();
+        const res = await refreshTokenAPI(refreshToken);
         if (res && res.statusCode === 200 && res.data) {
             return res.data.access_token;
         }
@@ -28,6 +28,7 @@ const sendRequest = async <T = any>(
 ): Promise<T> => {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("access_token")?.value;
+    const refreshToken = cookieStore.get("refresh_token")?.value;
 
     const headers = new Headers({
         Accept: "application/json",
@@ -49,8 +50,8 @@ const sendRequest = async <T = any>(
     });
 
     // Nếu bị 401 thì thử refresh token
-    if (res.status === 401 && !headers.has(NO_RETRY_HEADER) && url !== "/api/v1/auth/login") {
-        const newToken = await handleRefreshToken();
+    if (refreshToken && res.status === 401 && !headers.has(NO_RETRY_HEADER) && url !== "/api/v1/auth/login") {
+        const newToken = await handleRefreshToken(refreshToken);
         if (newToken) {
             headers.set("Authorization", `Bearer ${newToken}`);
             headers.set(NO_RETRY_HEADER, "true");

@@ -24,3 +24,8 @@ export interface IUser {
     updatedAt: string,
     deletedAt: string,
 }
+
+export interface ICategories {
+    _id: string,
+    name: string
+}
