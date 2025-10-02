@@ -29,3 +29,15 @@ export interface ICategories {
     _id: string,
     name: string
 }
+
+export interface ICategoryDetail {
+    _id: string,
+    category: ICategories,
+    name: string,
+    isDeleted: boolean,
+    createdBy: IUser,
+    updatedBy: IUser,
+    deletedBy: IUser,
+    createdAt: string,
+    updatedAt: string,
+}

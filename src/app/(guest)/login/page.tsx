@@ -12,7 +12,7 @@ import { AuthContext } from "@contexts/auth.context"
 import { useRouter } from "next/navigation"
 import { ADMIN_ROLE, STAFF_ROLE } from "@lib/constants/constant"
 import { notify } from "@lib/helpers/notify"
-import { useAuthContext } from "@hooks/auth.hook"
+import { useAuthContext } from "@hooks/app.hook"
 
 // Validation schema with zod
 const loginSchema = z.object({

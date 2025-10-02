@@ -23,6 +23,40 @@ interface IProps {
     meta: IMeta
 }
 
+export const getRoleConfig = (roleName: string) => {
+    const name = roleName?.toLowerCase()
+
+    if (name === "admin") {
+        return {
+            icon: Shield,
+            className:
+                "bg-gradient-to-r from-purple-50 to-purple-100 text-purple-600 border-purple-200 dark:from-purple-950/50 dark:to-purple-900/50 dark:text-purple-300 dark:border-purple-800",
+            dotColor: "bg-purple-500",
+        }
+    } else if (name === "staff") {
+        return {
+            icon: Users,
+            className:
+                "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border-blue-200 dark:from-blue-950/50 dark:to-blue-900/50 dark:text-blue-300 dark:border-blue-800",
+            dotColor: "bg-blue-500",
+        }
+    } else if (name === "customer") {
+        return {
+            icon: Users,
+            className:
+                "bg-gradient-to-r from-slate-50 to-slate-100 text-slate-700 border-slate-200 dark:from-slate-950/50 dark:to-slate-900/50 dark:text-slate-300 dark:border-slate-800",
+            dotColor: "bg-slate-500",
+        }
+    }
+
+    return {
+        icon: Users,
+        className:
+            "bg-gradient-to-r from-slate-50 to-slate-100 text-slate-700 border-slate-200 dark:from-slate-950/50 dark:to-slate-900/50 dark:text-slate-300 dark:border-slate-800",
+        dotColor: "bg-slate-500",
+    }
+}
+
 const UserTable = ({ data, meta }: IProps) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("*");
@@ -72,39 +106,6 @@ const UserTable = ({ data, meta }: IProps) => {
         setRoleFilter("*");
     }
 
-    const getRoleConfig = (roleName: string) => {
-        const name = roleName?.toLowerCase()
-
-        if (name === "admin") {
-            return {
-                icon: Shield,
-                className:
-                    "bg-gradient-to-r from-purple-50 to-purple-100 text-purple-700 border-purple-200 dark:from-purple-950/50 dark:to-purple-900/50 dark:text-purple-300 dark:border-purple-800",
-                dotColor: "bg-purple-500",
-            }
-        } else if (name === "staff") {
-            return {
-                icon: Users,
-                className:
-                    "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border-blue-200 dark:from-blue-950/50 dark:to-blue-900/50 dark:text-blue-300 dark:border-blue-800",
-                dotColor: "bg-blue-500",
-            }
-        } else if (name === "customer") {
-            return {
-                icon: Users,
-                className:
-                    "bg-gradient-to-r from-slate-50 to-slate-100 text-slate-700 border-slate-200 dark:from-slate-950/50 dark:to-slate-900/50 dark:text-slate-300 dark:border-slate-800",
-                dotColor: "bg-slate-500",
-            }
-        }
-
-        return {
-            icon: Users,
-            className:
-                "bg-gradient-to-r from-slate-50 to-slate-100 text-slate-700 border-slate-200 dark:from-slate-950/50 dark:to-slate-900/50 dark:text-slate-300 dark:border-slate-800",
-            dotColor: "bg-slate-500",
-        }
-    }
 
     const handleDeleteUser = async (userId: string) => {
         try {
@@ -130,6 +131,13 @@ const UserTable = ({ data, meta }: IProps) => {
         {
             key: "_id",
             label: "ID",
+            render: (value) => (
+                <div className="max-w-xs">
+                    <p className="text-md font-md text-blue-600 dark:text-white  leading-relaxed line-clamp-2">
+                        {value || "No description provided"}
+                    </p>
+                </div>
+            ),
         },
         {
             key: "email",

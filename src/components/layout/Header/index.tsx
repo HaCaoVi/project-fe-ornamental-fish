@@ -5,7 +5,7 @@ import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
 import { Menu, X, Search } from "lucide-react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useAppContext, useAuthContext } from "@hooks/app.hook"
 import UserMenu from "@components/features/UserMenu"
 
@@ -14,6 +14,7 @@ const Header = () => {
     const router = useRouter()
     const { user, isLoading } = useAuthContext();
     const { categories } = useAppContext();
+    const pathName = usePathname();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -90,20 +91,20 @@ const Header = () => {
                                 className="pl-10 w-64 bg-muted/50 border-border focus:bg-background transition-colors"
                             />
                         </div>
-                        {isLoading ? (
-                            <div className="px-3 py-2">
-                                <span className="text-muted-foreground text-sm">Loading...</span>
-                            </div>
-                        ) : !user ? (
-                            <div className="px-3 py-2">
-                                <Button onClick={navigateLoginPage} className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-medium px-6">
-                                    Login
-                                </Button>
-                            </div>
-                        ) : (
-                            <UserMenu user={user} />
-                        )}
-
+                        {pathName !== "/login" && pathName !== "/register" ?
+                            isLoading ? (
+                                <div className="px-3 py-2">
+                                    <span className="text-muted-foreground text-sm">Loading...</span>
+                                </div>
+                            ) : !user ? (
+                                <div className="px-3 py-2">
+                                    <Button onClick={navigateLoginPage} className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-medium px-6">
+                                        Login
+                                    </Button>
+                                </div>
+                            ) : (
+                                <UserMenu user={user} />
+                            ) : null}
                     </div>
 
                     {/* Mobile menu button */}
