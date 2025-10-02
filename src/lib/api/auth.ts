@@ -23,7 +23,7 @@ export const loginAPI = async (username: string, password: string) => {
         });
         cookieStore.set("access_token", res.data.access_token, {
             ...cookieOptions,
-            maxAge: 30,
+            maxAge: 60 * 60 * 24,
         });
     }
 
@@ -33,7 +33,8 @@ export const loginAPI = async (username: string, password: string) => {
 export const getAccountAPI = async () => {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("access_token")?.value;
-    if (!accessToken) return null;
+    const refreshToken = cookieStore.get("refresh_token")?.value;
+    if (!accessToken && !refreshToken) return null;
     return sendRequest<IBackendRes<IUserLogin>>("/api/v1/auth/account", {
         method: "GET",
     });
@@ -60,5 +61,17 @@ export const refreshTokenAPI = async (refreshToken: string) => {
         });
     }
 
+    return res;
+};
+
+export const logoutAPI = async () => {
+    const cookieStore = await cookies();
+    const res = await sendRequest<IBackendRes<any>>("/api/v1/auth/logout", {
+        method: "POST",
+    });
+    if (res.statusCode === 201) {
+        cookieStore.delete("refresh_token")
+        cookieStore.delete("access_token")
+    }
     return res;
 };

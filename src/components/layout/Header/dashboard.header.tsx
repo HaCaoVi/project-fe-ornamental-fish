@@ -3,15 +3,9 @@
 import { useState } from "react"
 import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/avatar"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@components/ui/dropdown-menu"
-import { Menu, Search, Sun, Moon, User, LogOut, ChevronRight } from "lucide-react"
+import { Menu, Search, Sun, Moon, ChevronRight } from "lucide-react"
+import UserMenu from "@components/features/UserMenu"
+import { useAuthContext } from "@hooks/app.hook"
 
 interface HeaderProps {
     onMenuClick: () => void
@@ -19,6 +13,7 @@ interface HeaderProps {
 
 export function Header({ onMenuClick }: HeaderProps) {
     const [isDark, setIsDark] = useState(false)
+    const { user } = useAuthContext();
 
     const toggleTheme = () => {
         setIsDark(!isDark)
@@ -57,33 +52,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                     </Button>
 
                     {/* User menu */}
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                                <Avatar className="h-9 w-9">
-                                    <AvatarImage src="/diverse-user-avatars.png" alt="User" />
-                                    <AvatarFallback>JD</AvatarFallback>
-                                </Avatar>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56" align="end" forceMount>
-                            <div className="flex items-center justify-start gap-2 p-2">
-                                <div className="flex flex-col space-y-1 leading-none">
-                                    <p className="font-medium">John Doe</p>
-                                    <p className="w-[200px] truncate text-sm text-muted-foreground">john.doe@example.com</p>
-                                </div>
-                            </div>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                                <User className="mr-2 h-4 w-4" />
-                                <span>View Profile</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <LogOut className="mr-2 h-4 w-4" />
-                                <span>Logout</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    {user && <UserMenu user={user} />}
                 </div>
             </div>
         </header>

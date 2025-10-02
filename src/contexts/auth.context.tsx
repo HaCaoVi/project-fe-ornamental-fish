@@ -1,7 +1,6 @@
 "use client";
 
-import { getAccountAPI, loginAPI } from "@lib/api/auth";
-import { setCookie } from "@lib/helpers/cookie.helper";
+import { getAccountAPI, loginAPI, logoutAPI } from "@lib/api/auth";
 import type { IBackendRes, ILogin, IUserLogin } from "../types/backend";
 import { createContext, useState, ReactNode, useEffect } from "react";
 
@@ -15,7 +14,7 @@ interface AuthContextType {
     message: string;
     setMessage: (v: string) => void;
     login: (username: string, password: string) => Promise<IBackendRes<ILogin>>;
-    logout: () => void;
+    logout: () => Promise<IBackendRes<any>>;
     setRefreshTokenAction: (status: boolean, message: string) => void;
 
 }
@@ -36,7 +35,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = async (username: string, password: string) => {
         const res = await loginAPI(username, password);
         if (res.statusCode === 201 && res.data) {
-            setCookie("access_token", res.data.access_token)
             setUser(res.data.user);
         }
         return res;
@@ -62,8 +60,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         fetchUser();
     }, []);
 
-    const logout = () => {
-        setUser(null);
+    const logout = async () => {
+        const res = await logoutAPI();
+        if (res.statusCode === 201) {
+            setUser(null);
+        }
+        return res;
     };
 
     return (
