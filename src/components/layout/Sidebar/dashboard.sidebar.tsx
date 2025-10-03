@@ -2,43 +2,27 @@
 
 import { cn } from "@components/lib/utils"
 import { Button } from "@components/ui/button"
-import { useAppContext } from "@hooks/app.hook"
-import { LayoutDashboard, BarChart3, Users, Settings, X, Columns2, ChevronDown, ChevronRight, Fish, FishSymbol, Tag } from "lucide-react"
+import { LayoutDashboard, BarChart3, Users, Settings, X, Crown, ShieldCheck, Columns2 } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
-import { useMemo, useState } from "react"
 
 interface SidebarProps {
     onClose?: () => void
 }
 
+const navigation = [
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
+    { name: "Users", href: "/dashboard/users", icon: Users },
+    { name: "Categories", href: "/dashboard/categories", icon: Columns2 },
+    { name: "Settings", href: "/dashboard/settings", icon: Settings },
+]
+
 export function Sidebar({ onClose }: SidebarProps) {
     const router = useRouter();
     const pathName = usePathname()
-    const [openMenu, setOpenMenu] = useState<string | null>(null);
-    const { categories } = useAppContext()
-
-    const childrenCategories = useMemo(() => {
-        return categories.map(cate => ({
-            name: cate.name,
-            href: `/dashboard/categories/${cate._id}`,
-        }));
-    }, [categories]);
-
-
-    const navigation = [
-        { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-        { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
-        { name: "Users", href: "/dashboard/users", icon: Users },
-        {
-            name: "Categories",
-            href: "/dashboard/categories",
-            icon: LayoutDashboard,
-            children: childrenCategories,
-        },
-        { name: "Settings", href: "/dashboard/settings", icon: Settings },
-    ]
-
-    const navigate = (href: string) => router.push(href);
+    const navigate = (href: string) => {
+        return router.push(href);
+    }
 
     return (
         <div className="flex h-full flex-col bg-sidebar border-r border-sidebar-border">
@@ -60,60 +44,21 @@ export function Sidebar({ onClose }: SidebarProps) {
             <nav className="flex-1 px-4 py-6 space-y-2">
                 {navigation.map((item) => {
                     const Icon = item.icon
-
-                    const isActive = pathName === item.href || item.children?.some(c => pathName.startsWith(c.href))
-                    const isOpen = openMenu === item.name
-
                     return (
-                        <div key={item.name}>
-                            <Button
-                                variant={isActive ? "default" : "ghost"}
-                                className={cn(
-                                    "w-full justify-between gap-3 h-10",
-                                    isActive
-                                        ? "bg-primary text-white hover:bg-primary/90"
-                                        : "text-sidebar-foreground hover:bg-primary hover:text-sidebar-accent-foreground",
-                                )}
-                                onClick={() => {
-                                    if (item.children) {
-                                        setOpenMenu(isOpen ? null : item.name)
-                                    } else {
-                                        navigate(item.href)
-                                    }
-                                }}
-                            >
-                                <div className="flex items-center gap-3">
-                                    <Icon className="h-4 w-4" />
-                                    {item.name}
-                                </div>
-                                {item.children && (
-                                    isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />
-                                )}
-                            </Button>
-
-                            {item.children && isOpen && (
-                                <div className="ml-6 mt-1 space-y-1">
-                                    {item.children.map((child) => {
-                                        return (
-                                            <Button
-                                                key={child.name}
-                                                variant={child.href === pathName ? "default" : "ghost"}
-                                                className={cn(
-                                                    "w-full justify-start gap-2 h-9 text-sm",
-                                                    child.href === pathName
-                                                        ? "bg-primary text-white hover:bg-primary/90"
-                                                        : "text-sidebar-foreground hover:bg-primary hover:text-sidebar-accent-foreground",
-                                                )}
-                                                onClick={() => navigate(child.href)}
-                                            >
-                                                <ChevronRight />
-                                                {child.name}
-                                            </Button>
-                                        )
-                                    })}
-                                </div>
+                        <Button
+                            key={item.name}
+                            variant={item.href === pathName ? "default" : "ghost"}
+                            className={cn(
+                                "w-full justify-start gap-3 h-10",
+                                item.href === pathName
+                                    ? "bg-primary text-white hover:bg-primary/90"
+                                    : "text-sidebar-foreground hover:bg-primary hover:text-sidebar-accent-foreground",
                             )}
-                        </div>
+                            onClick={() => navigate(item.href)}
+                        >
+                            <Icon className="h-4 w-4" />
+                            {item.name}
+                        </Button>
                     )
                 })}
             </nav>

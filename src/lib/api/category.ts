@@ -13,16 +13,21 @@ export const listCategoryAPI = async () => {
 };
 
 export const listCategoryDetailAPI = async (
-    categoryId: string,
     current: number,
     pageSize: number,
+    filters?: any,
+    search?: string,
 ) => {
     const query: Record<string, string> = {
         current: String(current),
         pageSize: String(pageSize),
     }
+
+    if (filters) query.filters = typeof filters === "string" ? filters : JSON.stringify(filters)
+    if (search) query.search = search
+
     const params = new URLSearchParams(query).toString()
-    const url = `/api/v1/categories/list-category-detail/${categoryId}?${params}`
+    const url = `/api/v1/categories/list-category-detail?${params}`
     return sendRequest<IBackendRes<IPagination<ICategories[]>>>(url, {
         method: "GET",
     },)

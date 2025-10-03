@@ -30,7 +30,7 @@ export const getRoleConfig = (roleName: string) => {
         return {
             icon: Shield,
             className:
-                "bg-gradient-to-r from-purple-50 to-purple-100 text-purple-600 border-purple-200 dark:from-purple-950/50 dark:to-purple-900/50 dark:text-purple-300 dark:border-purple-800",
+                "bg-gradient-to-r from-purple-50 to-purple-100 text-[#8e44ad] border-purple-200 dark:from-purple-950/50 dark:to-purple-900/50 dark:text-purple-300 dark:border-purple-800",
             dotColor: "bg-purple-500",
         }
     } else if (name === "staff") {

@@ -3,10 +3,9 @@
 import CategoryTable from "@components/features/Table/category.table";
 import { listCategoryDetailAPI } from "@lib/api/category"
 
-const CategoryPage = async ({ params, searchParams }: any) => {
-    const { current, pageSize } = await searchParams;
-    const { categoryId } = await params;
-    const res = await listCategoryDetailAPI(categoryId, current, pageSize)
+const CategoryPage = async ({ searchParams }: any) => {
+    const { current, pageSize, filters, search } = await searchParams;
+    const res = await listCategoryDetailAPI(current, pageSize, filters, search)
 
     const data = res.statusCode === 200 && res.data ? res.data.result : []
     const meta = {
@@ -15,7 +14,6 @@ const CategoryPage = async ({ params, searchParams }: any) => {
         pages: res.data?.meta?.pages || 1,
         total: res.data?.meta?.total || 0,
     }
-
     return (
         <CategoryTable data={data} meta={meta} />
     )
