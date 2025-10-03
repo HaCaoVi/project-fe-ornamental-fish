@@ -22,7 +22,7 @@ export const notify = {
         toast.warning(message, {
             style: {
                 background: "white",
-                color: "#facc15",
+                color: "#f39c12",
             },
         }),
 

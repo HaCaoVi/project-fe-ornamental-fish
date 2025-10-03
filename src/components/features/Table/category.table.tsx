@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { type Column, TableCustomize } from "@components/layout/Table"
 import type { IMeta } from "../../../types/backend"
-import { Pencil, Trash2, Plus, Search, Filter, } from "lucide-react"
+import { Pencil, Trash2, Plus, Search, Filter, Fish, Utensils, Package, } from "lucide-react"
 import { Button } from "@components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
 import dayjs from 'dayjs';
@@ -14,21 +14,58 @@ import { getRoleConfig } from "./user.table"
 import { Input } from "@components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
 import { useAppContext } from "@hooks/app.hook"
+import { CUCategoryDetailModel } from "../Modal/Category/create-category.modal"
+import { deleteCategoryAPI } from "@lib/api/category"
+import { DeleteButton } from "@components/lib/DeleteButton"
 
 interface IProps {
     data: any[]
     meta: IMeta,
 }
 
+export const getCategoryConfig = (categoryName: string) => {
+    const name = categoryName?.toLowerCase()
+
+    if (name === "ornamental fish") {
+        return {
+            icon: Fish,
+            className:
+                "bg-gradient-to-r from-cyan-50 to-cyan-100 text-cyan-700 border-cyan-200 dark:from-cyan-950/50 dark:to-cyan-900/50 dark:text-cyan-300 dark:border-cyan-800",
+            dotColor: "bg-cyan-500",
+        }
+    } else if (name === "aquarium fish food") {
+        return {
+            icon: Utensils,
+            className:
+                "bg-gradient-to-r from-amber-50 to-amber-100 text-amber-700 border-amber-200 dark:from-amber-950/50 dark:to-amber-900/50 dark:text-amber-300 dark:border-amber-800",
+            dotColor: "bg-amber-500",
+        }
+    } else if (name === "accessory") {
+        return {
+            icon: Package,
+            className:
+                "bg-gradient-to-r from-rose-50 to-rose-100 text-rose-700 border-rose-200 dark:from-rose-950/50 dark:to-rose-900/50 dark:text-rose-300 dark:border-rose-800",
+            dotColor: "bg-rose-500",
+        }
+    }
+
+    // default
+    return {
+        icon: Package,
+        className:
+            "bg-gradient-to-r from-slate-50 to-slate-100 text-slate-700 border-slate-200 dark:from-slate-950/50 dark:to-slate-900/50 dark:text-slate-300 dark:border-slate-800",
+        dotColor: "bg-slate-500",
+    }
+}
+
 const CategoryTable = ({ data, meta }: IProps) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("*");
     const { categories } = useAppContext()
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [editingUser, setEditingUser] = useState<ICategoryDetail | null>(null);
+    const [editingCategory, setEditingCategory] = useState<ICategoryDetail | null>(null);
 
     useEffect(() => {
         const params = new URLSearchParams(searchParams.toString());
@@ -49,11 +86,14 @@ const CategoryTable = ({ data, meta }: IProps) => {
     }, [searchTerm, categoryFilter]);
 
 
-    const handleDeleteUser = async (categoryDetailId: string) => {
+    const handleDeleteCategoryDetail = async (categoryDetailId: string) => {
         try {
-
+            const res = await deleteCategoryAPI(categoryDetailId)
+            if (res.statusCode === 200) {
+                notify.success(res.message)
+            }
         } catch (error) {
-
+            console.error("Delete category detail error: ", error);
         }
     }
 
@@ -61,6 +101,12 @@ const CategoryTable = ({ data, meta }: IProps) => {
         setSearchTerm("");
         setCategoryFilter("*");
     }
+
+    useEffect(() => {
+        if (!isModalOpen && editingCategory) {
+            setEditingCategory(null)
+        }
+    }, [editingCategory, isModalOpen])
 
     const columns: Column[] = [
         {
@@ -89,8 +135,17 @@ const CategoryTable = ({ data, meta }: IProps) => {
             key: "category",
             label: "Category",
             render: (value, row: ICategoryDetail) => {
+                const config = getCategoryConfig(row.category.name)
+                const IconComponent = config.icon
                 return (
-                    <span className="font-medium">{row.category.name}</span>
+                    <div className="flex items-center gap-3">
+                        <div
+                            className={`flex items-center gap-2 px-3 py-2 rounded-xl border font-medium text-sm transition-all duration-200 hover:shadow-sm ${config.className}`}
+                        >
+                            <IconComponent className="h-4 w-4" />
+                            <span className="font-semibold">{row.category.name}</span>
+                        </div>
+                    </div>
                 )
             },
         },
@@ -100,7 +155,6 @@ const CategoryTable = ({ data, meta }: IProps) => {
             render: (value, row: ICategoryDetail) => {
                 const config = getRoleConfig(row.createdBy.role.name)
                 const IconComponent = config.icon
-
                 return (
                     <div className="flex items-center gap-3">
                         <div
@@ -137,8 +191,8 @@ const CategoryTable = ({ data, meta }: IProps) => {
             },
         },
         {
-            key: "createdAt",
-            label: "Created At",
+            key: "updatedAt",
+            label: "Updated At",
             render: (value) => (
                 <div>{dayjs(value).format('DD-MM-YYYY HH:mm:ss')}</div>
             ),
@@ -147,14 +201,12 @@ const CategoryTable = ({ data, meta }: IProps) => {
             key: "action",
             label: "Actions",
             render: (value, row: ICategoryDetail) => {
-                console.log(row);
-
                 return (
                     <div className="flex items-center gap-2">
                         <Button
                             onClick={() => {
-                                setIsUpdateModalOpen(true)
-                                setEditingUser(row)
+                                setIsModalOpen(true)
+                                setEditingCategory(row)
                             }
                             }
                             variant="ghost"
@@ -163,20 +215,11 @@ const CategoryTable = ({ data, meta }: IProps) => {
                             title="Edit user"
                         >
                             <Pencil className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-                            <span className="sr-only">Edit user</span>
+                            <span className="sr-only">Edit category detail</span>
 
                         </Button>
 
-                        <Button
-                            onClick={() => handleDeleteUser(row._id)}
-                            variant="ghost"
-                            size="sm"
-                            className="h-9 w-9 p-0 text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 dark:hover:text-red-400 transition-all duration-200 rounded-lg group border border-transparent hover:border-red-200 dark:hover:border-red-800"
-                            title="Delete user"
-                        >
-                            <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-                            <span className="sr-only">Delete user</span>
-                        </Button>
+                        <DeleteButton id={row._id} onDelete={handleDeleteCategoryDetail} />
                     </div >
                 )
             },
@@ -196,7 +239,7 @@ const CategoryTable = ({ data, meta }: IProps) => {
                                 Manage category your system
                             </p>
                         </div>
-                        <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2">
+                        <Button onClick={() => setIsModalOpen(true)} className="gap-2">
                             <Plus className="h-4 w-4" />
                             Create Category
                         </Button>
@@ -259,15 +302,7 @@ const CategoryTable = ({ data, meta }: IProps) => {
                     </Card>
                 </div>
             </div>
-            {/* <CreateUserModal onOpenChange={setIsCreateModalOpen} open={isCreateModalOpen} listRole={listRole} /> */}
-            {/* {editingUser && (
-                <UpdateUserModal
-                    open={isUpdateModalOpen}
-                    onOpenChange={setIsUpdateModalOpen}
-                    user={editingUser}
-                    listRole={listRole}
-                />
-            )} */}
+            <CUCategoryDetailModel onOpenChange={setIsModalOpen} open={isModalOpen} categories={categories} item={editingCategory} />
         </div>
     )
 }

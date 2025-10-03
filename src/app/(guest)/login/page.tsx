@@ -49,7 +49,7 @@ const LoginPage = () => {
                 router.replace("/")
             }
         } else {
-            notify.error(res.message)
+            notify.warning(res.message)
         }
     }
 

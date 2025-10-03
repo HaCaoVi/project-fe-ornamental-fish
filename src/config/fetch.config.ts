@@ -72,9 +72,9 @@ const sendRequest = async <T = any>(
 
     const text = await res.text();
 
-    if (!res.ok) {
-        throw new Error(`Request failed with status ${res.status}: ${text}`);
-    }
+    // if (!res.ok) {
+    //     throw new Error(`Request failed with status ${res.status}: ${text}`);
+    // }
 
     try {
         return JSON.parse(text) as T;

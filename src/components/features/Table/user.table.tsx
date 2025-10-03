@@ -17,6 +17,7 @@ import { CreateUserModal } from "../Modal/User/create-user.modal"
 import { UpdateUserModal } from "../Modal/User/update-user.modal"
 import { banOrUnBanUserAPI, deleteUserAPI } from "@lib/api/user"
 import { notify } from "@lib/helpers/notify"
+import { DeleteButton } from "@components/lib/DeleteButton"
 
 interface IProps {
     data: any[]
@@ -204,8 +205,6 @@ const UserTable = ({ data, meta }: IProps) => {
             key: "action",
             label: "Actions",
             render: (value, row: IUser) => {
-                console.log(row);
-
                 return (
                     <div className="flex items-center gap-2">
                         <Button
@@ -248,16 +247,7 @@ const UserTable = ({ data, meta }: IProps) => {
                                     <span className="sr-only">UnBan user</span>
                                 </Button>
                         }
-                        <Button
-                            onClick={() => handleDeleteUser(row._id)}
-                            variant="ghost"
-                            size="sm"
-                            className="h-9 w-9 p-0 text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 dark:hover:text-red-400 transition-all duration-200 rounded-lg group border border-transparent hover:border-red-200 dark:hover:border-red-800"
-                            title="Delete user"
-                        >
-                            <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-                            <span className="sr-only">Delete user</span>
-                        </Button>
+                        <DeleteButton id={row._id} onDelete={handleDeleteUser} />
                     </div >
                 )
             },
