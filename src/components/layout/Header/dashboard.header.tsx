@@ -3,9 +3,10 @@
 import { useState } from "react"
 import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
-import { Menu, Search, Sun, Moon, ChevronRight } from "lucide-react"
+import { Menu, Search, Sun, Moon } from "lucide-react"
 import UserMenu from "@components/features/UserMenu"
 import { useAuthContext } from "@hooks/app.hook"
+import { AutoBreadcrumb } from "@components/lib/Breadcrumb"
 
 interface HeaderProps {
     onMenuClick: () => void
@@ -31,11 +32,9 @@ export function Header({ onMenuClick }: HeaderProps) {
                     </Button>
 
                     {/* Breadcrumb */}
-                    <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <span className="font-medium text-foreground">Dashboard</span>
-                        <ChevronRight className="h-3 w-3" />
-                        <span>Overview</span>
-                    </nav>
+                    <div className="p-6 space-y-4">
+                        <AutoBreadcrumb />
+                    </div>
                 </div>
 
                 {/* Right side */}
