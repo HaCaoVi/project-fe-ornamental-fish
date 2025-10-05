@@ -134,9 +134,7 @@ const UserTable = ({ data, meta }: IProps) => {
             label: "ID",
             render: (value) => (
                 <div className="max-w-xs">
-                    <p className="text-md font-md text-blue-600 dark:text-white  leading-relaxed line-clamp-2">
-                        {value || "No description provided"}
-                    </p>
+                    <p className="text-sm font-mono font-medium text-primary leading-relaxed line-clamp-2">{value}</p>
                 </div>
             ),
         },
@@ -191,14 +189,20 @@ const UserTable = ({ data, meta }: IProps) => {
             key: "createdAt",
             label: "Created At",
             render: (value) => (
-                <div>{dayjs(value).format('DD-MM-YYYY HH:mm:ss')}</div>
+                <div className="text-sm text-muted-foreground tabular-nums">
+                    {dayjs(value).format("MMM DD, YYYY")}
+                    <div className="text-xs text-muted-foreground/70 mt-0.5">{dayjs(value).format("HH:mm")}</div>
+                </div>
             ),
         },
         {
             key: "updatedAt",
             label: "Updated At",
             render: (value) => (
-                <div>{dayjs(value).format('DD-MM-YYYY HH:mm:ss')}</div>
+                <div className="text-sm text-muted-foreground tabular-nums">
+                    {dayjs(value).format("MMM DD, YYYY")}
+                    <div className="text-xs text-muted-foreground/70 mt-0.5">{dayjs(value).format("HH:mm")}</div>
+                </div>
             ),
         },
         {

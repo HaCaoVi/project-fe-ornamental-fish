@@ -2,7 +2,7 @@
 
 import { cn } from "@components/lib/utils"
 import { Button } from "@components/ui/button"
-import { LayoutDashboard, BarChart3, Users, Settings, X, Crown, ShieldCheck, Columns2 } from "lucide-react"
+import { LayoutDashboard, BarChart3, Users, Settings, X, Crown, ShieldCheck, Columns2, ShoppingBag } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
 
 interface SidebarProps {
@@ -13,6 +13,7 @@ const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
     { name: "Users", href: "/dashboard/users", icon: Users },
+    { name: "Products", href: "/dashboard/products", icon: ShoppingBag },
     { name: "Categories", href: "/dashboard/categories", icon: Columns2 },
     { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ]

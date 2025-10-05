@@ -4,7 +4,7 @@ import sendRequest from "@config/fetch.config";
 import { IBackendRes, IPagination } from "../../types/backend";
 import { IUser } from "../../types/model";
 import { revalidateTag } from "next/cache";
-// import instance from "@config/axios.config";
+
 const LIST_USER_TAG = "list-user";
 
 export const listUserAPI = async (

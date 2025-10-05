@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  images: {
+    domains: [
+      'bizweb.dktcdn.net',
+      'coburgaquarium.com.au'
+    ],
+  },
 };
 
 export default nextConfig;
