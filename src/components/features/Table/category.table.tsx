@@ -246,7 +246,7 @@ const CategoryTable = ({ data, meta }: IProps) => {
                         </Button>
                     </div>
 
-                    <Card className="border border-gray-200 shadow-lg bg-white/80 dark:border-transparent dark:bg-slate-900/50 backdrop-blur-sm rounded-2xl">
+                    <Card className="border border-slate-200 shadow-lg bg-white/80 dark:border-transparent dark:bg-slate-900/50 backdrop-blur-sm rounded-2xl">
                         <CardContent className="px-6">
                             <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
                                 <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center flex-1 w-full lg:w-auto">
@@ -291,7 +291,7 @@ const CategoryTable = ({ data, meta }: IProps) => {
                         </CardContent>
                     </Card>
 
-                    <Card className="border border-gray-200 shadow-xl bg-white dark:border-transparent dark:bg-slate-900/50  rounded-2xl overflow-hidden p-5">
+                    <Card className="border border-slate-200 shadow-xl bg-white dark:border-transparent dark:bg-slate-900/50  rounded-2xl overflow-hidden p-5">
                         <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-4">
                             <CardTitle className="text-lg font-semibold text-slate-800 dark:text-slate-200">
                                 Categories Overview ({meta.total} {meta.total <= 1 ? "category" : "categories"})

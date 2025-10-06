@@ -96,7 +96,7 @@ const RegisterPage = () => {
 
     return (
         <div className="max-h-screen flex items-center justify-center bg-background p-4">
-            <Card className="w-full max-w-xl space-y-6 p-8 border-gray-200 shadow-md rounded-xl">
+            <Card className="w-full max-w-xl space-y-6 p-8 border-slate-200 shadow-md rounded-xl">
                 <CardHeader className="space-y-2">
                     <CardTitle className="text-3xl font-bold text-center">Sign Up</CardTitle>
                     <CardDescription className="text-lg text-center">
@@ -116,7 +116,7 @@ const RegisterPage = () => {
                                 placeholder="Enter your full name"
                                 value={formData.name}
                                 onChange={handleInputChange}
-                                className={`border-gray-200 h-12 text-base ${errors.name ? "border-destructive" : ""}`}
+                                className={`border-slate-200 h-12 text-base ${errors.name ? "border-destructive" : ""}`}
                             />
                             {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
                         </div>
@@ -132,7 +132,7 @@ const RegisterPage = () => {
                                 placeholder="Enter your email"
                                 value={formData.email}
                                 onChange={handleInputChange}
-                                className={`border-gray-200 h-12 text-base ${errors.email ? "border-destructive" : ""}`}
+                                className={`border-slate-200 h-12 text-base ${errors.email ? "border-destructive" : ""}`}
                             />
                             {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
                         </div>
@@ -148,7 +148,7 @@ const RegisterPage = () => {
                                 placeholder="Enter your phone number"
                                 value={formData.phone}
                                 onChange={handleInputChange}
-                                className={`border-gray-200 h-12 text-base ${errors.phone ? "border-destructive" : ""}`}
+                                className={`border-slate-200 h-12 text-base ${errors.phone ? "border-destructive" : ""}`}
                             />
                             {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
                         </div>
@@ -164,7 +164,7 @@ const RegisterPage = () => {
                                 placeholder="Create a password (min. 6 characters)"
                                 value={formData.password}
                                 onChange={handleInputChange}
-                                className={`border-gray-200 h-12 text-base ${errors.password ? "border-destructive" : ""}`}
+                                className={`border-slate-200 h-12 text-base ${errors.password ? "border-destructive" : ""}`}
                             />
                             {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
                         </div>
@@ -180,7 +180,7 @@ const RegisterPage = () => {
                                 placeholder="Confirm your password"
                                 value={formData.confirmPassword}
                                 onChange={handleInputChange}
-                                className={`border-gray-200 h-12 text-base ${errors.confirmPassword ? "border-destructive" : ""}`}
+                                className={`border-slate-200 h-12 text-base ${errors.confirmPassword ? "border-destructive" : ""}`}
                             />
                             {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword}</p>}
                         </div>

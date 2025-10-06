@@ -103,7 +103,7 @@ export function CUCategoryDetailModel({ open, onOpenChange, categories, item }: 
                     <div>
                         <label className="font-bold text-sm">Name</label>
                         <Input
-                            className="border border-gray-200"
+                            className="border border-slate-200"
                             placeholder="Enter full name" {...register("name")} />
                         {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
                     </div>

@@ -41,11 +41,11 @@ export function TableCustomize({ data, meta, columns }: DataTableProps) {
 
     return (
         <div className="w-full space-y-4">
-            <div className="rounded-lg border bg-card  border-gray-200 dark:border-transparent">
+            <div className="rounded-lg border bg-card  border-slate-200 dark:border-transparent">
                 <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
-                            <TableRow className="hover:bg-transparent border-b border-gray-200 dark:border-transparent">
+                            <TableRow className="hover:bg-transparent border-b border-slate-200 dark:border-transparent">
                                 {columns.map((column) => (
                                     <TableHead
                                         key={column.key}

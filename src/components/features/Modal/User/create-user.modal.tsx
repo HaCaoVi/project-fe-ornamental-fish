@@ -110,7 +110,7 @@ export function CreateUserModal({ open, onOpenChange, listRole }: CreateUserModa
                     <div>
                         <label className="font-bold text-sm">Full Name</label>
                         <Input
-                            className="border border-gray-200"
+                            className="border border-slate-200"
                             placeholder="Enter full name" {...register("name")} />
                         {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
                     </div>
@@ -120,14 +120,14 @@ export function CreateUserModal({ open, onOpenChange, listRole }: CreateUserModa
                         <div>
                             <label className="font-bold text-sm">Email</label>
                             <Input
-                                className="border border-gray-200"
+                                className="border border-slate-200"
                                 type="email" placeholder="Enter email" {...register("email")} />
                             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
                         </div>
                         <div>
                             <label className="font-bold text-sm">Password</label>
                             <Input
-                                className="border border-gray-200"
+                                className="border border-slate-200"
                                 type="password" placeholder="Enter password" {...register("password")} />
                             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                         </div>
@@ -212,7 +212,7 @@ export function CreateUserModal({ open, onOpenChange, listRole }: CreateUserModa
                     <div>
                         <label className="font-bold text-sm">Address</label>
                         <Input
-                            className="border border-gray-200"
+                            className="border border-slate-200"
                             placeholder="Enter address" {...register("address")} />
                         {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
                     </div>
@@ -228,7 +228,7 @@ export function CreateUserModal({ open, onOpenChange, listRole }: CreateUserModa
                                     id="status"
                                     checked={field.value}
                                     onCheckedChange={field.onChange}
-                                    className="h-6 w-13 border border-gray-200 data-[state=unchecked]:bg-gray-200"
+                                    className="h-6 w-13 border border-slate-200 data-[state=unchecked]:bg-gray-200"
                                 />
                             )}
                         />

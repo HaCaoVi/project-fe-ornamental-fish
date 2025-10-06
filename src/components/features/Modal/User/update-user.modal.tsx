@@ -116,7 +116,7 @@ export function UpdateUserModal({ open, onOpenChange, listRole, user }: UpdateUs
                     <div>
                         <label className="font-bold text-sm">Full Name</label>
                         <Input
-                            className="border border-gray-200"
+                            className="border border-slate-200"
                             placeholder="Enter full name" {...register("name")} />
                         {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
                     </div>
@@ -126,7 +126,7 @@ export function UpdateUserModal({ open, onOpenChange, listRole, user }: UpdateUs
                         <div>
                             <label className="font-bold text-sm">Email</label>
                             <Input
-                                className="border border-gray-200"
+                                className="border border-slate-200"
                                 type="email" placeholder="Enter email" value={user.email}
                                 disabled
                             />
@@ -135,7 +135,7 @@ export function UpdateUserModal({ open, onOpenChange, listRole, user }: UpdateUs
                             <label className="font-bold text-sm">Password</label>
                             <Input
                                 disabled
-                                className="border border-gray-200"
+                                className="border border-slate-200"
                                 type="password" placeholder="Enter password" value={"********"} />
                         </div>
                     </div>
@@ -219,7 +219,7 @@ export function UpdateUserModal({ open, onOpenChange, listRole, user }: UpdateUs
                     <div>
                         <label className="font-bold text-sm">Address</label>
                         <Input
-                            className="border border-gray-200"
+                            className="border border-slate-200"
                             placeholder="Enter address" {...register("address")} />
                         {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
                     </div>
@@ -235,7 +235,7 @@ export function UpdateUserModal({ open, onOpenChange, listRole, user }: UpdateUs
                                     id="status"
                                     checked={field.value}
                                     onCheckedChange={field.onChange}
-                                    className="h-6 w-13 border border-gray-200 data-[state=unchecked]:bg-gray-200"
+                                    className="h-6 w-13 border border-slate-200 data-[state=unchecked]:bg-gray-200"
                                 />
                             )}
                         />

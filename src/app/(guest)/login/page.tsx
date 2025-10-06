@@ -60,7 +60,7 @@ const LoginPage = () => {
 
     return (
         <div className="max-h-screen flex items-center justify-center bg-background">
-            <Card className="w-full max-w-xl space-y-6 p-8 border-gray-200 shadow-md rounded-xl">
+            <Card className="w-full max-w-xl space-y-6 p-8 border-slate-200 shadow-md rounded-xl">
                 <CardHeader className="space-y-2">
                     <CardTitle className="text-3xl font-bold text-center">Sign In</CardTitle>
                     <CardDescription className="text-lg text-center">
@@ -79,7 +79,7 @@ const LoginPage = () => {
                                 type="email"
                                 placeholder="Enter your email"
                                 {...register("email")}
-                                className={`border-gray-200 h-12 text-base ${errors.email ? "border-destructive" : ""}`}
+                                className={`border-slate-200 h-12 text-base ${errors.email ? "border-destructive" : ""}`}
                             />
                             {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
                         </div>
@@ -94,7 +94,7 @@ const LoginPage = () => {
                                 type="password"
                                 placeholder="Enter your password"
                                 {...register("password")}
-                                className={`border-gray-200 h-12 text-base ${errors.password ? "border-destructive" : ""}`}
+                                className={`border-slate-200 h-12 text-base ${errors.password ? "border-destructive" : ""}`}
                             />
                             {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
                         </div>

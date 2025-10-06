@@ -115,7 +115,7 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                 control={control}
                 render={({ field }) => (
                     <div className="flex flex-col gap-2">
-                        <Label className="font-bold" htmlFor="categoryDetail">Category Detail<span className="text-red-500">*</span></Label>
+                        <Label className="font-semibold" htmlFor="categoryDetail">Category Detail<span className="text-red-500">*</span></Label>
                         <Select value={field.value} onValueChange={field.onChange}>
                             <SelectTrigger className="w-full h-10 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
                                 <SelectValue placeholder="Select detail" /></SelectTrigger>
@@ -153,8 +153,8 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                                 control={control}
                                 render={({ field, fieldState }) => (
                                     <div className="space-y-2">
-                                        <Label htmlFor="name">Product Name<span className="text-red-500">*</span></Label>
-                                        <Input {...field} placeholder="Enter product name" />
+                                        <Label className="font-semibold" htmlFor="name">Product Name<span className="text-red-500">*</span></Label>
+                                        <Input className="border border-slate-200" {...field} placeholder="Enter product name" />
                                         {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                     </div>
                                 )}
@@ -164,8 +164,8 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                                 control={control}
                                 render={({ field, fieldState }) => (
                                     <div className="space-y-2">
-                                        <Label htmlFor="code">Product Code<span className="text-red-500">*</span></Label>
-                                        <Input {...field} placeholder="Enter product code" />
+                                        <Label className="font-semibold" htmlFor="code">Product Code<span className="text-red-500">*</span></Label>
+                                        <Input className="border border-slate-200" {...field} placeholder="Enter product code" />
                                         {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                     </div>
                                 )}
@@ -178,7 +178,7 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                             control={control}
                             render={({ field, fieldState }) => (
                                 <div className="space-y-2">
-                                    <Label htmlFor="description">Description<span className="text-red-500">*</span></Label>
+                                    <Label className="font-semibold" htmlFor="description">Description<span className="text-red-500">*</span></Label>
                                     <Textarea {...field} rows={3} placeholder="Enter product description..." />
                                     {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                 </div>
@@ -192,8 +192,8 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                                 control={control}
                                 render={({ field, fieldState }) => (
                                     <div className="space-y-2">
-                                        <Label htmlFor="price">Price (VND)<span className="text-red-500">*</span></Label>
-                                        <PriceInput {...field} placeholder="Enter price" />
+                                        <Label className="font-semibold" htmlFor="price">Price (VND)<span className="text-red-500">*</span></Label>
+                                        <PriceInput className="border border-slate-200" {...field} placeholder="Enter price" />
                                         {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                     </div>
                                 )}
@@ -203,8 +203,8 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                                 control={control}
                                 render={({ field, fieldState }) => (
                                     <div className="space-y-2">
-                                        <Label htmlFor="discount">Discount (VND)</Label>
-                                        <PriceInput {...field} placeholder="Enter discount" />
+                                        <Label className="font-semibold" htmlFor="discount">Discount (VND)</Label>
+                                        <PriceInput className="border border-slate-200"  {...field} placeholder="Enter discount" />
                                         {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                     </div>
                                 )}
@@ -214,8 +214,8 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                                 control={control}
                                 render={({ field, fieldState }) => (
                                     <div className="space-y-2">
-                                        <Label htmlFor="quantity">Quantity<span className="text-red-500">*</span></Label>
-                                        <Input {...field} type="number" placeholder="Enter stock quantity" />
+                                        <Label className="font-semibold" htmlFor="quantity">Quantity<span className="text-red-500">*</span></Label>
+                                        <Input className="border border-slate-200" {...field} type="number" placeholder="Enter stock quantity" />
                                         {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                     </div>
                                 )}
@@ -228,7 +228,7 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                                 control={control}
                                 render={({ field, fieldState }) => (
                                     <div className="space-y-2">
-                                        <Label>Main Image<span className="text-red-500">*</span></Label>
+                                        <Label className="font-semibold">Main Image<span className="text-red-500">*</span></Label>
                                         <FileUpload onChange={field.onChange} value={field.value} isImage />
                                         {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                     </div>
@@ -240,7 +240,7 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                                 control={control}
                                 render={({ field }) => (
                                     <div className="space-y-2">
-                                        <Label>Main Video</Label>
+                                        <Label className="font-semibold">Main Video</Label>
                                         <FileUpload onChange={field.onChange} value={field.value ?? ""} isVideo />
                                     </div>
                                 )}
@@ -251,9 +251,14 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                                 control={control}
                                 render={({ field }) => (
                                     <div className="space-y-2">
-                                        <Label>Product Status</Label>
+                                        <Label className="font-semibold">Product Status</Label>
                                         <div className="flex items-center gap-3">
-                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                            <Switch
+                                                id="status"
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                                className="h-6 w-13 border border-slate-200 data-[state=unchecked]:bg-gray-200"
+                                            />
                                             <span>{field.value ? "Activated" : "Inactive"}</span>
                                         </div>
                                     </div>
@@ -280,20 +285,20 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                                             <CategoryDetailSelect />
                                             <Controller name="color" control={control} render={({ field }) => (
                                                 <div className="flex flex-col gap-2">
-                                                    <Label className="font-bold" htmlFor="color">Color<span className="text-red-500">*</span></Label>
-                                                    <Input {...field} placeholder="Color" />
+                                                    <Label className="font-semibold" htmlFor="color">Color<span className="text-red-500">*</span></Label>
+                                                    <Input className="border border-slate-200" {...field} placeholder="Color" />
                                                 </div>
                                             )} />
                                             <Controller name="origin" control={control} render={({ field }) => (
                                                 <div className="flex flex-col gap-2">
-                                                    <Label className="font-bold" htmlFor="origin">Origin<span className="text-red-500">*</span></Label>
-                                                    <Input {...field} placeholder="Origin" />
+                                                    <Label className="font-semibold" htmlFor="origin">Origin<span className="text-red-500">*</span></Label>
+                                                    <Input className="border border-slate-200" {...field} placeholder="Origin" />
                                                 </div>
                                             )} />
                                             <Controller name="size" control={control} render={({ field }) => (
                                                 <div className="flex flex-col gap-2">
-                                                    <Label className="font-bold" htmlFor="size">Size<span className="text-red-500">*</span></Label>
-                                                    <Input {...field} placeholder="Size" />
+                                                    <Label className="font-semibold" htmlFor="size">Size<span className="text-red-500">*</span></Label>
+                                                    <Input className="border border-slate-200" {...field} placeholder="Size" />
                                                 </div>
                                             )} />
                                         </div>
@@ -307,14 +312,14 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                                             <CategoryDetailSelect />
                                             <Controller name="weight" control={control} render={({ field }) => (
                                                 <div className="flex flex-col gap-2">
-                                                    <Label className="font-bold" htmlFor="weight">Weight<span className="text-red-500">*</span></Label>
-                                                    <Input {...field} placeholder="Weight" />
+                                                    <Label className="font-semibold" htmlFor="weight">Weight<span className="text-red-500">*</span></Label>
+                                                    <Input className="border border-slate-200" {...field} placeholder="Weight" />
                                                 </div>
                                             )} />
                                             <Controller name="expirationDate" control={control} render={({ field }) => (
                                                 <div className="flex flex-col gap-2">
-                                                    <Label className="font-bold" htmlFor="weight">Expiration Date<span className="text-red-500">*</span></Label>
-                                                    <Input {...field} placeholder="Expiration Date" />
+                                                    <Label className="font-semibold" htmlFor="weight">Expiration Date<span className="text-red-500">*</span></Label>
+                                                    <Input className="border border-slate-200" {...field} placeholder="Expiration Date" />
                                                 </div>
                                             )} />
                                         </div>
@@ -328,14 +333,14 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                                             <CategoryDetailSelect />
                                             <Controller name="material" control={control} render={({ field }) => (
                                                 <div className="flex flex-col gap-2">
-                                                    <Label className="font-bold" htmlFor="material">Material<span className="text-red-500">*</span></Label>
-                                                    <Input {...field} placeholder="Material" />
+                                                    <Label className="font-semibold" htmlFor="material">Material<span className="text-red-500">*</span></Label>
+                                                    <Input className="border border-slate-200" {...field} placeholder="Material" />
                                                 </div>
                                             )} />
                                             <Controller name="dimensions" control={control} render={({ field }) => (
                                                 <div className="flex flex-col gap-2">
-                                                    <Label className="font-bold" htmlFor="dimensions">Dimensions<span className="text-red-500">*</span></Label>
-                                                    <Input {...field} placeholder="Dimensions" />
+                                                    <Label className="font-semibold" htmlFor="dimensions">Dimensions<span className="text-red-500">*</span></Label>
+                                                    <Input className="border border-slate-200" {...field} placeholder="Dimensions" />
                                                 </div>
                                             )} />
                                         </div>
