@@ -7,20 +7,17 @@ import { Pencil, Trash2, Plus, Search, Filter, Fish, Utensils, Package, OctagonA
 import { Button } from "@components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
 import dayjs from 'dayjs';
-import { useParams, useRouter, useSearchParams } from "next/navigation"
-import { ICategoryDetail, IProduct } from "../../../types/model"
+import { useRouter, useSearchParams } from "next/navigation"
+import { IProduct } from "../../../types/model"
 import { notify } from "@lib/helpers/notify"
-import { getRoleConfig } from "./user.table"
 import { Input } from "@components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
 import { useAppContext } from "@hooks/app.hook"
-import { CUCategoryDetailModel } from "../Modal/Category/create-category.modal"
 import { deleteCategoryAPI } from "@lib/api/category"
-import { DeleteButton } from "@components/lib/DeleteButton"
-import { getCategoryConfig } from "./category.table"
 import Image from "next/image"
 import { Badge } from "@components/ui/badge"
 import { calculateDiscountPercent, formatNumberFollowKAndM } from "@lib/helpers/convert.helper"
+import { ProductModal } from "../Modal/Product/create-product"
 
 interface IProps {
     data: any[]
@@ -36,10 +33,10 @@ const ProductTable = ({ data, meta }: IProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [editingCategory, setEditingCategory] = useState<ICategoryDetail | null>(null);
+    const [editingCategory, setEditingCategory] = useState<IProduct | null>(null);
 
     useEffect(() => {
-        const categoryIdFromUrl = searchParams.get("categoryId");
+        const categoryIdFromUrl = searchParams.get("category");
         if (categoryIdFromUrl) {
             setCategoryFilter(categoryIdFromUrl);
         } else if (categories?.length) {
@@ -51,14 +48,14 @@ const ProductTable = ({ data, meta }: IProps) => {
         if (!categories?.length) return;
 
         const params = new URLSearchParams(searchParams.toString());
-        const currentCategoryId = params.get('categoryId');
+        const currentCategoryId = params.get('category');
 
         if (!currentCategoryId || !currentCategoryId.length) {
-            params.set('categoryId', categories[0]._id);
+            params.set('category', categories[0]._id);
         }
 
         if (categoryFilter && categoryFilter !== currentCategoryId) {
-            params.set('categoryId', categoryFilter);
+            params.set('category', categoryFilter);
         }
 
         if (searchTerm) params.set('search', searchTerm);
@@ -332,11 +329,11 @@ const ProductTable = ({ data, meta }: IProps) => {
                                         </Select>
                                         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                                             <SelectTrigger className="w-[160px] h-10 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-                                                <SelectValue placeholder={categories.map(x => {
-                                                    if (x._id === categoryFilter) {
-                                                        return x.name
+                                                <SelectValue
+                                                    placeholder={
+                                                        categories.find(c => c._id === categoryFilter)?.name || "Select category"
                                                     }
-                                                })} />
+                                                />
                                             </SelectTrigger>
                                             <SelectContent className="rounded-xl">
                                                 {categories.length > 0 && categories.map((item) => (
@@ -370,7 +367,7 @@ const ProductTable = ({ data, meta }: IProps) => {
                     </Card>
                 </div>
             </div>
-            <CUCategoryDetailModel onOpenChange={setIsModalOpen} open={isModalOpen} categories={categories} item={editingCategory} />
+            <ProductModal onOpenChange={setIsModalOpen} open={isModalOpen} categories={categories} item={editingCategory} />
         </div>
     )
 }

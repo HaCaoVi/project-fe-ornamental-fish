@@ -2,7 +2,7 @@
 
 import sendRequest from "@config/fetch.config";
 import { IBackendRes, IPagination } from "../../types/backend";
-import { ICategories } from "../../types/model";
+import { ICategories, ICategoryDetail } from "../../types/model";
 import { revalidateTag } from "next/cache";
 
 const LIST_CATEGORY_DETAIL_TAG = "list-category-detail";
@@ -31,7 +31,7 @@ export const listCategoryDetailAPI = async (
 
     const params = new URLSearchParams(query).toString()
     const url = `/api/v1/categories/list-category-detail?${params}`
-    return sendRequest<IBackendRes<IPagination<ICategories[]>>>(url, {
+    return sendRequest<IBackendRes<IPagination<ICategoryDetail[]>>>(url, {
         method: "GET",
         next: { tags: [LIST_CATEGORY_DETAIL_TAG], revalidate: 60 },
     },)

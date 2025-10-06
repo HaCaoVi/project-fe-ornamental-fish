@@ -30,10 +30,15 @@ const sendRequest = async <T = any>(
     const accessToken = cookieStore.get("access_token")?.value;
     const refreshToken = cookieStore.get("refresh_token")?.value;
 
+    const isFormData = options.body instanceof FormData;
+
     const headers = new Headers({
         Accept: "application/json",
-        "Content-Type": "application/json; charset=utf-8",
     });
+
+    if (!isFormData) {
+        headers.set("Content-Type", "application/json; charset=utf-8");
+    }
 
     if (options.headers) {
         new Headers(options.headers).forEach((v, k) => headers.set(k, v));
@@ -49,7 +54,6 @@ const sendRequest = async <T = any>(
         credentials: "include",
     });
 
-    // Nếu bị 401 thì thử refresh token
     if (refreshToken && res.status === 401 && !headers.has(NO_RETRY_HEADER) && url !== "/api/v1/auth/login") {
         const newToken = await handleRefreshToken(refreshToken);
         if (newToken) {

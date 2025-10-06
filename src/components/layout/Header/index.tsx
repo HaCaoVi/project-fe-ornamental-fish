@@ -8,6 +8,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useAppContext, useAuthContext } from "@hooks/app.hook"
 import UserMenu from "@components/features/UserMenu"
+import { Spinner } from "@components/ui/spinner"
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -94,7 +95,7 @@ const Header = () => {
                         {pathName !== "/login" && pathName !== "/register" ?
                             isLoading ? (
                                 <div className="px-3 py-2">
-                                    <span className="text-muted-foreground text-sm">Loading...</span>
+                                    <Spinner color="gray" />
                                 </div>
                             ) : !user ? (
                                 <div className="px-3 py-2">
@@ -155,7 +156,7 @@ const Header = () => {
                             {/* Mobile Login Button */}
                             {isLoading ? (
                                 <div className="px-3 py-2">
-                                    <span className="text-muted-foreground text-sm">Loading...</span>
+                                    <Spinner color="gray" />
                                 </div>
                             ) : !user ? (
                                 <div className="px-3 py-2">

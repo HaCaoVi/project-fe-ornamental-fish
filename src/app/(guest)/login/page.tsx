@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation"
 import { ADMIN_ROLE, STAFF_ROLE } from "@lib/constants/constant"
 import { notify } from "@lib/helpers/notify"
 import { useAuthContext } from "@hooks/app.hook"
+import { Spinner } from "@components/ui/spinner"
 
 // Validation schema with zod
 const loginSchema = z.object({
@@ -39,17 +40,21 @@ const LoginPage = () => {
     })
 
     const onSubmit = async (data: LoginFormValues) => {
-        const res = await login(data.email, data.password)
+        try {
+            const res = await login(data.email, data.password)
 
-        if (res.statusCode === 201 && res.data) {
-            notify.success(res.message)
-            if (res.data.user.role.name === ADMIN_ROLE || res.data.user.role.name === STAFF_ROLE) {
-                router.replace("/dashboard")
+            if (res.statusCode === 201 && res.data) {
+                notify.success(res.message)
+                if (res.data.user.role.name === ADMIN_ROLE || res.data.user.role.name === STAFF_ROLE) {
+                    router.replace("/dashboard")
+                } else {
+                    router.replace("/")
+                }
             } else {
-                router.replace("/")
+                notify.warning(res.message)
             }
-        } else {
-            notify.warning(res.message)
+        } catch (error) {
+            console.log("Login error: ", error);
         }
     }
 
@@ -96,7 +101,7 @@ const LoginPage = () => {
 
                         {/* Submit button */}
                         <Button type="submit" className="w-full h-12 text-lg" disabled={isSubmitting}>
-                            {isSubmitting ? "Signing In..." : "Sign In"}
+                            {isSubmitting ? <Spinner color="white" /> : "Sign In"}
                         </Button>
                     </form>
 

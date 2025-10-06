@@ -2,13 +2,8 @@
 
 import { IBackendRes, ILogin, IUserLogin } from "../../types/backend";
 import sendRequest from "@config/fetch.config";
+import { cookieOptions } from "@lib/constants/constant";
 import { cookies } from "next/headers";
-
-const cookieOptions: any = {
-    httpOnly: true,
-    sameSite: "strict",
-    // secure: process.env.NODE_ENV === "production",
-};
 
 export const loginAPI = async (username: string, password: string) => {
     const cookieStore = await cookies();
