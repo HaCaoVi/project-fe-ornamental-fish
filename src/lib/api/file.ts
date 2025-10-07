@@ -50,7 +50,5 @@ export const uploadVideoAPI = async (image: File) => {
             maxAge: 60 * 60 * 24 * 30,
         });
     }
-    console.log(">>>>res: ", res);
-
     return res;
 };

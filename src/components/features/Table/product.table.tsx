@@ -105,7 +105,9 @@ const ProductTable = ({ data, meta }: IProps) => {
 
     const resetFilters = () => {
         setSearchTerm("");
-        setCategoryFilter("*");
+        setCategoryFilter(categories[0]._id);
+        setSelectedFilter("*")
+        setFilters({})
     }
 
     useEffect(() => {

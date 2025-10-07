@@ -32,3 +32,16 @@ export interface IUserLogin {
         name: string
     },
 }
+
+export interface IRequireCreateProduct {
+    name: string,
+    code: string,
+    description: string,
+    price: number,
+    discount: number,
+    quantity: number,
+    mainImageUrl: string,
+    mainVideoUrl?: string | undefined,
+    isActivated: boolean,
+    categoryDetail: string
+}

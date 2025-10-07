@@ -1,9 +1,10 @@
 "use server"
 
 import sendRequest from "@config/fetch.config";
-import { IBackendRes, IPagination } from "../../types/backend";
+import { IBackendRes, IPagination, IRequireCreateProduct } from "../../types/backend";
 import { IProduct } from "../../types/model";
 import { revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
 const LIST_PRODUCT_TAG = "list-product";
 
 export const listProductAPI = async (
@@ -30,3 +31,35 @@ export const listProductAPI = async (
         next: { tags: [LIST_PRODUCT_TAG], revalidate: 60 },
     },)
 }
+
+export const createFishAPI = async (color: string, origin: string, size: string, required: IRequireCreateProduct,) => {
+    const url = `/api/v1/products/create-fish`
+    const res = await sendRequest<IBackendRes<any>>(url, {
+        method: "POST",
+        body: JSON.stringify({
+            ...required, color, origin, size
+        }),
+    })
+    if (res.statusCode === 201) {
+        revalidateTag(LIST_PRODUCT_TAG);
+    }
+    return res;
+};
+
+
+export const createFoodAPI = async (color: string, origin: string, size: string, required: IRequireCreateProduct,) => {
+    const cookieStore = await cookies();
+    const url = `/api/v1/products/create-fish`
+    const res = await sendRequest<IBackendRes<any>>(url, {
+        method: "POST",
+        body: JSON.stringify({
+            ...required, color, origin, size
+        }),
+    })
+    if (res.statusCode === 201) {
+        revalidateTag(LIST_PRODUCT_TAG);
+        cookieStore.delete("image_upload")
+        cookieStore.delete("video_upload")
+    }
+    return res;
+};

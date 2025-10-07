@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { uploadImageAPI, uploadVideoAPI } from "@lib/api/file";
 import { cn } from "@components/lib/utils";
@@ -26,7 +26,7 @@ export default function FileUpload({ onChange, value, isImage, isVideo }: IProps
         const selectedFile = e.target.files?.[0];
         if (!selectedFile) return;
 
-        setError(null); // reset error khi chọn lại file
+        setError(null);
 
         const fileType = selectedFile.type;
         const validImage = fileType.startsWith("image/");
@@ -84,6 +84,7 @@ export default function FileUpload({ onChange, value, isImage, isVideo }: IProps
     return (
         <div className="flex flex-col items-start space-y-2">
             <Input
+                key={preview || "empty"}
                 ref={inputRef}
                 type="file"
                 className="hidden"
