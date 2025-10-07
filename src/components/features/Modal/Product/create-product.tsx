@@ -25,6 +25,7 @@ import { listCategoryDetailAPI } from "@lib/api/category"
 import { CATE_FISH, CATE_FOOD, CATE_ACCESSORY } from "@lib/constants/constant"
 import PriceInput from "@components/lib/PriceInput"
 import FileUpload from "@components/lib/FileUpload"
+import Tiptap from "@components/lib/Tiptap"
 
 // ✅ Define schema with Zod
 const productSchema = z.object({
@@ -133,7 +134,7 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="min-w-6xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="min-w-6xl max-h-[95vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Create New Product</DialogTitle>
                     <DialogDescription>
@@ -141,11 +142,9 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                     </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-4">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 py-4">
                     {/* Common Fields */}
                     <div className="space-y-4">
-                        <h3 className="text-md font-semibold text-foreground/80">General Information</h3>
-
                         {/* Name + Code */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <Controller
@@ -179,7 +178,7 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                             render={({ field, fieldState }) => (
                                 <div className="space-y-2">
                                     <Label className="font-semibold" htmlFor="description">Description<span className="text-red-500">*</span></Label>
-                                    <Textarea {...field} rows={3} placeholder="Enter product description..." />
+                                    <Tiptap className="border border-slate-200" {...field} placeholder="Enter description..." />
                                     {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                 </div>
                             )}
@@ -215,7 +214,7 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                                 render={({ field, fieldState }) => (
                                     <div className="space-y-2">
                                         <Label className="font-semibold" htmlFor="quantity">Quantity<span className="text-red-500">*</span></Label>
-                                        <Input className="border border-slate-200" {...field} type="number" placeholder="Enter stock quantity" />
+                                        <PriceInput className="border border-slate-200" {...field} placeholder="Enter stock quantity" />
                                         {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                     </div>
                                 )}
@@ -286,19 +285,19 @@ export function ProductModal({ open, onOpenChange, categories }: ProductModalPro
                                             <Controller name="color" control={control} render={({ field }) => (
                                                 <div className="flex flex-col gap-2">
                                                     <Label className="font-semibold" htmlFor="color">Color<span className="text-red-500">*</span></Label>
-                                                    <Input className="border border-slate-200" {...field} placeholder="Color" />
+                                                    <Input className="border border-slate-200" {...field} placeholder="Enter color" />
                                                 </div>
                                             )} />
                                             <Controller name="origin" control={control} render={({ field }) => (
                                                 <div className="flex flex-col gap-2">
                                                     <Label className="font-semibold" htmlFor="origin">Origin<span className="text-red-500">*</span></Label>
-                                                    <Input className="border border-slate-200" {...field} placeholder="Origin" />
+                                                    <Input className="border border-slate-200" {...field} placeholder="Enter origin" />
                                                 </div>
                                             )} />
                                             <Controller name="size" control={control} render={({ field }) => (
                                                 <div className="flex flex-col gap-2">
                                                     <Label className="font-semibold" htmlFor="size">Size<span className="text-red-500">*</span></Label>
-                                                    <Input className="border border-slate-200" {...field} placeholder="Size" />
+                                                    <Input className="border border-slate-200" {...field} placeholder="Enter size" />
                                                 </div>
                                             )} />
                                         </div>

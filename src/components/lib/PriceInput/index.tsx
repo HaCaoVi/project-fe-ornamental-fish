@@ -6,11 +6,10 @@ interface PriceInputProps {
     disabled?: boolean,
     className?: string,
     id?: string,
-    type?: string,
     placeholder?: string,
 }
 
-export default function PriceInput({ value = "0", onChange, className, id, placeholder, type, disabled = false }: PriceInputProps) {
+export default function PriceInput({ value = "0", onChange, className, id, placeholder, disabled = false }: PriceInputProps) {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const numericValue = e.target.value.replace(/\D/g, "");
         onChange(numericValue);
@@ -27,7 +26,7 @@ export default function PriceInput({ value = "0", onChange, className, id, place
             className={className}
             id={id}
             placeholder={placeholder}
-            type={type}
+            type={'text'}
             value={formatPrice(value)}
             onChange={handleChange}
         />
