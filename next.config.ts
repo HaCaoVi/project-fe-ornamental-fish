@@ -11,16 +11,6 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'bizweb.dktcdn.net',
-        port: '',
-      },
-      {
-        protocol: 'https',
-        hostname: 'coburgaquarium.com.au',
-        port: '',
-      },
-      {
-        protocol: 'https',
         hostname: 'storage.googleapis.com',
         port: '',
       }

@@ -33,6 +33,7 @@ export const listProductAPI = async (
 }
 
 export const createFishAPI = async (color: string, origin: string, size: string, required: IRequireCreateProduct,) => {
+    const cookieStore = await cookies();
     const url = `/api/v1/products/create-fish`
     const res = await sendRequest<IBackendRes<any>>(url, {
         method: "POST",
@@ -42,6 +43,8 @@ export const createFishAPI = async (color: string, origin: string, size: string,
     })
     if (res.statusCode === 201) {
         revalidateTag(LIST_PRODUCT_TAG);
+        cookieStore.delete("image_upload")
+        cookieStore.delete("video_upload")
     }
     return res;
 };

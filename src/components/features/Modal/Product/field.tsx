@@ -9,7 +9,7 @@ export const CategoryDetailSelect = React.memo(({ control, listCategoryDetail }:
         <Controller
             name="categoryDetail"
             control={control}
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
                 <div className="flex flex-col gap-2">
                     <Label className="font-semibold" htmlFor="categoryDetail">Category Detail<span className="text-red-500">*</span></Label>
                     <Select value={field.value} onValueChange={field.onChange}>
@@ -21,6 +21,7 @@ export const CategoryDetailSelect = React.memo(({ control, listCategoryDetail }:
                             ))}
                         </SelectContent>
                     </Select>
+                    {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                 </div>
             )}
         />

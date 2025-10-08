@@ -99,7 +99,7 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
             quantity: "",
             mainImageUrl: "",
             mainVideoUrl: "",
-            isActivated: false,
+            isActivated: true,
             categoryDetail: "",
         },
     })
@@ -352,6 +352,7 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
 
                     <DialogFooter>
                         <Button variant="outline" type="reset" onClick={() => {
+                            clearErrors();
                             onOpenChange(false);
                         }}>Cancel</Button>
                         <Button type="submit" disabled={isSubmitting}>
