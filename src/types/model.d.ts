@@ -67,4 +67,8 @@ export interface IProduct {
     updatedAt: Date | string;
     deletedAt?: Date | string;
     stock: IStock;
+    color: string;
+    origin: string;
+    size: string;
+    weight: string;
 }

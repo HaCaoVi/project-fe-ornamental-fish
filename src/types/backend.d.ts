@@ -35,7 +35,7 @@ export interface IUserLogin {
 
 export interface IRequireCreateProduct {
     name: string,
-    code: string,
+    code?: string,
     description: string,
     price: number,
     discount: number,

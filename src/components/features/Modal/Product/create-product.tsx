@@ -28,7 +28,7 @@ const FileUpload = dynamic(() => import("@components/lib/FileUpload"), {
     ssr: false,
     loading: () => <div className="h-24 bg-gray-100 animate-pulse rounded-lg" />,
 })
-import { createProductAPI } from "@lib/api/product"
+import { createProductAPI, updateProductAPI } from "@lib/api/product"
 import { notify } from "@lib/helpers/notify"
 import { Spinner } from "@components/ui/spinner"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
@@ -78,6 +78,7 @@ interface ProductModalProps {
 export function ProductModal({ open, onOpenChange, categories, item }: ProductModalProps) {
     const [category, setCategory] = useState<string>("")
     const [listCategoryDetail, setListCategoryDetail] = useState<ICategoryDetail[]>([])
+    const [cachedDetails, setCachedDetails] = useState<Record<string, ICategoryDetail[]>>({});
 
     const form = useForm<ProductFormValues>({
         resolver: zodResolver(productSchema),
@@ -98,9 +99,51 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
             weight: ""
         },
     })
-
     const { control, handleSubmit, clearErrors, reset, formState: { isSubmitting } } = form
-    const [cachedDetails, setCachedDetails] = useState<Record<string, ICategoryDetail[]>>({});
+
+    useEffect(() => {
+        if (open) {
+            if (item) {
+                console.log(item.description);
+
+                setCategory(String(item.categoryDetail.category))
+                reset({
+                    name: item.name,
+                    code: item.code,
+                    description: item.description,
+                    price: item.price + "",
+                    discount: item.discount + "",
+                    quantity: item.stock.quantity + "",
+                    mainImageUrl: item.mainImageUrl,
+                    mainVideoUrl: item.mainVideoUrl,
+                    isActivated: item.isActivated,
+                    categoryDetail: item.categoryDetail._id,
+                    color: item.color ?? "",
+                    origin: item.origin,
+                    size: item.size ?? "",
+                    weight: item.weight ?? "",
+                })
+            } else {
+                reset({
+                    name: "",
+                    code: "",
+                    description: "",
+                    price: "",
+                    discount: "0",
+                    quantity: "",
+                    mainImageUrl: "",
+                    mainVideoUrl: "",
+                    isActivated: true,
+                    categoryDetail: "",
+                    color: "",
+                    origin: "",
+                    size: "",
+                    weight: ""
+                });
+            }
+        }
+    }, [open, item, reset])
+
 
     useEffect(() => {
         if (!category) return;
@@ -132,15 +175,23 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                 discount: Number(discount),
                 quantity: Number(quantity),
             };
-            const res = await createProductAPI(payload)
-            if (res.statusCode === 201) {
-                clearErrors();
-                reset();
+
+            let res = null;
+            if (!item) {
+                res = await createProductAPI(payload)
+            } else {
+                const { code, ...rest } = payload
+                res = await updateProductAPI(item._id, rest)
+            }
+            if (res.statusCode === 201 || res.statusCode === 200) {
                 notify.success(res.message)
+                reset();
                 onOpenChange(false)
             } else {
                 notify.warning(res.message)
+
             }
+
         } catch (error) {
             console.error("Create product error: ", error);
         }
@@ -214,7 +265,7 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                                 render={({ field, fieldState }) => (
                                     <div className="space-y-2">
                                         <Label className="font-semibold" htmlFor="code">Product Code<span className="text-red-500">*</span></Label>
-                                        <Input className="border border-slate-200" {...field} placeholder="Enter product code" />
+                                        <Input disabled={item ? true : false} className="border border-slate-200" {...field} placeholder="Enter product code" />
                                         {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                     </div>
                                 )}
@@ -281,7 +332,7 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                             <Controller name="weight" control={control} render={({ field, fieldState }) => (
                                 <div className="flex flex-col gap-2">
                                     <Label className="font-semibold" htmlFor="size">Weight</Label>
-                                    <Input className="border border-slate-200" onChange={field.onChange} value={field.value ?? ""} placeholder="Enter size" />
+                                    <Input className="border border-slate-200" onChange={field.onChange} value={field.value ?? ""} placeholder="Enter weight" />
                                     {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                 </div>
                             )} />
@@ -335,7 +386,7 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                         render={({ field, fieldState }) => (
                             <div className="space-y-2">
                                 <Label className="font-semibold" htmlFor="description">Description<span className="text-red-500">*</span></Label>
-                                <Tiptap className="border border-slate-200" {...field} placeholder="Enter description..." />
+                                <Tiptap className="border border-slate-200" onChange={field.onChange} content={field.value} placeholder="Enter description..." />
                                 {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                             </div>
                         )}

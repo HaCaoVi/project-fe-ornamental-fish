@@ -72,7 +72,7 @@ export function CUCategoryDetailModel({ open, onOpenChange, categories, item }: 
                 }
             } else {
                 const res = await updateCategoryAPI(item._id, data.name, data.category)
-                if (res.statusCode === 201) {
+                if (res.statusCode === 200) {
                     notify.success(res.message)
                 }
             }

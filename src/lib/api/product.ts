@@ -46,3 +46,15 @@ export const createProductAPI = async (required: IRequireCreateProduct) => {
     }
     return res;
 };
+
+export const updateProductAPI = async (productId: string, required: IRequireCreateProduct) => {
+    const url = `/api/v1/products/update-product/${productId}`
+    const res = await sendRequest<IBackendRes<any>>(url, {
+        method: "PATCH",
+        body: JSON.stringify(required),
+    })
+    if (res.statusCode === 200) {
+        revalidateTag(LIST_PRODUCT_TAG);
+    }
+    return res;
+};

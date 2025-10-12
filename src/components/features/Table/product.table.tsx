@@ -33,7 +33,7 @@ const ProductTable = ({ data, meta }: IProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [editingCategory, setEditingCategory] = useState<IProduct | null>(null);
+    const [item, setItem] = useState<IProduct | null>(null);
 
     useEffect(() => {
         const categoryIdFromUrl = searchParams.get("category");
@@ -111,10 +111,10 @@ const ProductTable = ({ data, meta }: IProps) => {
     }
 
     useEffect(() => {
-        if (!isModalOpen && editingCategory) {
-            setEditingCategory(null)
+        if (!isModalOpen && item) {
+            setItem(null)
         }
-    }, [editingCategory, isModalOpen])
+    }, [item, isModalOpen])
 
     const columns: Column[] = [
         {
@@ -256,7 +256,11 @@ const ProductTable = ({ data, meta }: IProps) => {
                 return (
                     <div className="flex items-center gap-2">
                         <Button
-                            onClick={() => console.log("[v0] Edit:", row._id)}
+                            onClick={() => {
+                                setIsModalOpen(true)
+                                setItem(row)
+                            }
+                            }
                             variant="ghost"
                             size="sm"
                             className="h-9 w-9 p-0 text-muted-foreground hover:text-primary hover:bg-primary/10 dark:hover:bg-primary/20 transition-all duration-200 rounded-lg group border border-transparent hover:border-primary/20"
@@ -371,7 +375,7 @@ const ProductTable = ({ data, meta }: IProps) => {
                     </Card>
                 </div>
             </div>
-            <ProductModal onOpenChange={setIsModalOpen} open={isModalOpen} categories={categories} item={editingCategory} />
+            <ProductModal onOpenChange={setIsModalOpen} open={isModalOpen} categories={categories} item={item} />
         </div>
     )
 }
