@@ -12,14 +12,12 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@components/ui/dialog"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs"
 import { Input } from "@components/ui/input"
 import { Switch } from "@components/ui/switch"
 import { Label } from "@components/ui/label"
 import { Button } from "@components/ui/button"
 import { ICategories, ICategoryDetail, IProduct } from "../../../../types/model"
 import { listCategoryDetailAPI } from "@lib/api/category"
-import { CATE_FISH, CATE_FOOD, CATE_ACCESSORY } from "@lib/constants/constant"
 import PriceInput from "@components/lib/PriceInput"
 import dynamic from "next/dynamic";
 const Tiptap = dynamic(() => import("@components/lib/Tiptap"), {
@@ -30,11 +28,10 @@ const FileUpload = dynamic(() => import("@components/lib/FileUpload"), {
     ssr: false,
     loading: () => <div className="h-24 bg-gray-100 animate-pulse rounded-lg" />,
 })
-import { createFishAPI } from "@lib/api/product"
+import { createProductAPI } from "@lib/api/product"
 import { notify } from "@lib/helpers/notify"
-import { IBackendRes } from "../../../../types/backend"
 import { Spinner } from "@components/ui/spinner"
-import { AccessoryField, CategoryDetailSelect, FishField, FoodField } from "./field"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
 
 // ✅ Define schema with Zod
 const productSchema = z
@@ -49,15 +46,10 @@ const productSchema = z
         mainVideoUrl: z.string().optional(),
         isActivated: z.boolean(),
         categoryDetail: z.string().min(1, "Category detail is required"),
-
-        // Optional fields (depending on tab)
         color: z.string().optional(),
-        origin: z.string().optional(),
+        origin: z.string().min(1, "Origin image required"),
         size: z.string().optional(),
-        expirationDate: z.string().optional(),
         weight: z.string().optional(),
-        material: z.string().optional(),
-        dimensions: z.string().optional(),
     })
     .superRefine((data, ctx) => {
         const price = Number(data.price)
@@ -74,7 +66,6 @@ const productSchema = z
         }
     })
 
-
 type ProductFormValues = z.infer<typeof productSchema>
 
 interface ProductModalProps {
@@ -85,7 +76,7 @@ interface ProductModalProps {
 }
 
 export function ProductModal({ open, onOpenChange, categories, item }: ProductModalProps) {
-    const [activeTab, setActiveTab] = useState<string>("")
+    const [category, setCategory] = useState<string>("")
     const [listCategoryDetail, setListCategoryDetail] = useState<ICategoryDetail[]>([])
 
     const form = useForm<ProductFormValues>({
@@ -101,71 +92,47 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
             mainVideoUrl: "",
             isActivated: true,
             categoryDetail: "",
+            color: "",
+            origin: "",
+            size: "",
+            weight: ""
         },
     })
 
-    const { control, handleSubmit, setError, clearErrors, reset, formState: { isSubmitting } } = form
+    const { control, handleSubmit, clearErrors, reset, formState: { isSubmitting } } = form
     const [cachedDetails, setCachedDetails] = useState<Record<string, ICategoryDetail[]>>({});
 
     useEffect(() => {
-        if (!activeTab) return;
-        if (cachedDetails[activeTab]) {
-            setListCategoryDetail(cachedDetails[activeTab]);
+        if (!category) return;
+        if (cachedDetails[category]) {
+            setListCategoryDetail(cachedDetails[category]);
             return;
         }
         (async () => {
-            const res = await listCategoryDetailAPI(1, 100, { category: activeTab });
+            const res = await listCategoryDetailAPI(1, 100, { category: category });
             if (res.statusCode === 200 && res.data) {
                 setListCategoryDetail(res.data.result);
-                setCachedDetails(prev => ({ ...prev, [activeTab]: res.data!.result }));
+                setCachedDetails(prev => ({ ...prev, [category]: res.data!.result }));
             }
         })();
-    }, [activeTab]);
+    }, [category]);
 
     // Default first category tab
     useEffect(() => {
-        if (categories.length > 0) setActiveTab(categories[0]._id)
+        if (categories.length > 0) setCategory(categories[0]._id)
     }, [categories])
 
     // Submit handler
     const onSubmit = async (data: ProductFormValues) => {
         try {
-            const { color, origin, size, dimensions, expirationDate, material, weight, ...rest } = data;
-            let res: IBackendRes<any> = {
-                message: "",
-                statusCode: 0,
-            }
-            let hasError = false;
-            if (activeTab === CATE_FISH) {
-                if (!color || !color.trim()) {
-                    setError("color", { type: "manual", message: "Color is required" });
-                    hasError = true;
-                }
-                if (!origin || !origin.trim()) {
-                    setError("origin", { type: "manual", message: "Origin is required" });
-                    hasError = true;
-                }
-                if (!size || !size.trim()) {
-                    setError("size", { type: "manual", message: "Size is required" });
-                    hasError = true;
-                }
-
-                if (hasError) {
-                    return;
-                }
-                const { price, discount, quantity } = rest;
-                const payload = {
-                    ...rest,
-                    price: Number(price),
-                    discount: Number(discount),
-                    quantity: Number(quantity),
-                };
-                res = await createFishAPI(color!, origin!, size!, payload);
-            } else if (activeTab === CATE_FOOD) {
-
-            } else {
-
-            }
+            const { price, discount, quantity, ...rest } = data;
+            const payload = {
+                ...rest,
+                price: Number(price),
+                discount: Number(discount),
+                quantity: Number(quantity),
+            };
+            const res = await createProductAPI(payload)
             if (res.statusCode === 201) {
                 clearErrors();
                 reset();
@@ -178,8 +145,6 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
             console.error("Create product error: ", error);
         }
     }
-
-
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -194,6 +159,42 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 py-4">
                     {/* Common Fields */}
                     <div className="space-y-4">
+                        {/* Category-Specific Fields */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+
+                            <div className="flex flex-col gap-2">
+                                <Label className="font-semibold" htmlFor="categoryDetail">Category-Specific<span className="text-red-500">*</span></Label>
+                                <Select value={category} onValueChange={setCategory}>
+                                    <SelectTrigger className="w-full h-10 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                                        <SelectValue placeholder="Select detail" /></SelectTrigger>
+                                    <SelectContent className="rounded-xl">
+                                        {categories.map((d: any) => (
+                                            <SelectItem key={d._id} value={d._id}>{d.name}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <Controller
+                                name="categoryDetail"
+                                control={control}
+                                render={({ field, fieldState }) => (
+                                    <div className="flex flex-col gap-2">
+                                        <Label className="font-semibold" htmlFor="categoryDetail">Category Detail<span className="text-red-500">*</span></Label>
+                                        <Select value={field.value} onValueChange={field.onChange}>
+                                            <SelectTrigger className="w-full h-10 rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                                                <SelectValue placeholder="Select detail" /></SelectTrigger>
+                                            <SelectContent className="rounded-xl">
+                                                {listCategoryDetail.map((d: any) => (
+                                                    <SelectItem key={d._id} value={d._id}>{d.name}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
+                                    </div>
+                                )}
+                            />
+                        </div>
+
                         {/* Name + Code */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <Controller
@@ -219,20 +220,6 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                                 )}
                             />
                         </div>
-
-                        {/* Description */}
-                        <Controller
-                            name="description"
-                            control={control}
-                            render={({ field, fieldState }) => (
-                                <div className="space-y-2">
-                                    <Label className="font-semibold" htmlFor="description">Description<span className="text-red-500">*</span></Label>
-                                    <Tiptap className="border border-slate-200" {...field} placeholder="Enter description..." />
-                                    {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
-                                </div>
-                            )}
-                        />
-
                         {/* Price, Discount, Quantity */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <Controller
@@ -269,7 +256,36 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                                 )}
                             />
                         </div>
-
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+                            <Controller name="origin" control={control} render={({ field, fieldState }) => (
+                                <div className="flex flex-col gap-2">
+                                    <Label className="font-semibold" htmlFor="origin">Origin<span className="text-red-500">*</span></Label>
+                                    <Input className="border border-slate-200" onChange={field.onChange} value={field.value ?? ""} placeholder="Enter origin" />
+                                    {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
+                                </div>
+                            )} />
+                            <Controller name="color" control={control} render={({ field, fieldState }) => (
+                                <div className="flex flex-col gap-2">
+                                    <Label className="font-semibold" htmlFor="color">Color</Label>
+                                    <Input className="border border-slate-200" onChange={field.onChange} value={field.value ?? ""} placeholder="Enter color" />
+                                    {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
+                                </div>
+                            )} />
+                            <Controller name="size" control={control} render={({ field, fieldState }) => (
+                                <div className="flex flex-col gap-2">
+                                    <Label className="font-semibold" htmlFor="size">Size</Label>
+                                    <Input className="border border-slate-200" onChange={field.onChange} value={field.value ?? ""} placeholder="Enter size" />
+                                    {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
+                                </div>
+                            )} />
+                            <Controller name="weight" control={control} render={({ field, fieldState }) => (
+                                <div className="flex flex-col gap-2">
+                                    <Label className="font-semibold" htmlFor="size">Weight</Label>
+                                    <Input className="border border-slate-200" onChange={field.onChange} value={field.value ?? ""} placeholder="Enter size" />
+                                    {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
+                                </div>
+                            )} />
+                        </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
                             <Controller
                                 name="mainImageUrl"
@@ -282,7 +298,6 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                                     </div>
                                 )}
                             />
-
                             <Controller
                                 name="mainVideoUrl"
                                 control={control}
@@ -293,7 +308,6 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                                     </div>
                                 )}
                             />
-
                             <Controller
                                 name="isActivated"
                                 control={control}
@@ -314,42 +328,18 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                             />
                         </div>
                     </div>
-
-                    {/* Category-Specific Fields */}
-                    <div className="space-y-4">
-                        <h3 className="text-sm font-bold">Category-Specific</h3>
-                        <Tabs value={activeTab} onValueChange={setActiveTab}>
-                            <TabsList className="grid w-full grid-cols-3">
-                                {categories.map((c) => (
-                                    <TabsTrigger key={c._id} value={c._id}>{c.name}</TabsTrigger>
-                                ))}
-                            </TabsList>
-                            {/* Fish */}
-                            <TabsContent key="fish" value={CATE_FISH} asChild>
-                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-                                    <CategoryDetailSelect control={control} listCategoryDetail={listCategoryDetail} />
-                                    <FishField control={control} />
-                                </div>
-                            </TabsContent>
-
-                            {/* Food */}
-                            <TabsContent key="food" value={CATE_FOOD} asChild>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                                    <CategoryDetailSelect control={control} listCategoryDetail={listCategoryDetail} />
-                                    <FoodField control={control} />
-                                </div>
-                            </TabsContent>
-
-                            {/* Accessory */}
-                            <TabsContent key="accessory" value={CATE_ACCESSORY} asChild>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                    <CategoryDetailSelect control={control} listCategoryDetail={listCategoryDetail} />
-                                    <AccessoryField control={control} />
-                                </div>
-                            </TabsContent>
-                        </Tabs>
-                    </div>
-
+                    {/* Description */}
+                    <Controller
+                        name="description"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                            <div className="space-y-2">
+                                <Label className="font-semibold" htmlFor="description">Description<span className="text-red-500">*</span></Label>
+                                <Tiptap className="border border-slate-200" {...field} placeholder="Enter description..." />
+                                {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
+                            </div>
+                        )}
+                    />
                     <DialogFooter>
                         <Button variant="outline" type="reset" onClick={() => {
                             clearErrors();
@@ -362,6 +352,6 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                     </DialogFooter>
                 </form>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     )
 }

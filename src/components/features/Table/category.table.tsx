@@ -91,6 +91,8 @@ const CategoryTable = ({ data, meta }: IProps) => {
             const res = await deleteCategoryAPI(categoryDetailId)
             if (res.statusCode === 200) {
                 notify.success(res.message)
+            } else {
+                notify.warning(res.message)
             }
         } catch (error) {
             console.error("Delete category detail error: ", error);

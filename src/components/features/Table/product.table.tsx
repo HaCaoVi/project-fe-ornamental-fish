@@ -158,17 +158,19 @@ const ProductTable = ({ data, meta }: IProps) => {
         {
             key: "price",
             label: "Price (VNĐ)",
-            render: (value) => {
-                const formattedPrice =
-                    typeof value === "number"
-                        ? value.toLocaleString("vi-VN", { style: "currency", currency: "VND" })
-                        : "0 ₫";
+            render: (value, row: IProduct) => {
+                const price = typeof value === "number" ? value : 0;
+                const discount = typeof row.discount === "number" ? row.discount : 0;
+
+                const finalPrice = price - discount;
+
+                const formattedPrice = price.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+                const formattedFinalPrice = finalPrice.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
 
                 return (
-                    <div className="text-start">
-                        <span className="text-sm font-semibold text-foreground tabular-nums">
-                            {formattedPrice}
-                        </span>
+                    <div className="text-start space-x-2">
+                        {discount !== 0 && <div className="text-sm text-gray-400 line-through">{formattedPrice}</div>}
+                        <div className="text-sm font-semibold text-foreground">{formattedFinalPrice}</div>
                     </div>
                 );
             },

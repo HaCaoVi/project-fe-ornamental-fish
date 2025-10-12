@@ -10,7 +10,7 @@ const LIST_PRODUCT_TAG = "list-product";
 export const listProductAPI = async (
     current: number,
     pageSize: number,
-    categoryId: string,
+    category: string,
     filters?: any,
     search?: string,
     sort?: string,
@@ -18,7 +18,7 @@ export const listProductAPI = async (
     const query: Record<string, string> = {
         current: String(current ?? 1),
         pageSize: String(pageSize ?? 10),
-        categoryId: String(categoryId),
+        category: String(category),
     }
     if (sort) query.sort = sort
     if (filters) query.filters = typeof filters === "string" ? filters : JSON.stringify(filters)
@@ -32,32 +32,12 @@ export const listProductAPI = async (
     },)
 }
 
-export const createFishAPI = async (color: string, origin: string, size: string, required: IRequireCreateProduct,) => {
+export const createProductAPI = async (required: IRequireCreateProduct) => {
     const cookieStore = await cookies();
-    const url = `/api/v1/products/create-fish`
+    const url = `/api/v1/products/create-product`
     const res = await sendRequest<IBackendRes<any>>(url, {
         method: "POST",
-        body: JSON.stringify({
-            ...required, color, origin, size
-        }),
-    })
-    if (res.statusCode === 201) {
-        revalidateTag(LIST_PRODUCT_TAG);
-        cookieStore.delete("image_upload")
-        cookieStore.delete("video_upload")
-    }
-    return res;
-};
-
-
-export const createFoodAPI = async (color: string, origin: string, size: string, required: IRequireCreateProduct,) => {
-    const cookieStore = await cookies();
-    const url = `/api/v1/products/create-fish`
-    const res = await sendRequest<IBackendRes<any>>(url, {
-        method: "POST",
-        body: JSON.stringify({
-            ...required, color, origin, size
-        }),
+        body: JSON.stringify(required),
     })
     if (res.statusCode === 201) {
         revalidateTag(LIST_PRODUCT_TAG);
