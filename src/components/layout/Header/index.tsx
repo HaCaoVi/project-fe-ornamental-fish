@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
-import { Menu, X, Search } from "lucide-react"
+import { Menu, X, Search, ShoppingCart } from "lucide-react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useAppContext, useAuthContext } from "@hooks/app.hook"
@@ -122,7 +122,12 @@ const Header = () => {
                                     </Button>
                                 </div>
                             ) : (
-                                <UserMenu user={user} />
+                                <>
+                                    <Button className="font-medium bg-transparent transition-colors duration-200 text-foreground hover:text-white" size="icon">
+                                        <ShoppingCart className="h-5 w-5 " />
+                                    </Button>
+                                    <UserMenu user={user} />
+                                </>
                             ) : null}
                     </div>
 

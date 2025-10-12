@@ -2,7 +2,7 @@
 
 import sendRequest from "@config/fetch.config";
 import { IBackendRes, IPagination } from "../../types/backend";
-import { ICategories, ICategoryDetail } from "../../types/model";
+import { IAllFollowCategory, ICategories, ICategoryDetail } from "../../types/model";
 import { revalidateTag } from "next/cache";
 
 const LIST_CATEGORY_DETAIL_TAG = "list-category-detail";
@@ -74,4 +74,12 @@ export const deleteCategoryAPI = async (categoryDetailId: string) => {
         revalidateTag(LIST_CATEGORY_DETAIL_TAG);
     }
     return res;
+};
+
+export const listAllFollowCategoryAPI = async () => {
+    const url = `/api/v1/categories/list-all-follow-category`
+    return sendRequest<IBackendRes<IAllFollowCategory[]>>(url, {
+        method: "GET",
+        next: { revalidate: 24 * 60 * 60 * 1000 }
+    })
 };

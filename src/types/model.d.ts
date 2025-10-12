@@ -25,9 +25,14 @@ export interface IUser {
     deletedAt: string,
 }
 
+export interface IAllFollowCategory extends ICategories {
+    details: ICategoryDetail[]
+}
+
 export interface ICategories {
     _id: string,
     name: string
+    description: string
 }
 
 export interface ICategoryDetail {

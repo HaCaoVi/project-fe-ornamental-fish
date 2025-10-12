@@ -84,9 +84,9 @@ export function SpecialOffers() {
                                                 <Badge className="w-fit mb-4 bg-accent text-accent-foreground">{offer.badge}</Badge>
                                                 <h3 className="text-3xl md:text-4xl font-bold mb-3 text-balance">{offer.title}</h3>
                                                 <p className="text-muted-foreground mb-6 text-pretty">{offer.description}</p>
-                                                <div className="flex items-center gap-4 mb-6">
+                                                {/* <div className="flex items-center gap-4 mb-6">
                                                     <span className="text-4xl font-bold text-primary">{offer.discount}</span>
-                                                </div>
+                                                </div> */}
                                                 <Button size="lg" className="w-full md:w-auto rounded-full">
                                                     Shop Now
                                                 </Button>
