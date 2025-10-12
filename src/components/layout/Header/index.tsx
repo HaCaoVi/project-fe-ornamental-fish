@@ -35,9 +35,9 @@ const Header = () => {
                     <div className="flex-shrink-0">
                         <a href="/" className="flex items-center">
                             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                                <span className="text-primary-foreground font-bold text-lg">L</span>
+                                <span className="text-primary-foreground font-bold text-lg">I</span>
                             </div>
-                            <span className="ml-2 text-xl font-bold text-foreground">Logo</span>
+                            <span className="ml-2 text-xl font-bold text-foreground">IFish</span>
                         </a>
                     </div>
 

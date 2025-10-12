@@ -12,9 +12,9 @@ const Footer = () => {
                     <div className="space-y-4">
                         <div className="flex items-center space-x-2">
                             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                                <span className="text-primary-foreground font-bold text-sm">S</span>
+                                <span className="text-primary-foreground font-bold text-sm">I</span>
                             </div>
-                            <span className="text-xl font-bold text-foreground">ShopMart</span>
+                            <span className="text-xl font-bold text-foreground">IFish</span>
                         </div>
                         <p className="text-muted-foreground text-sm leading-relaxed">
                             The leading online store with thousands of high-quality products and excellent customer service.
@@ -90,7 +90,7 @@ const Footer = () => {
                 </div>
                 <div className="mt-12 pt-8 border-t border-border">
                     <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                        <p className="text-sm text-muted-foreground">© 2025 ShopMart. All rights reserved.</p>
+                        <p className="text-sm text-muted-foreground">© 2025 IFish. All rights reserved.</p>
                     </div>
                 </div>
             </div>
