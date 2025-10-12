@@ -306,7 +306,7 @@ const ProductTable = ({ data, meta }: IProps) => {
                                     <div className="relative flex-1 max-w-md w-full sm:w-auto">
                                         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
                                         <Input
-                                            placeholder="Search roles and descriptions..."
+                                            placeholder="Search..."
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
                                             className="pl-12 h-12 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 transition-all duration-200"

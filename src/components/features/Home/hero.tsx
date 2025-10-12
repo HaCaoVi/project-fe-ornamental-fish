@@ -3,17 +3,17 @@ import { ArrowRight } from "lucide-react"
 
 export function Hero() {
     return (
-        <section className="relative h-[600px] md:h-[700px] flex items-center justify-center overflow-hidden">
+        <section className="relative h-[600px] md:h-[900px] flex items-center justify-center overflow-hidden">
             <div
                 className="absolute inset-0 z-0"
                 style={{
                     backgroundImage:
-                        "url(/placeholder.svg?height=700&width=1920&query=beautiful+colorful+tropical+fish+swimming+in+vibrant+coral+reef+aquarium)",
+                        "url(/images/banner.jpg)",
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                 }}
             >
-                <div className="absolute inset-0 bg-gradient-to-b from-primary/40 via-primary/30 to-background/90" />
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/40 via-primary/20 to-background/60" />
             </div>
 
             <div className="container relative z-10 mx-auto px-4 text-center">

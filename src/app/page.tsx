@@ -9,7 +9,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <div >
+      <div>
         <Hero />
         <FeaturedCategories />
         <SpecialOffers />
