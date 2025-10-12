@@ -18,6 +18,8 @@ import Image from "next/image"
 import { Badge } from "@components/ui/badge"
 import { calculateDiscountPercent, formatNumberFollowKAndM } from "@lib/helpers/convert.helper"
 import { ProductModal } from "../Modal/Product/create-product"
+import { DeleteButton } from "@components/lib/DeleteButton"
+import { deleteProductAPI } from "@lib/api/product"
 
 interface IProps {
     data: any[]
@@ -92,11 +94,13 @@ const ProductTable = ({ data, meta }: IProps) => {
         }
     };
 
-    const handleDeleteCategoryDetail = async (categoryDetailId: string) => {
+    const handleDeleteProduct = async (productId: string) => {
         try {
-            const res = await deleteCategoryAPI(categoryDetailId)
+            const res = await deleteProductAPI(productId)
             if (res.statusCode === 200) {
                 notify.success(res.message)
+            } else {
+                notify.warning(res.message)
             }
         } catch (error) {
             console.error("Delete category detail error: ", error);
@@ -269,17 +273,7 @@ const ProductTable = ({ data, meta }: IProps) => {
                             <Pencil className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
                             <span className="sr-only">Edit product</span>
                         </Button>
-
-                        <Button
-                            onClick={() => console.log("[v0] Delete:", row._id)}
-                            variant="ghost"
-                            size="sm"
-                            className="h-9 w-9 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 rounded-lg group border border-transparent hover:border-destructive/20"
-                            title="Delete product"
-                        >
-                            <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-                            <span className="sr-only">Delete product</span>
-                        </Button>
+                        <DeleteButton id={row._id} onDelete={handleDeleteProduct} />
                     </div>
                 )
             },

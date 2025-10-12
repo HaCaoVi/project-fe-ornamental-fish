@@ -221,7 +221,6 @@ const CategoryTable = ({ data, meta }: IProps) => {
                             <span className="sr-only">Edit category detail</span>
 
                         </Button>
-
                         <DeleteButton id={row._id} onDelete={handleDeleteCategoryDetail} />
                     </div >
                 )

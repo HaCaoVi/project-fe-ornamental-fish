@@ -58,3 +58,14 @@ export const updateProductAPI = async (productId: string, required: IRequireCrea
     }
     return res;
 };
+
+export const deleteProductAPI = async (productId: string) => {
+    const url = `/api/v1/products/delete-product/${productId}`
+    const res = await sendRequest<IBackendRes<any>>(url, {
+        method: "DELETE",
+    })
+    if (res.statusCode === 200) {
+        revalidateTag(LIST_PRODUCT_TAG);
+    }
+    return res;
+};

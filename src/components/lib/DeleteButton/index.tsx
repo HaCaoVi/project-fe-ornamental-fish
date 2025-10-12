@@ -27,7 +27,7 @@ export function DeleteButton({ id, onDelete }: DeleteButtonProps) {
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="h-9 w-9 p-0 text-slate-500 hover:text-red-600 hover:bg-red-50 
+                    className="h-9 w-9 p-0 text-muted-foreground hover:text-red-600 hover:bg-red-50 
           dark:hover:bg-red-950/30 dark:hover:text-red-400 transition-all duration-200 
           rounded-lg group border border-transparent hover:border-red-200 dark:hover:border-red-800"
                     title="Delete item"

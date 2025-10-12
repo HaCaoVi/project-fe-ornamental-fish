@@ -65,19 +65,19 @@ export function CUCategoryDetailModel({ open, onOpenChange, categories, item }: 
     const onSubmit = async (data: CategoryDetailFormData) => {
         setIsSubmitting(true)
         try {
+            let res = null;
             if (!item) {
-                const res = await createCategoryAPI(data.name, data.category)
-                if (res.statusCode === 201) {
-                    notify.success(res.message)
-                }
+                res = await createCategoryAPI(data.name, data.category)
             } else {
-                const res = await updateCategoryAPI(item._id, data.name, data.category)
-                if (res.statusCode === 200) {
-                    notify.success(res.message)
-                }
+                res = await updateCategoryAPI(item._id, data.name, data.category)
             }
-            reset()
-            onOpenChange(false)
+            if (res.statusCode === 201 || res.statusCode === 200) {
+                notify.success(res.message)
+                reset()
+                onOpenChange(false)
+            } else {
+                notify.warning(res.message)
+            }
         } catch (error) {
             console.error("Error creating user:", error)
         } finally {
