@@ -25,6 +25,8 @@ const Header = () => {
         return router.push("/login")
     }
 
+    const isActive = (path: string) => pathName === path;
+
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,13 +43,22 @@ const Header = () => {
 
                     {/* Desktop Navigation */}
                     <nav className="hidden md:flex items-center space-x-8">
-                        <Link href="/" className="text-foreground hover:text-primary transition-colors duration-200 font-medium">
+                        <Link
+                            href="/"
+                            className={`font-medium transition-colors duration-200 ${isActive("/") ? "text-primary" : "text-foreground hover:text-primary"
+                                }`}
+                        >
                             Home
                         </Link>
+
                         <div className="relative group">
-                            <button className="text-foreground hover:text-primary transition-colors duration-200 font-medium">
+                            <button
+                                className={`font-medium transition-colors duration-200 ${pathName.startsWith("/products") ? "text-primary" : "text-foreground hover:text-primary"
+                                    }`}
+                            >
                                 Product
                             </button>
+
                             {/* Dropdown menu */}
                             <div className="absolute left-1/2 -translate-x-1/2 mt-5 w-48 bg-background border border-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                                 <ul className="py-2">
@@ -56,7 +67,10 @@ const Header = () => {
                                             <li key={cat._id}>
                                                 <Link
                                                     href={`/products/${cat._id}`}
-                                                    className="block px-4 py-2 text-foreground hover:bg-muted hover:text-primary transition-colors duration-150"
+                                                    className={`block px-4 py-2 transition-colors duration-150 ${pathName === `/products/${cat._id}`
+                                                        ? "text-primary bg-muted"
+                                                        : "text-foreground hover:bg-muted hover:text-primary"
+                                                        }`}
                                                 >
                                                     {cat.name}
                                                 </Link>
@@ -68,15 +82,19 @@ const Header = () => {
                                 </ul>
                             </div>
                         </div>
+
                         <Link
                             href="/services"
-                            className="text-foreground hover:text-primary transition-colors duration-200 font-medium"
+                            className={`font-medium transition-colors duration-200 ${isActive("/services") ? "text-primary" : "text-foreground hover:text-primary"
+                                }`}
                         >
                             Blog
                         </Link>
+
                         <Link
                             href="/contact"
-                            className="text-foreground hover:text-primary transition-colors duration-200 font-medium"
+                            className={`font-medium transition-colors duration-200 ${isActive("/contact") ? "text-primary" : "text-foreground hover:text-primary"
+                                }`}
                         >
                             Contact
                         </Link>
