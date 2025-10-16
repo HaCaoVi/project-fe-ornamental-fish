@@ -14,7 +14,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
     return (
-        <Link href={`/products/detail/${product._id}`}>
+        <Link href={`/products/detail/${product.code}`}>
             <Card className="group overflow-hidden backdrop-blur-sm bg-card/80 border-border/50 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 cursor-pointer">
                 <CardContent className="p-0">
                     <div className="relative aspect-square overflow-hidden bg-muted">
@@ -33,7 +33,7 @@ export function ProductCard({ product }: ProductCardProps) {
       shadow-md backdrop-blur-sm
     "
                             >
-                                Hết hàng
+                                Out of stock
                             </Badge>
                         ) : (
                             <Badge
@@ -44,10 +44,9 @@ export function ProductCard({ product }: ProductCardProps) {
       shadow-md backdrop-blur-sm
     "
                             >
-                                Còn hàng
+                                In stock
                             </Badge>
                         )}
-
                     </div>
 
                     <div className="p-4 space-y-2">
@@ -62,8 +61,9 @@ export function ProductCard({ product }: ProductCardProps) {
                             dangerouslySetInnerHTML={{ __html: product.description }}
                         />
 
-                        <div className="flex items-center justify-between pt-2">
-                            <span className="text-2xl font-bold text-primary">{product.price.toLocaleString("vi-VN")}đ</span>
+                        <div className="flex items-center justify-start gap-2 pt-2">
+                            {product.discount !== 0 && <div className="text-2xl text-gray-400 line-through">{product.price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</div>}
+                            <div className={`text-2xl font-bold ${product.discount === 0 ? "text-primary" : "text-red-500"} `}>{(product.price - product.discount).toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</div>
                         </div>
                     </div>
                 </CardContent>
@@ -78,7 +78,7 @@ export function ProductCard({ product }: ProductCardProps) {
                         }}
                     >
                         <ShoppingCart className="h-4 w-4" />
-                        {product.stock.quantity > 0 ? "Thêm Vào Giỏ" : "Hết Hàng"}
+                        {product.stock.quantity > 0 ? "Thêm Vào Giỏ" : "Out of stock"}
                     </Button>
                 </CardFooter>
             </Card>

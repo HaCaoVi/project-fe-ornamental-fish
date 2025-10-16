@@ -6,24 +6,10 @@ import { Badge } from "@components/ui/badge"
 import { Card } from "@components/ui/card"
 import { ShoppingCart, Heart, Share2, Ruler, Palette, MapPin, Package } from "lucide-react"
 import { ProductImageViewer } from "./product-image-viewer"
-
-interface ProductDetail {
-    id: number
-    name: string
-    productCode: string
-    description: string
-    price: number
-    color: string
-    size: string
-    origin: string
-    image: string
-    mainVideoUrl?: string
-    inStock: boolean
-    detailedDescription: string
-}
+import { IProduct } from "../../../types/model"
 
 interface ProductDetailViewProps {
-    product: ProductDetail
+    product: IProduct
 }
 
 export function ProductDetailView({ product }: ProductDetailViewProps) {
@@ -32,25 +18,46 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
             {/* Left: Product Image */}
-            <ProductImageViewer imageUrl={product.image} videoUrl={product.mainVideoUrl} productName={product.name} />
+            <ProductImageViewer imageUrl={product.mainImageUrl} videoUrl={product.mainVideoUrl} productName={product.name} />
 
             {/* Right: Product Info */}
             <div className="space-y-6">
                 <div>
                     <h1 className="text-4xl font-bold text-foreground mb-2">{product.name}</h1>
-                    <p className="text-muted-foreground">Mã sản phẩm: {product.productCode}</p>
+                    <p className="text-muted-foreground">Product code: {product.code}</p>
                 </div>
 
                 <div className="flex items-center gap-3">
-                    {product.inStock ? (
-                        <Badge className="bg-accent text-accent-foreground px-4 py-1">Còn Hàng</Badge>
+                    {product.stock.quantity === 0 ? (
+                        <Badge
+                            className="
+      absolute top-3 right-3 
+      bg-red-500/90 text-white 
+      rounded-full px-3 py-1.5 text-xs font-semibold 
+      shadow-md backdrop-blur-sm
+    "
+                        >
+                            Out of stock
+                        </Badge>
                     ) : (
-                        <Badge className="bg-destructive text-destructive-foreground px-4 py-1">Hết Hàng</Badge>
+                        <Badge
+                            className="
+      absolute top-3 right-3 
+      bg-green-500/90 text-white 
+      rounded-full px-3 py-1.5 text-xs font-semibold 
+      shadow-md backdrop-blur-sm
+    "
+                        >
+                            In stock
+                        </Badge>
                     )}
+
                 </div>
 
-                <div className="text-4xl font-bold text-primary">{product.price.toLocaleString("vi-VN")}đ</div>
-
+                <div className="flex items-center justify-start gap-2">
+                    {product.discount !== 0 && <div className="text-4xl text-gray-400 line-through">{product.price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</div>}
+                    <div className={`text-4xl font-bold ${product.discount === 0 ? "text-primary" : "text-red-500"} `}>{(product.price - product.discount).toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</div>
+                </div>
                 {/* Product Attributes */}
                 <Card className="p-6 bg-card/50 backdrop-blur-sm border-border/50">
                     <div className="grid grid-cols-2 gap-4">
@@ -59,7 +66,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                                 <Palette className="h-5 w-5 text-primary" />
                             </div>
                             <div>
-                                <p className="text-sm text-muted-foreground">Màu sắc</p>
+                                <p className="text-sm text-muted-foreground">Color</p>
                                 <p className="font-semibold text-foreground">{product.color}</p>
                             </div>
                         </div>
@@ -69,7 +76,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                                 <Ruler className="h-5 w-5 text-primary" />
                             </div>
                             <div>
-                                <p className="text-sm text-muted-foreground">Kích thước</p>
+                                <p className="text-sm text-muted-foreground">Size</p>
                                 <p className="font-semibold text-foreground">{product.size}</p>
                             </div>
                         </div>
@@ -79,7 +86,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                                 <MapPin className="h-5 w-5 text-primary" />
                             </div>
                             <div>
-                                <p className="text-sm text-muted-foreground">Xuất xứ</p>
+                                <p className="text-sm text-muted-foreground">Origin</p>
                                 <p className="font-semibold text-foreground">{product.origin}</p>
                             </div>
                         </div>
@@ -89,8 +96,8 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                                 <Package className="h-5 w-5 text-primary" />
                             </div>
                             <div>
-                                <p className="text-sm text-muted-foreground">Tình trạng</p>
-                                <p className="font-semibold text-foreground">{product.inStock ? "Còn hàng" : "Hết hàng"}</p>
+                                <p className="text-sm text-muted-foreground">Status</p>
+                                <p className="font-semibold text-foreground">{product.stock.quantity > 0 ? "In stock" : "Out of stock"}</p>
                             </div>
                         </div>
                     </div>
@@ -98,7 +105,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
 
                 {/* Quantity Selector */}
                 <div className="flex items-center gap-4">
-                    <span className="text-foreground font-medium">Số lượng:</span>
+                    <span className="text-foreground font-medium">Quantity:</span>
                     <div className="flex items-center border border-border rounded-lg">
                         <button
                             onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -115,37 +122,36 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
 
                 {/* Action Buttons */}
                 <div className="flex gap-4">
-                    <Button size="lg" className="flex-1 gap-2" disabled={!product.inStock}>
+                    <Button size="lg" className="flex-1 gap-2" disabled={product.stock.quantity === 0}>
                         <ShoppingCart className="h-5 w-5" />
-                        Thêm Vào Giỏ
+                        Add to Cart
                     </Button>
                     <Button
                         size="lg"
                         variant="default"
                         className="flex-1 bg-accent hover:bg-accent/90"
-                        disabled={!product.inStock}
+                        disabled={product.stock.quantity === 0}
                     >
-                        Mua Ngay
+                        Buy Now
                     </Button>
                 </div>
 
                 <div className="flex gap-3">
                     <Button variant="outline" size="lg" className="flex-1 gap-2 bg-transparent">
                         <Heart className="h-5 w-5" />
-                        Yêu Thích
+                        Favourite
                     </Button>
                     <Button variant="outline" size="lg" className="flex-1 gap-2 bg-transparent">
                         <Share2 className="h-5 w-5" />
-                        Chia Sẻ
+                        Share
                     </Button>
                 </div>
-
                 {/* Detailed Description */}
                 <Card className="p-6 bg-card/50 backdrop-blur-sm border-border/50">
-                    <h2 className="text-2xl font-bold text-foreground mb-4">Mô Tả Chi Tiết</h2>
+                    <h2 className="text-2xl font-bold text-foreground mb-4">Detailed Description</h2>
                     <div
                         className="prose prose-sm max-w-none text-foreground prose-headings:text-foreground prose-h3:text-xl prose-h3:font-bold prose-h3:mb-3 prose-h4:text-lg prose-h4:font-semibold prose-h4:mb-2 prose-p:mb-3 prose-ul:mb-3 prose-li:text-foreground prose-strong:text-primary"
-                        dangerouslySetInnerHTML={{ __html: product.detailedDescription }}
+                        dangerouslySetInnerHTML={{ __html: product.description }}
                     />
                 </Card>
             </div>

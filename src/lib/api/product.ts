@@ -69,3 +69,25 @@ export const deleteProductAPI = async (productId: string) => {
     }
     return res;
 };
+
+export const getProductByCode = async (
+    code: string
+) => {
+    const url = `/api/v1/products/get-product/${code}`
+    return sendRequest<IBackendRes<IProduct>>(url, {
+        method: "GET",
+        next: { revalidate: 60 },
+    },)
+}
+
+export const listRecommendProduct = async (
+    categoryDetailId: string, exclude: string
+) => {
+    console.log(categoryDetailId);
+
+    const url = `/api/v1/products/list-recommend-product?categoryDetailId=${categoryDetailId}&exclude=${exclude}`
+    return sendRequest<IBackendRes<IProduct[]>>(url, {
+        method: "GET",
+        next: { revalidate: 60 },
+    },)
+}
