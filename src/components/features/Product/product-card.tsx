@@ -6,43 +6,62 @@ import { Card, CardContent, CardFooter } from "@components/ui/card"
 import { Button } from "@components/ui/button"
 import { Badge } from "@components/ui/badge"
 import { ShoppingCart } from "lucide-react"
-
-interface Product {
-    id: number
-    name: string
-    description: string
-    price: number
-    image: string
-    inStock: boolean
-}
+import { IProduct } from "../../../types/model"
 
 interface ProductCardProps {
-    product: Product
+    product: IProduct
 }
 
 export function ProductCard({ product }: ProductCardProps) {
     return (
-        <Link href={`/products/detail/${product.id}`}>
+        <Link href={`/products/detail/${product._id}`}>
             <Card className="group overflow-hidden backdrop-blur-sm bg-card/80 border-border/50 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 cursor-pointer">
                 <CardContent className="p-0">
                     <div className="relative aspect-square overflow-hidden bg-muted">
                         <Image
-                            src={product.image || "/placeholder.svg"}
+                            src={product.mainImageUrl || "/placeholder.svg"}
                             alt={product.name}
                             fill
                             className="object-cover transition-transform duration-500 group-hover:scale-110"
                         />
-                        {!product.inStock && (
-                            <Badge className="absolute top-3 right-3 bg-destructive text-destructive-foreground">Hết Hàng</Badge>
+                        {product.stock.quantity === 0 ? (
+                            <Badge
+                                className="
+      absolute top-3 right-3 
+      bg-red-500/90 text-white 
+      rounded-full px-3 py-1.5 text-xs font-semibold 
+      shadow-md backdrop-blur-sm
+    "
+                            >
+                                Hết hàng
+                            </Badge>
+                        ) : (
+                            <Badge
+                                className="
+      absolute top-3 right-3 
+      bg-green-500/90 text-white 
+      rounded-full px-3 py-1.5 text-xs font-semibold 
+      shadow-md backdrop-blur-sm
+    "
+                            >
+                                Còn hàng
+                            </Badge>
                         )}
-                        {product.inStock && (
-                            <Badge className="absolute top-3 right-3 bg-accent text-accent-foreground">Còn Hàng</Badge>
-                        )}
+
                     </div>
 
                     <div className="p-4 space-y-2">
                         <h3 className="font-semibold text-lg text-foreground line-clamp-1">{product.name}</h3>
-                        <p className="text-sm text-muted-foreground line-clamp-2">{product.description}</p>
+                        <div
+                            className="prose prose-sm max-w-none text-foreground 
+    prose-headings:text-foreground 
+    prose-h3:text-xl prose-h3:font-bold prose-h3:mb-3 
+    prose-h4:text-lg prose-h4:font-semibold prose-h4:mb-2 
+    prose-p:mb-3 prose-ul:mb-3 prose-li:text-foreground prose-strong:text-primary
+    line-clamp-2 overflow-hidden"
+                            dangerouslySetInnerHTML={{ __html: product.description }}
+                        />
+
                         <div className="flex items-center justify-between pt-2">
                             <span className="text-2xl font-bold text-primary">{product.price.toLocaleString("vi-VN")}đ</span>
                         </div>
@@ -52,15 +71,14 @@ export function ProductCard({ product }: ProductCardProps) {
                 <CardFooter className="p-4 pt-0">
                     <Button
                         className="w-full gap-2"
-                        disabled={!product.inStock}
-                        variant={product.inStock ? "default" : "secondary"}
+                        disabled={product.stock.quantity === 0}
+                        variant={product.stock.quantity > 0 ? "default" : "secondary"}
                         onClick={(e) => {
                             e.preventDefault()
-                            // Add to cart logic here
                         }}
                     >
                         <ShoppingCart className="h-4 w-4" />
-                        {product.inStock ? "Thêm Vào Giỏ" : "Hết Hàng"}
+                        {product.stock.quantity > 0 ? "Thêm Vào Giỏ" : "Hết Hàng"}
                     </Button>
                 </CardFooter>
             </Card>

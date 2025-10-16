@@ -3,6 +3,9 @@
 import { Button } from "@components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { ProductCard } from "./product-card"
+import { IProduct } from "../../../types/model"
+import { IMeta } from "../../../types/backend"
+import PaginationCustomize from "@components/lib/Pagination"
 
 const products = [
     {
@@ -79,39 +82,25 @@ const products = [
     },
 ]
 
-export function ProductGrid() {
+interface IProps {
+    data: IProduct[],
+    meta: IMeta
+}
+
+const ProductGrid = ({ data, meta }: IProps) => {
     return (
         <div className="space-y-8">
             {/* Product Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {products.map((product) => (
-                    <ProductCard key={product.id} product={product} />
+                {data && data.length > 0 && data.map((product) => (
+                    <ProductCard key={product._id} product={product} />
                 ))}
             </div>
 
             {/* Pagination */}
-            <div className="flex items-center justify-center gap-2 pt-4">
-                <Button variant="outline" size="icon" disabled>
-                    <ChevronLeft className="h-4 w-4" />
-                </Button>
-
-                <Button variant="default" size="sm" className="min-w-10">
-                    1
-                </Button>
-                <Button variant="outline" size="sm" className="min-w-10 bg-transparent">
-                    2
-                </Button>
-                <Button variant="outline" size="sm" className="min-w-10 bg-transparent">
-                    3
-                </Button>
-                <Button variant="outline" size="sm" className="min-w-10 bg-transparent">
-                    4
-                </Button>
-
-                <Button variant="outline" size="icon">
-                    <ChevronRight className="h-4 w-4" />
-                </Button>
-            </div>
+            <PaginationCustomize meta={meta} />
         </div>
     )
 }
+
+export default ProductGrid;

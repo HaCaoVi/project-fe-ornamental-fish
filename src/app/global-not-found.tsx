@@ -77,10 +77,10 @@ const GlobalNotFoundPage = () => {
                                             size="lg"
                                             className="group border-2 border-slate-300 dark:border-slate-600 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all duration-300 bg-transparent"
                                         >
-                                            <Link href="javascript:history.back()" className="flex items-center gap-2">
-                                                {/* <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" /> */}
+                                            {/* <Link href="javascript:history.back()" className="flex items-center gap-2">
+                                                {/* <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" /> 
                                                 Go Back
-                                            </Link>
+                                            </Link> */}
                                         </Button>
                                     </div>
                                 </div>
