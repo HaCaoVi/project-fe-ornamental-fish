@@ -7,18 +7,11 @@ import { Checkbox } from "@components/ui/checkbox"
 import { Slider } from "@components/ui/slider"
 import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
-import { Search } from "lucide-react"
+import { Search, TicketCheck } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAppContext } from "@hooks/app.hook"
 import { ICategoryDetail } from "../../../types/model"
-
-const fishTypes = [
-    { id: "betta", label: "Betta Fish" },
-    { id: "guppy", label: "Guppy" },
-    { id: "koi", label: "Koi Fish" },
-    { id: "goldfish", label: "Goldfish" },
-    { id: "tetra", label: "Tetra Fish" },
-]
+import { Switch } from "@components/ui/switch"
 
 export function ProductFilters({ categoryId }: any) {
     const { categories } = useAppContext()
@@ -27,7 +20,9 @@ export function ProductFilters({ categoryId }: any) {
     const [priceRange, setPriceRange] = useState([0, 5000000])
     const [searchTerm, setSearchTerm] = useState("")
     const [categoryDetailFilter, setCategoryFilter] = useState<string[]>([]);
-    const [types, setTypes] = useState<ICategoryDetail[]>([])
+    const [types, setTypes] = useState<ICategoryDetail[]>([]);
+    const [isSale, setIsSale] = useState<boolean>(false);
+
 
     useEffect(() => {
         if (categories && categories.length > 0) {
@@ -49,6 +44,7 @@ export function ProductFilters({ categoryId }: any) {
     const handleApplyFilter = () => {
         const params = new URLSearchParams(searchParams.toString());
         let filters: any = {};
+        console.log(isSale, "is");
 
         if (searchTerm) params.set('search', searchTerm);
         else params.delete('search');
@@ -59,6 +55,9 @@ export function ProductFilters({ categoryId }: any) {
         if (categoryDetailFilter && categoryDetailFilter.length > 0) {
             filters.categoryDetail = categoryDetailFilter;
         }
+
+        filters.sale = isSale;
+
         params.set("filters", JSON.stringify(filters));
         const newUrl = `?${params.toString()}`;
         const currentUrl = `?${searchParams.toString()}`;
@@ -84,7 +83,16 @@ export function ProductFilters({ categoryId }: any) {
                         />
                     </div>
                 </div>
+                <div className="flex items-center gap-3">
+                    <Label className="font-semibold"><TicketCheck className="text-slate-400" />Sale</Label>
 
+                    <Switch
+                        id="status"
+                        checked={isSale}
+                        onCheckedChange={setIsSale}
+                        className="h-6 w-13 border border-slate-200 data-[state=unchecked]:bg-gray-200"
+                    />
+                </div>
                 {/* Fish Type Filter */}
                 <div className="space-y-3">
                     <Label className="text-sm font-semibold">Type</Label>
