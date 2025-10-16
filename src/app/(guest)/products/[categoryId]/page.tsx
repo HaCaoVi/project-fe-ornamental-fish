@@ -27,7 +27,7 @@ const ProductsPage = async ({ params, searchParams }: any) => {
 
             <div className="flex flex-col lg:flex-row gap-8">
                 <aside className="lg:w-64 flex-shrink-0">
-                    <ProductFilters />
+                    <ProductFilters categoryId={categoryId} />
                 </aside>
 
                 <div className="flex-1">

@@ -1,23 +1,23 @@
 "use client";
 
 import { createContext, useState, ReactNode, useEffect } from "react";
-import { ICategories } from "../types/model";
-import { listCategoryAPI } from "@lib/api/category";
+import { IAllFollowCategory } from "../types/model";
+import { listAllFollowCategoryAPI, } from "@lib/api/category";
 
 interface AppContextType {
-    categories: ICategories[] | [];
-    setCategories: (v: ICategories[]) => void;
+    categories: IAllFollowCategory[] | [];
+    setCategories: (v: IAllFollowCategory[]) => void;
 }
 
 export const AppContext = createContext<AppContextType | null>(null);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-    const [categories, setCategories] = useState<ICategories[] | []>([]);
+    const [categories, setCategories] = useState<IAllFollowCategory[] | []>([]);
 
     useEffect(() => {
         (async () => {
             try {
-                const res = await listCategoryAPI();
+                const res = await listAllFollowCategoryAPI();
                 console.log(res);
                 if (res.statusCode === 200 && res.data) {
                     setCategories(res.data)
@@ -31,7 +31,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     return (
         <AppContext.Provider
             value={{
-                categories, setCategories
+                categories, setCategories,
             }}
         >
             {children}

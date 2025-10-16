@@ -1,14 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
 import { Label } from "@components/ui/label"
 import { Checkbox } from "@components/ui/checkbox"
 import { Slider } from "@components/ui/slider"
-import { Switch } from "@components/ui/switch"
 import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
 import { Search } from "lucide-react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useAppContext } from "@hooks/app.hook"
+import { ICategoryDetail } from "../../../types/model"
 
 const fishTypes = [
     { id: "betta", label: "Betta Fish" },
@@ -18,11 +20,52 @@ const fishTypes = [
     { id: "tetra", label: "Tetra Fish" },
 ]
 
-export function ProductFilters() {
+export function ProductFilters({ categoryId }: any) {
+    const { categories } = useAppContext()
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const [priceRange, setPriceRange] = useState([0, 5000000])
-    const [inStockOnly, setInStockOnly] = useState(false)
     const [searchTerm, setSearchTerm] = useState("")
+    const [categoryDetailFilter, setCategoryFilter] = useState<string[]>([]);
+    const [types, setTypes] = useState<ICategoryDetail[]>([])
 
+    useEffect(() => {
+        if (categories && categories.length > 0) {
+            const filterType = categories.find(x => x._id === categoryId);
+            setTypes(filterType?.details!);
+        }
+    }, [categories])
+
+    const handleCheckboxChange = (id: string, checked: boolean) => {
+        setCategoryFilter((prev: string[]) => {
+            if (checked) {
+                return [...prev, id];
+            } else {
+                return prev.filter((item) => item !== id);
+            }
+        });
+    };
+
+    const handleApplyFilter = () => {
+        const params = new URLSearchParams(searchParams.toString());
+        let filters: any = {};
+
+        if (searchTerm) params.set('search', searchTerm);
+        else params.delete('search');
+
+        if (priceRange && priceRange.length === 2) {
+            filters.price = priceRange;
+        }
+        if (categoryDetailFilter && categoryDetailFilter.length > 0) {
+            filters.categoryDetail = categoryDetailFilter;
+        }
+        params.set("filters", JSON.stringify(filters));
+        const newUrl = `?${params.toString()}`;
+        const currentUrl = `?${searchParams.toString()}`;
+        if (newUrl !== currentUrl) {
+            router.replace(newUrl);
+        }
+    }
     return (
         <Card className="sticky py-5 top-20 backdrop-blur-sm bg-card/80 border-border/50">
             <CardHeader>
@@ -44,16 +87,20 @@ export function ProductFilters() {
 
                 {/* Fish Type Filter */}
                 <div className="space-y-3">
-                    <Label className="text-sm font-semibold">Fish Type</Label>
+                    <Label className="text-sm font-semibold">Type</Label>
                     <div className="space-y-2">
-                        {fishTypes.map((type) => (
-                            <div key={type.id} className="flex items-center space-x-2">
-                                <Checkbox id={type.id} />
+                        {types && types.length > 0 && types.map((type) => (
+                            <div key={type._id} className="flex items-center space-x-2">
+                                <Checkbox
+                                    id={type._id}
+                                    checked={categoryDetailFilter.includes(type._id)}
+                                    onCheckedChange={(checked) => handleCheckboxChange(type._id, !!checked)}
+                                />
                                 <label
-                                    htmlFor={type.id}
-                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                                    htmlFor={type._id}
+                                    className="text-sm font-medium leading-none cursor-pointer"
                                 >
-                                    {type.label}
+                                    {type.name}
                                 </label>
                             </div>
                         ))}
@@ -78,21 +125,8 @@ export function ProductFilters() {
                     </div>
                 </div>
 
-                {/* Availability Toggle */}
-                <div className="flex items-center justify-between space-x-2 pt-2">
-                    <Label htmlFor="in-stock" className="text-sm font-semibold cursor-pointer">
-                        In Stock Only
-                    </Label>
-                    <Switch
-                        id="status"
-                        checked={inStockOnly}
-                        onCheckedChange={setInStockOnly}
-                        className="h-6 w-13 border border-slate-200 data-[state=unchecked]:bg-gray-200"
-                    />
-                </div>
-
                 {/* Apply Button */}
-                <Button className="w-full">Apply Filters</Button>
+                <Button onClick={handleApplyFilter} className="w-full">Apply Filters</Button>
             </CardContent>
         </Card>
     )

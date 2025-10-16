@@ -60,7 +60,6 @@ export function ProductCard({ product }: ProductCardProps) {
     line-clamp-2 overflow-hidden"
                             dangerouslySetInnerHTML={{ __html: product.description }}
                         />
-
                         <div className="flex items-center justify-start gap-2 pt-2">
                             {product.discount !== 0 && <div className="text-2xl text-gray-400 line-through">{product.price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</div>}
                             <div className={`text-2xl font-bold ${product.discount === 0 ? "text-primary" : "text-red-500"} `}>{(product.price - product.discount).toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</div>
