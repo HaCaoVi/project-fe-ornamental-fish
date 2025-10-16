@@ -2,123 +2,123 @@
 
 import { Card, CardContent } from "@components/ui/card"
 import { Button } from "@components/ui/button"
-import { Fish, Apple, Sparkles } from "lucide-react"
+import { Fish, Apple, Sparkles, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { CATE_ACCESSORY, CATE_FISH, CATE_FOOD } from "@lib/constants/constant"
 import { listAllFollowCategoryAPI } from "@lib/api/category"
 import { useEffect, useState } from "react"
 
 export function FeaturedCategories() {
-    const [data, setData] = useState<any[]>([]);
+    const [data, setData] = useState<any[]>([])
+
     useEffect(() => {
-        (async () => {
+        ; (async () => {
             try {
-                const res = await listAllFollowCategoryAPI();
+                const res = await listAllFollowCategoryAPI()
                 if (res.statusCode === 200 && res.data) {
                     const data: any[] = []
-                    res.data.map(item => {
+                    res.data.map((item) => {
                         data.push({
                             _id: item._id,
                             title: item.name,
                             description: item.description,
                             image: "/images/colorful-betta-fish-goldfish-guppy-tropical-fish-c.jpg",
-                            items: item.details
+                            items: item.details,
                         })
                     })
                     setData(data)
                 }
             } catch (error) {
-
+                console.error("Failed to fetch categories:", error)
             }
         })()
     }, [])
+
     return (
-        <section className="py-20 md:py-48 bg-background">
-            <div className="container mx-auto px-4">
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-bold mb-4 text-balance">Shop by Category</h2>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
-                        Find everything you need to create and maintain a thriving aquatic ecosystem
+        <section className="relative py-24 md:py-32 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-accent/20 to-background" />
+
+            <div className="container relative mx-auto px-4">
+                <div className="text-center mb-20">
+                    <div className="inline-block mb-4 px-4 py-1.5 bg-primary/10 rounded-full">
+                        <span className="text-sm font-medium text-primary">Explore Our Collection</span>
+                    </div>
+                    <h2 className="text-5xl md:text-6xl font-bold mb-6 text-balance tracking-tight">Shop by Category</h2>
+                    <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
+                        Discover premium aquarium essentials curated for thriving aquatic ecosystems
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
-                    {data.map((category) => {
-                        const Icon = category._id === CATE_FISH
-                            ? Fish : category._id === CATE_FOOD
-                                ? Apple : category._id === CATE_ACCESSORY
-                                    ? Sparkles : null
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                    {data.map((category, index) => {
+                        const Icon =
+                            category._id === CATE_FISH
+                                ? Fish
+                                : category._id === CATE_FOOD
+                                    ? Apple
+                                    : category._id === CATE_ACCESSORY
+                                        ? Sparkles
+                                        : null
 
-                        const image = category._id === CATE_FISH
-                            ? "/images/colorful-betta-fish-goldfish-guppy-tropical-fish-c.jpg"
-                            : category._id === CATE_FOOD
-                                ? "/images/fish-food-pellets-flakes-freeze-dried-food-contain.jpg"
-                                : category._id === CATE_ACCESSORY
-                                    ? "/images/aquarium-filter-air-pump-led-lights-decorations-ac.jpg" : null
+                        const image =
+                            category._id === CATE_FISH
+                                ? "/images/colorful-betta-fish-goldfish-guppy-tropical-fish-c.jpg"
+                                : category._id === CATE_FOOD
+                                    ? "/images/fish-food-pellets-flakes-freeze-dried-food-contain.jpg"
+                                    : category._id === CATE_ACCESSORY
+                                        ? "/images/aquarium-filter-air-pump-led-lights-decorations-ac.jpg"
+                                        : null
+
                         return (
                             <Card
                                 key={category._id}
-                                className="group flex flex-col justify-between overflow-hidden border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-xl"
+                                className={`group relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 ${index === 1 ? "md:mt-8" : ""
+                                    }`}
                             >
-                                {/* Hình ảnh + tiêu đề */}
-                                <div className="relative h-64 overflow-hidden">
+                                <div className="relative h-80 overflow-hidden">
                                     <div
-                                        className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
                                         style={{
                                             backgroundImage: image ? `url(${image})` : "none",
                                         }}
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
-                                    <div className="absolute bottom-4 left-4 right-4">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            {Icon && (
-                                                <div className="p-2 bg-primary rounded-lg">
-                                                    <Icon className="h-5 w-5 text-primary-foreground" />
-                                                </div>
-                                            )}
-                                            <h3 className="text-2xl font-bold text-card-foreground">
-                                                {category.title}
-                                            </h3>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+
+                                    {Icon && (
+                                        <div className="absolute top-6 right-6 p-3 bg-background/90 backdrop-blur-sm rounded-xl shadow-lg">
+                                            <Icon className="h-6 w-6 text-primary" />
                                         </div>
+                                    )}
+
+                                    <div className="absolute bottom-0 left-0 right-0 p-6">
+                                        <h3 className="text-3xl font-bold text-white mb-2 text-balance">{category.title}</h3>
+                                        <p className="text-white/80 text-sm text-pretty leading-relaxed">{category.description}</p>
                                     </div>
                                 </div>
 
-                                {/* Nội dung card */}
-                                <CardContent className="p-6 flex flex-col flex-1 justify-between">
-                                    <div>
-                                        <p className="text-muted-foreground mb-4 text-pretty">
-                                            {category.description}
-                                        </p>
-
-                                        {/* Danh sách chia cột tự động */}
-                                        <ul
-                                            className="
-          grid 
-          grid-cols-1 
-          sm:grid-cols-2 
-          gap-x-4 gap-y-2 
-          mb-6
-        "
-                                        >
-                                            {category.items.map((item: any) => (
-                                                <li
-                                                    key={item._id}
-                                                    className="text-sm text-foreground/70 flex items-center gap-2"
-                                                >
-                                                    <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                                                    {item.name}
-                                                </li>
+                                <CardContent className="p-6 bg-card">
+                                    <div className="mb-6">
+                                        <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+                                            Popular Items
+                                        </h4>
+                                        <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                                            {category.items.slice(0, 6).map((item: any) => (
+                                                <div key={item._id} className="flex items-center gap-2 text-sm text-foreground/80 group/item">
+                                                    <div className="h-1 w-1 rounded-full bg-primary/60 group-hover/item:bg-primary transition-colors" />
+                                                    <span className="group-hover/item:text-foreground transition-colors">{item.name}</span>
+                                                </div>
                                             ))}
-                                        </ul>
+                                        </div>
                                     </div>
 
-                                    {/* Nút Explore */}
-                                    <Button asChild className="w-full rounded-full mt-auto">
-                                        <Link href={`#${category._id}`}>Explore {category.title}</Link>
+                                    <Button asChild className="w-full group/btn rounded-xl h-12 text-base font-medium">
+                                        <Link href={`#${category._id}`} className="flex items-center justify-center gap-2">
+                                            Explore {category.title}
+                                            <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+                                        </Link>
                                     </Button>
                                 </CardContent>
                             </Card>
-
                         )
                     })}
                 </div>

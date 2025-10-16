@@ -83,8 +83,8 @@ const Header = () => {
                             </div>
                         </div>
                         <Link
-                            href="/blogs"
-                            className={`font-medium transition-colors duration-200 ${isActive("/services") ? "text-primary" : "text-foreground hover:text-primary"
+                            href="/blog"
+                            className={`font-medium transition-colors duration-200 ${isActive("/blog") ? "text-primary" : "text-foreground hover:text-primary"
                                 }`}
                         >
                             Blog
