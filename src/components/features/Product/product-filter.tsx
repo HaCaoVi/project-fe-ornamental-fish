@@ -89,21 +89,26 @@ export function ProductFilters({ categoryId }: any) {
                 <div className="space-y-3">
                     <Label className="text-sm font-semibold">Type</Label>
                     <div className="space-y-2">
-                        {types && types.length > 0 && types.map((type) => (
-                            <div key={type._id} className="flex items-center space-x-2">
-                                <Checkbox
-                                    id={type._id}
-                                    checked={categoryDetailFilter.includes(type._id)}
-                                    onCheckedChange={(checked) => handleCheckboxChange(type._id, !!checked)}
-                                />
-                                <label
-                                    htmlFor={type._id}
-                                    className="text-sm font-medium leading-none cursor-pointer"
-                                >
-                                    {type.name}
-                                </label>
+                        {types && types.length > 0 && (
+                            <div className="grid grid-cols-2 gap-2"> {/* 👈 thêm grid ở đây */}
+                                {types.map((type) => (
+                                    <div key={type._id} className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id={type._id}
+                                            checked={categoryDetailFilter.includes(type._id)}
+                                            onCheckedChange={(checked) => handleCheckboxChange(type._id, !!checked)}
+                                        />
+                                        <label
+                                            htmlFor={type._id}
+                                            className="text-sm font-medium leading-none cursor-pointer"
+                                        >
+                                            {type.name}
+                                        </label>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
+                        )}
+
                     </div>
                 </div>
 
