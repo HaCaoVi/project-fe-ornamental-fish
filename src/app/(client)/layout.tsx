@@ -15,7 +15,7 @@ const GuestLayout = ({
     return (
         <div className="min-h-screen bg-background flex flex-col">
             <Header />
-            <div>
+            <div className="my-5">
                 {children}
             </div>
             <Footer />

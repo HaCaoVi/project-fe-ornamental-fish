@@ -108,7 +108,7 @@ export function CreateUserModal({ open, onOpenChange, listRole }: CreateUserModa
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     {/* Name */}
                     <div>
-                        <label className="font-bold text-sm">Full Name</label>
+                        <label className="font-bold text-sm">Fullname<span className="text-red-500">*</span></label>
                         <Input
                             className="border border-slate-200"
                             placeholder="Enter full name" {...register("name")} />
@@ -118,14 +118,14 @@ export function CreateUserModal({ open, onOpenChange, listRole }: CreateUserModa
                     {/* Email & Password */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="font-bold text-sm">Email</label>
+                            <label className="font-bold text-sm">Email<span className="text-red-500">*</span></label>
                             <Input
                                 className="border border-slate-200"
                                 type="email" placeholder="Enter email" {...register("email")} />
                             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
                         </div>
                         <div>
-                            <label className="font-bold text-sm">Password</label>
+                            <label className="font-bold text-sm">Password<span className="text-red-500">*</span></label>
                             <Input
                                 className="border border-slate-200"
                                 type="password" placeholder="Enter password" {...register("password")} />
@@ -136,7 +136,7 @@ export function CreateUserModal({ open, onOpenChange, listRole }: CreateUserModa
                     {/* Birthday & Gender */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="font-bold text-sm">Birthday</label>
+                            <label className="font-bold text-sm">Birthday<span className="text-red-500">*</span></label>
                             <Controller
                                 control={control}
                                 name="birthday"
@@ -164,7 +164,7 @@ export function CreateUserModal({ open, onOpenChange, listRole }: CreateUserModa
 
                         <div className="flex justify-around">
                             <div>
-                                <label className="font-bold text-sm">Gender</label>
+                                <label className="font-bold text-sm">Gender<span className="text-red-500">*</span></label>
                                 <Controller
                                     control={control}
                                     name="gender"
@@ -187,7 +187,7 @@ export function CreateUserModal({ open, onOpenChange, listRole }: CreateUserModa
 
                             {/* Role */}
                             <div>
-                                <label className="font-bold text-sm">Role</label>
+                                <label className="font-bold text-sm">Role<span className="text-red-500">*</span></label>
                                 <Controller
                                     control={control}
                                     name="role"
@@ -210,7 +210,7 @@ export function CreateUserModal({ open, onOpenChange, listRole }: CreateUserModa
                     </div>
                     {/* Address */}
                     <div>
-                        <label className="font-bold text-sm">Address</label>
+                        <label className="font-bold text-sm">Address<span className="text-red-500">*</span></label>
                         <Input
                             className="border border-slate-200"
                             placeholder="Enter address" {...register("address")} />

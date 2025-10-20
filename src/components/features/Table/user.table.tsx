@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { type Column, TableCustomize } from "@components/layout/Table"
 import type { IMeta } from "../../../types/backend"
-import { Pencil, Trash2, Plus, Search, Filter, Users, Shield, LockKeyhole, LockKeyholeOpen } from "lucide-react"
+import { Pencil, Plus, Search, Filter, Users, Shield, LockKeyhole, LockKeyholeOpen } from "lucide-react"
 import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"

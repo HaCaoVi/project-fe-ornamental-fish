@@ -101,7 +101,7 @@ export function CUCategoryDetailModel({ open, onOpenChange, categories, item }: 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     {/* Name */}
                     <div>
-                        <label className="font-bold text-sm">Name</label>
+                        <label className="font-bold text-sm">Name<span className="text-red-500">*</span></label>
                         <Input
                             className="border border-slate-200"
                             placeholder="Enter full name" {...register("name")} />
@@ -109,7 +109,7 @@ export function CUCategoryDetailModel({ open, onOpenChange, categories, item }: 
                     </div>
                     {/* Category */}
                     <div>
-                        <label className="font-bold text-sm">Category</label>
+                        <label className="font-bold text-sm">Category<span className="text-red-500">*</span></label>
                         <Controller
                             control={control}
                             name="category"

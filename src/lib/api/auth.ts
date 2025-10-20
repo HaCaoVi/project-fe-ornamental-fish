@@ -1,9 +1,11 @@
 "use server";
 
+import { RegisterFormData } from "@app/(client)/register/page";
 import { IBackendRes, ILogin, IUserLogin } from "../../types/backend";
 import sendRequest from "@config/fetch.config";
 import { cookieOptions } from "@lib/constants/constant";
 import { cookies } from "next/headers";
+import { ActivateAccountFormData } from "@components/features/Modal/Auth/auth-code.modal";
 
 export const loginAPI = async (username: string, password: string) => {
     const cookieStore = await cookies();
@@ -68,5 +70,21 @@ export const logoutAPI = async () => {
         cookieStore.delete("refresh_token")
         cookieStore.delete("access_token")
     }
+    return res;
+};
+
+export const registerAPI = async (data: Omit<RegisterFormData, "confirmPassword">) => {
+    const res = await sendRequest<IBackendRes<ILogin>>("/api/v1/auth/register", {
+        method: "POST",
+        body: JSON.stringify({ ...data }),
+    });
+    return res;
+};
+
+export const activateAccountAPI = async (data: ActivateAccountFormData) => {
+    const res = await sendRequest<IBackendRes<ILogin>>("/api/v1/auth/active-account", {
+        method: "PATCH",
+        body: JSON.stringify({ ...data }),
+    });
     return res;
 };
