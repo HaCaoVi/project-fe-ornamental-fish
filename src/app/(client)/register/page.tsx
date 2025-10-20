@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
 import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
 import { registerAPI } from "@lib/api/auth"
 import { notify } from "@lib/helpers/notify"
 import { Spinner } from "@components/ui/spinner"
@@ -35,9 +35,8 @@ export type RegisterFormData = z.infer<typeof registerSchema>
 
 const RegisterPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(true);
-    const [email, setEmail] = useState("");
-
     const {
+        getValues,
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
@@ -51,7 +50,6 @@ const RegisterPage = () => {
             const res = await registerAPI(rest);
             if (res.statusCode === 201) {
                 setIsModalOpen(true)
-                setEmail(data.email)
                 notify.success(res.message);
             } else {
                 notify.warning(res.message)
@@ -143,7 +141,7 @@ const RegisterPage = () => {
                     </div>
                 </CardContent>
             </Card>
-            <AuthCodeModal email={email} onOpenChange={setIsModalOpen} open={isModalOpen} />
+            <AuthCodeModal email={getValues("email")} onOpenChange={setIsModalOpen} open={isModalOpen} />
         </div>
     )
 }

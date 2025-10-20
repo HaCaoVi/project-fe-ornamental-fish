@@ -88,3 +88,11 @@ export const activateAccountAPI = async (data: ActivateAccountFormData) => {
     });
     return res;
 };
+
+export const retryAccountAPI = async (email: string) => {
+    const res = await sendRequest<IBackendRes<ILogin>>("/api/v1/auth/retry-active", {
+        method: "POST",
+        body: JSON.stringify({ email }),
+    });
+    return res;
+};

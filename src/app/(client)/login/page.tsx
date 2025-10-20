@@ -13,6 +13,9 @@ import { ADMIN_ROLE, STAFF_ROLE } from "@lib/constants/constant"
 import { notify } from "@lib/helpers/notify"
 import { useAuthContext } from "@hooks/app.hook"
 import { Spinner } from "@components/ui/spinner"
+import { AuthCodeModal } from "@components/features/Modal/Auth/auth-code.modal"
+import { useState } from "react"
+import { retryAccountAPI } from "@lib/api/auth"
 
 // Validation schema with zod
 const loginSchema = z.object({
@@ -28,8 +31,9 @@ type LoginFormValues = z.infer<typeof loginSchema>
 const LoginPage = () => {
     const router = useRouter()
     const { login } = useAuthContext()
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const {
+        getValues,
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
@@ -51,9 +55,26 @@ const LoginPage = () => {
                 }
             } else {
                 notify.warning(res.message)
+                if (res.statusCode === 409) {
+                    setIsModalOpen(true);
+                    handleRetryActiveAccount(data.email)
+                }
             }
         } catch (error) {
             console.log("Login error: ", error);
+        }
+    }
+
+    const handleRetryActiveAccount = async (email: string) => {
+        try {
+            const res = await retryAccountAPI(email);
+            if (res.statusCode === 201) {
+                notify.info(res.message);
+            } else {
+                notify.warning(res.message)
+            }
+        } catch (error) {
+
         }
     }
 
@@ -114,6 +135,7 @@ const LoginPage = () => {
                     </div>
                 </CardContent>
             </Card>
+            <AuthCodeModal email={getValues("email")} onOpenChange={setIsModalOpen} open={isModalOpen} />
         </div>
     )
 }
