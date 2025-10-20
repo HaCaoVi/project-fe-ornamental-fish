@@ -22,7 +22,7 @@ const Header = () => {
     }
 
     const navigateLoginPage = () => {
-        return router.push("/login")
+        return router.push("/auth/login")
     }
 
     const isActive = (path: string) => pathName === path;

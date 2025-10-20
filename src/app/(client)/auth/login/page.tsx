@@ -15,8 +15,8 @@ import { useAuthContext } from "@hooks/app.hook"
 import { Spinner } from "@components/ui/spinner"
 import { AuthCodeModal } from "@components/features/Modal/Auth/auth-code.modal"
 import { useState } from "react"
-import { retryAccountAPI } from "@lib/api/auth"
-
+import { loginWithGoogleAPI, retryAccountAPI } from "@lib/api/auth"
+import { FcGoogle } from "react-icons/fc"
 // Validation schema with zod
 const loginSchema = z.object({
     email: z.string()
@@ -74,8 +74,12 @@ const LoginPage = () => {
                 notify.warning(res.message)
             }
         } catch (error) {
-
+            console.log("Login error: ", error);
         }
+    }
+
+    const handleLoginWithGoogle = async () => {
+        window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/google`;
     }
 
     return (
@@ -89,7 +93,7 @@ const LoginPage = () => {
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                        {/* Email field */}
+                        {/* Email */}
                         <div className="space-y-2">
                             <label htmlFor="email" className="text-md font-medium">
                                 Email
@@ -104,7 +108,7 @@ const LoginPage = () => {
                             {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
                         </div>
 
-                        {/* Password field */}
+                        {/* Password */}
                         <div className="space-y-2">
                             <label htmlFor="password" className="text-md font-medium">
                                 Password
@@ -119,22 +123,40 @@ const LoginPage = () => {
                             {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
                         </div>
 
-                        {/* Submit button */}
+                        {/* Submit */}
                         <Button type="submit" className="w-full h-12 text-lg" disabled={isSubmitting}>
                             {isSubmitting ? <Spinner color="white" /> : "Sign In"}
+                        </Button>
+
+                        {/* 👇 Nút Login với Google */}
+                        <div className="flex items-center gap-2 mt-4">
+                            <div className="h-px flex-1 bg-slate-300" />
+                            <span className="text-sm text-muted-foreground">or</span>
+                            <div className="h-px flex-1 bg-slate-300" />
+                        </div>
+
+                        <Button
+                            type="button"
+                            variant="outline"
+                            className="w-full h-12 text-base mt-3 flex items-center justify-center gap-3 border-slate-300 hover:bg-slate-100"
+                            onClick={handleLoginWithGoogle}
+                        >
+                            <FcGoogle size={22} />
+                            Continue with Google
                         </Button>
                     </form>
 
                     <div className="mt-6 text-center">
                         <p className="text-sm text-muted-foreground">
                             Don't have an account?{" "}
-                            <Link href="/register" className="text-primary hover:underline font-medium">
+                            <Link href="/auth/register" className="text-primary hover:underline font-medium">
                                 Sign up
                             </Link>
                         </p>
                     </div>
                 </CardContent>
             </Card>
+
             <AuthCodeModal email={getValues("email")} onOpenChange={setIsModalOpen} open={isModalOpen} />
         </div>
     )

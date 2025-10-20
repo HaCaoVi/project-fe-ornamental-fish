@@ -1,6 +1,6 @@
 "use server";
 
-import { RegisterFormData } from "@app/(client)/register/page";
+import { RegisterFormData } from "@app/(client)/auth/register/page";
 import { IBackendRes, ILogin, IUserLogin } from "../../types/backend";
 import sendRequest from "@config/fetch.config";
 import { cookieOptions } from "@lib/constants/constant";
@@ -95,4 +95,10 @@ export const retryAccountAPI = async (email: string) => {
         body: JSON.stringify({ email }),
     });
     return res;
+};
+
+export const loginWithGoogleAPI = async () => {
+    return sendRequest<IBackendRes<ILogin>>("/api/v1/auth/google", {
+        method: "GET",
+    });
 };
