@@ -18,8 +18,8 @@ export interface IPagination<T> {
 }
 
 export interface ILogin {
-    refresh_token: string,
     access_token: string,
+    refresh_token: string,
     user: IUserLogin
 }
 
@@ -27,10 +27,7 @@ export interface IUserLogin {
     _id: string,
     email: string,
     name: string,
-    role: {
-        _id: string,
-        name: string
-    },
+    role: string,
 }
 
 export interface IRequireCreateProduct {

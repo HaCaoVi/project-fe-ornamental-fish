@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 const decodeToken = (token: String) => {
     try {
         const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
-        return payload?.role.name || "GUEST";
+        return payload?.role || "GUEST";
     } catch (e) {
         return "GUEST";
     }

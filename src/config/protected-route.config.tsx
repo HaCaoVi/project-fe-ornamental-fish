@@ -17,11 +17,11 @@ const ProtectedRoute = ({ allowedRoles, children }: Props) => {
         if (!isLoading) {
             if (!user) router.push("/login");
 
-            else if (!allowedRoles.includes(user.role.name)) router.push("/unauthorized");
+            else if (!allowedRoles.includes(user.role)) router.push("/unauthorized");
         }
     }, [user, isLoading]);
 
-    if (isLoading || !user || !allowedRoles.includes(user.role.name)) return null;
+    if (isLoading || !user || !allowedRoles.includes(user.role)) return null;
 
     return <>{children}</>;
 }

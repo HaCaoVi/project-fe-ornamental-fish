@@ -104,8 +104,6 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
     useEffect(() => {
         if (open) {
             if (item) {
-                console.log(item.description);
-
                 setCategory(String(item.categoryDetail.category))
                 reset({
                     name: item.name,

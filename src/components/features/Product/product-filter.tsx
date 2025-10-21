@@ -44,8 +44,6 @@ export function ProductFilters({ categoryId }: any) {
     const handleApplyFilter = () => {
         const params = new URLSearchParams(searchParams.toString());
         let filters: any = {};
-        console.log(isSale, "is");
-
         if (searchTerm) params.set('search', searchTerm);
         else params.delete('search');
 

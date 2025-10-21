@@ -1,9 +1,9 @@
 "use server"
 
-import sendRequest from "@config/fetch.config";
 import { IBackendRes } from "../../types/backend";
 import { cookies } from "next/headers";
 import { cookieOptions } from "@lib/constants/constant";
+import sendRequest from "@config/fetch.config";
 
 export const uploadImageAPI = async (image: File) => {
     const cookieStore = await cookies();

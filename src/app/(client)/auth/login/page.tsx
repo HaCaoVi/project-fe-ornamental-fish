@@ -45,10 +45,9 @@ const LoginPage = () => {
     const onSubmit = async (data: LoginFormValues) => {
         try {
             const res = await login(data.email, data.password)
-
             if (res.statusCode === 201 && res.data) {
                 notify.success(res.message)
-                if (res.data.user.role.name === ADMIN_ROLE || res.data.user.role.name === STAFF_ROLE) {
+                if (res.data.user.role === ADMIN_ROLE || res.data.user.role === STAFF_ROLE) {
                     router.replace("/dashboard")
                 } else {
                     router.replace("/")
@@ -61,7 +60,7 @@ const LoginPage = () => {
                 }
             }
         } catch (error) {
-            console.log("Login error: ", error);
+            console.error("Login error: ", error);
         }
     }
 
@@ -74,7 +73,7 @@ const LoginPage = () => {
                 notify.warning(res.message)
             }
         } catch (error) {
-            console.log("Login error: ", error);
+            console.error("Login error: ", error);
         }
     }
 
