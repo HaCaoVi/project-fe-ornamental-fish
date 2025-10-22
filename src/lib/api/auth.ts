@@ -3,29 +3,8 @@
 import { RegisterFormData } from "@app/(client)/auth/register/page";
 import { IBackendRes, ILogin, IUserLogin } from "../../types/backend";
 import sendRequest from "@config/fetch.config";
-import { cookieOptions } from "@lib/constants/constant";
 import { cookies } from "next/headers";
 import { ActivateAccountFormData } from "@components/features/Modal/Auth/auth-code.modal";
-
-export const loginAPI = async (username: string, password: string) => {
-    const cookieStore = await cookies();
-    const res = await sendRequest<IBackendRes<ILogin>>("/api/v1/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ username, password }),
-    });
-    if (res.statusCode === 201 && res.data) {
-        cookieStore.set("refresh_token", res.data.refresh_token, {
-            ...cookieOptions,
-            maxAge: 60 * 60 * 24 * 30,
-        });
-        cookieStore.set("access_token", res.data.access_token, {
-            ...cookieOptions,
-            maxAge: 60 * 60 * 24,
-        });
-    }
-
-    return res;
-};
 
 export const getAccountAPI = async () => {
     const cookieStore = await cookies();
@@ -35,30 +14,6 @@ export const getAccountAPI = async () => {
     return sendRequest<IBackendRes<IUserLogin>>("/api/v1/auth/account", {
         method: "GET",
     });
-};
-
-export const refreshTokenAPI = async (refreshToken: string) => {
-    const cookieStore = await cookies();
-
-    const res = await sendRequest<IBackendRes<any>>("/api/v1/auth/refresh", {
-        method: "GET",
-        headers: {
-            Cookie: `refresh_token=${refreshToken}`,
-        },
-    });
-
-    if (res.statusCode === 200 && res.data) {
-        cookieStore.set("refresh_token", res.data.refresh_token, {
-            ...cookieOptions,
-            maxAge: 60 * 60 * 24 * 30,
-        });
-        cookieStore.set("access_token", res.data.access_token, {
-            ...cookieOptions,
-            maxAge: 30,
-        });
-    }
-
-    return res;
 };
 
 export const logoutAPI = async () => {

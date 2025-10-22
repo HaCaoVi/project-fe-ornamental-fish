@@ -94,7 +94,7 @@ const UnauthorizedPage = () => {
                                             size="lg"
                                             className="group hover:scale-105 transition-all duration-200 hover:bg-primary hover:text-primary-foreground hover:border-primary bg-transparent"
                                         >
-                                            <Link href="/login" className="flex items-center gap-2">
+                                            <Link href="/auth/login" className="flex items-center gap-2">
                                                 <LogIn className="w-4 h-4 group-hover:scale-110 transition-transform" />
                                                 Sign In
                                             </Link>

@@ -15,7 +15,7 @@ const ProtectedRoute = ({ allowedRoles, children }: Props) => {
 
     useEffect(() => {
         if (!isLoading) {
-            if (!user) router.push("/login");
+            if (!user) router.push("/auth/login");
 
             else if (!allowedRoles.includes(user.role)) router.push("/unauthorized");
         }

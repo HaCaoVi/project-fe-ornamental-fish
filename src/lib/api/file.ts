@@ -2,7 +2,6 @@
 
 import { IBackendRes } from "../../types/backend";
 import { cookies } from "next/headers";
-import { cookieOptions } from "@lib/constants/constant";
 import sendRequest from "@config/fetch.config";
 
 export const uploadImageAPI = async (image: File) => {
@@ -21,10 +20,8 @@ export const uploadImageAPI = async (image: File) => {
     });
 
     if (res.statusCode === 201 && res.data) {
-        cookieStore.set("image_upload", res.data.fileName, {
-            ...cookieOptions,
-            maxAge: 60 * 60 * 24 * 30,
-        });
+        cookieStore.set("image_upload", res.data.fileName, { httpOnly: true }
+        );
     }
     return res;
 };
@@ -45,10 +42,7 @@ export const uploadVideoAPI = async (image: File) => {
     });
 
     if (res.statusCode === 201 && res.data) {
-        cookieStore.set("video_upload", res.data.fileName, {
-            ...cookieOptions,
-            maxAge: 60 * 60 * 24 * 30,
-        });
+        cookieStore.set("video_upload", res.data.fileName, { httpOnly: true });
     }
     return res;
 };

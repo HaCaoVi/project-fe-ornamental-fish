@@ -1,10 +1,10 @@
 "use server";
 
+import { MAX_AGE_ACCESS_TOKEN, MAX_AGE_REFRESH_TOKEN } from "@lib/constants/constant";
 import { cookies } from "next/headers";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
-// 🟩 Login (được gọi từ client-side)
 export async function loginAction(username: string, password: string) {
     const cookieStore = await cookies();
     const res = await fetch(`${BASE_URL}/api/v1/auth/login`, {
@@ -12,18 +12,14 @@ export async function loginAction(username: string, password: string) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
     });
-
     const data = await res.json();
-
     if (res.ok && data?.data) {
-        cookieStore.set("access_token", data.data.access_token, { httpOnly: true });
-        cookieStore.set("refresh_token", data.data.refresh_token, { httpOnly: true });
+        cookieStore.set("access_token", data.data.access_token, { httpOnly: true, maxAge: MAX_AGE_ACCESS_TOKEN });
+        cookieStore.set("refresh_token", data.data.refresh_token, { httpOnly: true, maxAge: MAX_AGE_REFRESH_TOKEN });
     }
-
     return data;
 }
 
-// 🟩 Refresh token (được gọi từ fetch.config.ts)
 export async function refreshTokenAction(): Promise<string | null> {
     const cookieStore = await cookies();
 
@@ -31,24 +27,19 @@ export async function refreshTokenAction(): Promise<string | null> {
     if (!refreshToken) return null;
 
     const res = await fetch(`${BASE_URL}/api/v1/auth/refresh`, {
-        method: "POST",
-        headers: { "Authorization": `Bearer ${refreshToken}` },
+        method: "GET",
+        headers: {
+            Cookie: `refresh_token=${refreshToken}`,
+        },
         credentials: "include",
     });
 
     const data = await res.json();
 
     if (res.ok && data?.data?.access_token) {
-        cookieStore.set("access_token", data.data.access_token, { httpOnly: true });
-        cookieStore.set("refresh_token", data.data.refresh_token, { httpOnly: true });
+        cookieStore.set("access_token", data.data.access_token, { httpOnly: true, maxAge: MAX_AGE_ACCESS_TOKEN });
+        cookieStore.set("refresh_token", data.data.refresh_token, { httpOnly: true, maxAge: MAX_AGE_REFRESH_TOKEN });
         return data.data.access_token;
     }
-
     return null;
-}
-
-// 🟩 Logout
-export async function logoutAction() {
-    cookieStore.delete("access_token");
-    cookieStore.delete("refresh_token");
 }

@@ -109,7 +109,7 @@ const Header = () => {
                                 className="pl-10 w-64 bg-muted/50 border-border focus:bg-background transition-colors"
                             />
                         </div>
-                        {pathName !== "/login" && pathName !== "/register" ?
+                        {pathName !== "/auth/login" && pathName !== "/auth/register" ?
                             isLoading ? (
                                 <div className="px-3 py-2">
                                     <Spinner color="gray" />

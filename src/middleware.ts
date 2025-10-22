@@ -22,7 +22,7 @@ export function middleware(req: NextRequest) {
     }
 
     if (role === "CUSTOMER") {
-        if (url.startsWith("/dashboard") || url.startsWith("/login") || url.startsWith("/register")) {
+        if (url.startsWith("/dashboard") || url.startsWith("/auth/login") || url.startsWith("/auth/register")) {
             return NextResponse.redirect(new URL("/", req.url));
         }
     }

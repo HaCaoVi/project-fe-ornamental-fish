@@ -14,7 +14,7 @@ export default function AuthSuccessPage() {
             alert("Đăng nhập Google thành công!");
             router.push("/"); // quay về trang chủ
         } else {
-            router.push("/login");
+            router.push("/auth/login");
         }
     }, [router, searchParams]);
 

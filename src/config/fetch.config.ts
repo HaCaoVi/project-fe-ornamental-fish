@@ -1,6 +1,6 @@
 "use server";
 
-import { refreshTokenAPI } from "@lib/api/auth";
+import { refreshTokenAction } from "@lib/action/auth.action";
 import { Mutex } from "async-mutex";
 import { cookies } from "next/headers";
 
@@ -8,13 +8,9 @@ const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const mutex = new Mutex();
 const NO_RETRY_HEADER = "x-no-retry";
 
-const handleRefreshToken = async (refreshToken: string): Promise<string | null> => {
+const handleRefreshToken = async (): Promise<string | null> => {
     return await mutex.runExclusive(async () => {
-        const res = await refreshTokenAPI(refreshToken);
-        if (res && res.statusCode === 200 && res.data) {
-            return res.data.access_token;
-        }
-        return null;
+        return refreshTokenAction();
     });
 };
 
@@ -55,7 +51,7 @@ const sendRequest = async <T = any>(
     });
 
     if (refreshToken && res.status === 401 && !headers.has(NO_RETRY_HEADER) && url !== "/api/v1/auth/login") {
-        const newToken = await handleRefreshToken(refreshToken);
+        const newToken = await handleRefreshToken();
         if (newToken) {
             headers.set("Authorization", `Bearer ${newToken}`);
             headers.set(NO_RETRY_HEADER, "true");

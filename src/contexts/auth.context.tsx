@@ -1,8 +1,9 @@
 "use client";
 
-import { getAccountAPI, loginAPI, logoutAPI } from "@lib/api/auth";
+import { getAccountAPI, logoutAPI } from "@lib/api/auth";
 import type { IBackendRes, ILogin, IUserLogin } from "../types/backend";
 import { createContext, useState, ReactNode, useEffect } from "react";
+import { loginAction } from "@lib/action/auth.action";
 
 interface AuthContextType {
     user: IUserLogin | null;
@@ -33,7 +34,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const login = async (username: string, password: string) => {
-        const res = await loginAPI(username, password);
+        // const res = await loginAPI(username, password);
+        const res = await loginAction(username, password);
         if (res.statusCode === 201 && res.data) {
             setUser(res.data.user);
         }

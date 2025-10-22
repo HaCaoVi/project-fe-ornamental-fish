@@ -85,7 +85,7 @@ export function AuthCodeModal({ open, onOpenChange, email }: AuthCodeModalProps)
             if (res.statusCode === 200) {
                 notify.success(res.message);
                 handleCancel();
-                router.replace("/login");
+                router.replace("/auth/login");
             } else {
                 notify.warning(res.message);
             }
