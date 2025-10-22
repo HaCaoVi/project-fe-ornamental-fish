@@ -15,8 +15,9 @@ import { useAuthContext } from "@hooks/app.hook"
 import { Spinner } from "@components/ui/spinner"
 import { AuthCodeModal } from "@components/features/Modal/Auth/auth-code.modal"
 import { useState } from "react"
-import { loginWithGoogleAPI, retryAccountAPI } from "@lib/api/auth"
+import { retryAccountAPI } from "@lib/api/auth"
 import { FcGoogle } from "react-icons/fc"
+import { ForgotPasswordModal } from "@components/features/Modal/Auth/forgot-password.modal"
 // Validation schema with zod
 const loginSchema = z.object({
     email: z.string()
@@ -32,6 +33,7 @@ const LoginPage = () => {
     const router = useRouter()
     const { login } = useAuthContext()
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
     const {
         getValues,
         register,
@@ -90,12 +92,12 @@ const LoginPage = () => {
                         Enter your credentials to access your account
                     </CardDescription>
                 </CardHeader>
+
                 <CardContent>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                        {/* Email */}
                         <div className="space-y-2">
                             <label htmlFor="email" className="text-md font-medium">
-                                Email
+                                Email<span className="text-red-500">*</span>
                             </label>
                             <Input
                                 id="email"
@@ -107,10 +109,9 @@ const LoginPage = () => {
                             {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
                         </div>
 
-                        {/* Password */}
                         <div className="space-y-2">
                             <label htmlFor="password" className="text-md font-medium">
-                                Password
+                                Password<span className="text-red-500">*</span>
                             </label>
                             <Input
                                 id="password"
@@ -120,14 +121,19 @@ const LoginPage = () => {
                                 className={`border-slate-200 h-12 text-base ${errors.password ? "border-destructive" : ""}`}
                             />
                             {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
+
+                            <div
+                                onClick={() => setIsForgotPasswordModalOpen(true)}
+                                className="text-right text-sm text-primary hover:underline font-medium cursor-pointer"
+                            >
+                                Forgot password?
+                            </div>
                         </div>
 
-                        {/* Submit */}
                         <Button type="submit" className="w-full h-12 text-lg" disabled={isSubmitting}>
                             {isSubmitting ? <Spinner color="white" /> : "Sign In"}
                         </Button>
 
-                        {/* 👇 Nút Login với Google */}
                         <div className="flex items-center gap-2 mt-4">
                             <div className="h-px flex-1 bg-slate-300" />
                             <span className="text-sm text-muted-foreground">or</span>
@@ -155,9 +161,10 @@ const LoginPage = () => {
                     </div>
                 </CardContent>
             </Card>
-
             <AuthCodeModal email={getValues("email")} onOpenChange={setIsModalOpen} open={isModalOpen} />
+            <ForgotPasswordModal isOpen={isForgotPasswordModalOpen} onClose={setIsForgotPasswordModalOpen} />
         </div>
+
     )
 }
 export default LoginPage;

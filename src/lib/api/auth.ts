@@ -54,6 +54,15 @@ export const retryAccountAPI = async (email: string) => {
     return res;
 };
 
+export const forgotPasswordAPI = async (email: string, code: string, password: string) => {
+    const res = await sendRequest<IBackendRes<ILogin>>("/api/v1/auth/forgot-password", {
+        method: "PATCH",
+        body: JSON.stringify({ email, code, password }),
+    });
+    return res;
+};
+
+
 export const loginWithGoogleAPI = async () => {
     return sendRequest<IBackendRes<ILogin>>("/api/v1/auth/google", {
         method: "GET",
