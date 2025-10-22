@@ -17,7 +17,7 @@ interface AuthContextType {
     login: (username: string, password: string) => Promise<IBackendRes<ILogin>>;
     logout: () => Promise<IBackendRes<any>>;
     setRefreshTokenAction: (status: boolean, message: string) => void;
-
+    fetchUser: () => Promise<void>
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -34,7 +34,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const login = async (username: string, password: string) => {
-        // const res = await loginAPI(username, password);
         const res = await loginAction(username, password);
         if (res.statusCode === 201 && res.data) {
             setUser(res.data.user);
@@ -42,23 +41,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return res;
     };
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const res = await getAccountAPI();
-                if (res && res.statusCode === 200 && res.data) {
-                    setUser(res.data);
-                } else {
-                    setUser(null);
-                }
-            } catch (err) {
-                console.error("Failed to fetch user info:", err);
+    const fetchUser = async () => {
+        try {
+            const res = await getAccountAPI();
+            if (res && res.statusCode === 200 && res.data) {
+                setUser(res.data);
+            } else {
                 setUser(null);
-            } finally {
-                setIsLoading(false);
             }
-        };
+        } catch (err) {
+            console.error("Failed to fetch user info:", err);
+            setUser(null);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchUser();
     }, []);
 
@@ -80,6 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 login,
                 logout,
                 setRefreshTokenAction,
+                fetchUser
             }}
         >
             {children}

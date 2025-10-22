@@ -10,6 +10,8 @@ export const getAccountAPI = async () => {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("access_token")?.value;
     const refreshToken = cookieStore.get("refresh_token")?.value;
+    console.log("check cookieStore>>>>>", cookieStore.getAll());
+
     if (!accessToken && !refreshToken) return null;
     return sendRequest<IBackendRes<IUserLogin>>("/api/v1/auth/account", {
         method: "GET",

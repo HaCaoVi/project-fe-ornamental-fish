@@ -20,6 +20,11 @@ export async function loginAction(username: string, password: string) {
     return data;
 }
 
+export async function loginWithGoogleAction(token: string) {
+    const cookieStore = await cookies();
+    cookieStore.set("access_token", token, { httpOnly: true, maxAge: MAX_AGE_ACCESS_TOKEN });
+}
+
 export async function refreshTokenAction(): Promise<string | null> {
     const cookieStore = await cookies();
 
