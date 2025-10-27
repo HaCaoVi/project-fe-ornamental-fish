@@ -10,6 +10,7 @@ export interface IUser {
     email: string,
     birthday: string,
     gender: "MALE" | "FEMALE" | "OTHER",
+    avatar: string,
     address: string,
     accountType: string,
     role: IRole,

@@ -4,8 +4,7 @@ import sendRequest from "@config/fetch.config";
 import { IBackendRes, IPagination } from "../../types/backend";
 import { IAllFollowCategory, ICategories, ICategoryDetail } from "../../types/model";
 import { revalidateTag } from "next/cache";
-
-const LIST_CATEGORY_DETAIL_TAG = "list-category-detail";
+import { LIST_CATEGORY_DETAIL_TAG } from "@lib/constants/tag.constant";
 
 export const listCategoryAPI = async () => {
     const url = `/api/v1/categories/list-category`

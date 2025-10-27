@@ -5,7 +5,7 @@ import { IBackendRes, IPagination, IRequireCreateProduct } from "../../types/bac
 import { IProduct } from "../../types/model";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
-const LIST_PRODUCT_TAG = "list-product";
+import { LIST_PRODUCT_TAG } from "@lib/constants/tag.constant";
 
 export const listProductAPI = async (
     current: number,

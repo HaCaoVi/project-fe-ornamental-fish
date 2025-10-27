@@ -1,0 +1,4 @@
+export const LIST_USER_TAG = "list-user";
+export const LIST_PRODUCT_TAG = "list-product";
+export const LIST_CATEGORY_DETAIL_TAG = "list-category-detail";
+export const PROFILE_TAG = "view-profile"

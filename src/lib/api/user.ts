@@ -4,8 +4,8 @@ import sendRequest from "@config/fetch.config";
 import { IBackendRes, IPagination } from "../../types/backend";
 import { IUser } from "../../types/model";
 import { revalidateTag } from "next/cache";
-
-const LIST_USER_TAG = "list-user";
+import { LIST_USER_TAG, PROFILE_TAG } from "@lib/constants/tag.constant";
+import { cookies } from "next/headers";
 
 export const listUserAPI = async (
     current: number,
@@ -79,6 +79,22 @@ export const banOrUnBanUserAPI = async (userId: string, isBanned: boolean) => {
     })
     if (res.statusCode === 200) {
         revalidateTag(LIST_USER_TAG);
+    }
+    return res;
+};
+
+export const updateAvatarAPI = async (newAvatar: string) => {
+    const cookieStore = await cookies();
+    const url = `/api/v1/users/update-avatar`
+    const res = await sendRequest<IBackendRes<any>>(url, {
+        method: "PATCH",
+        body: JSON.stringify({
+            newAvatar
+        })
+    })
+    if (res.statusCode === 200) {
+        revalidateTag(PROFILE_TAG);
+        cookieStore.delete("image_upload")
     }
     return res;
 };
