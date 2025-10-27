@@ -28,6 +28,7 @@ export interface IUserLogin {
     email: string,
     name: string,
     role: string,
+    avatar: string
 }
 
 export interface IRequireCreateProduct {

@@ -17,6 +17,7 @@ export const getAccountAPI = async () => {
     if (!accessToken && !refreshToken) return null;
     return sendRequest<IBackendRes<IUserLogin>>("/api/v1/auth/account", {
         method: "GET",
+        next: { revalidate: 60 },
     });
 };
 

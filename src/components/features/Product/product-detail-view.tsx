@@ -7,6 +7,8 @@ import { Card } from "@components/ui/card"
 import { ShoppingCart, Heart, Share2, Ruler, Palette, MapPin, Package } from "lucide-react"
 import { ProductImageViewer } from "./product-image-viewer"
 import { IProduct } from "../../../types/model"
+import { createCartAPI } from "@lib/api/cart"
+import { notify } from "@lib/helpers/notify"
 
 interface ProductDetailViewProps {
     product: IProduct
@@ -15,6 +17,18 @@ interface ProductDetailViewProps {
 export function ProductDetailView({ product }: ProductDetailViewProps) {
     const [quantity, setQuantity] = useState(1)
 
+    const handleAddToCart = async (productId: string) => {
+        try {
+            const res = await createCartAPI(productId, quantity);
+            if (res.statusCode === 201) {
+                notify.success(res.message)
+            } else {
+                notify.warning(res.message)
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
             {/* Left: Product Image */}
@@ -22,8 +36,33 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
 
             {/* Right: Product Info */}
             <div className="space-y-6">
-                <div>
-                    <h1 className="text-4xl font-bold text-foreground mb-2">{product.name}</h1>
+                <div >
+
+                    <div className="flex items-center gap-2">
+                        <h1 className="text-4xl font-bold text-foreground mb-2">{product.name}
+                        </h1>
+                        {product.stock.quantity === 0 ? (
+                            <Badge
+                                className="
+      bg-red-500/90 text-white 
+      rounded-full px-3 py-1.5 text-md font-semibold 
+      shadow-md backdrop-blur-sm
+    "
+                            >
+                                Out of stock
+                            </Badge>
+                        ) : (
+                            <Badge
+                                className="
+      bg-green-500/90 text-white 
+      rounded-full px-3 py-1.5 text-md font-semibold 
+      shadow-md backdrop-blur-sm
+    "
+                            >
+                                In stock
+                            </Badge>
+                        )}
+                    </div>
                     <p className="text-muted-foreground">Product code: {product.code}</p>
                 </div>
 
@@ -122,7 +161,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
 
                 {/* Action Buttons */}
                 <div className="flex gap-4">
-                    <Button size="lg" className="flex-1 gap-2" disabled={product.stock.quantity === 0}>
+                    <Button onClick={() => handleAddToCart(product._id)} size="lg" className="flex-1 gap-2" disabled={product.stock.quantity === 0}>
                         <ShoppingCart className="h-5 w-5" />
                         Add to Cart
                     </Button>

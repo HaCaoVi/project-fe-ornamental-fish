@@ -96,7 +96,7 @@ export function ProductFilters({ categoryId }: any) {
                     <Label className="text-sm font-semibold">Type</Label>
                     <div className="space-y-2">
                         {types && types.length > 0 && (
-                            <div className="grid grid-cols-2 gap-2"> {/* 👈 thêm grid ở đây */}
+                            <div className="grid grid-cols-2 gap-2">
                                 {types.map((type) => (
                                     <div key={type._id} className="flex items-center space-x-2">
                                         <Checkbox

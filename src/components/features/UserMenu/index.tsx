@@ -40,7 +40,7 @@ const UserMenu = ({ user }: IProps) => {
             <DropdownMenuTrigger asChild>
                 <Button className="relative h-9 w-9 rounded-full hover:bg-black">
                     <Avatar className="h-9 w-9 border border-gray-700">
-                        <AvatarImage src="/diverse-user-avatars.png" alt="User" />
+                        <AvatarImage src={user.avatar} alt="User" />
                         <AvatarFallback className="text-gray-700">{getInitials(user.name)}</AvatarFallback>
                     </Avatar>
                 </Button>

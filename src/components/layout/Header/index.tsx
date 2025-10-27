@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
 import { Menu, X, Search, ShoppingCart } from "lucide-react"
@@ -10,13 +10,12 @@ import { useAppContext, useAuthContext } from "@hooks/app.hook"
 import UserMenu from "@components/features/UserMenu"
 import { Spinner } from "@components/ui/spinner"
 
-const Header = () => {
+const Header = ({ countCart }: any) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const router = useRouter()
     const { user, isLoading } = useAuthContext();
     const { categories } = useAppContext();
     const pathName = usePathname();
-
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
     }
@@ -122,9 +121,19 @@ const Header = () => {
                                 </div>
                             ) : (
                                 <>
-                                    <Button className="font-medium bg-transparent transition-colors duration-200 text-foreground hover:text-white" size="icon">
-                                        <ShoppingCart className="h-5 w-5 " />
+                                    <Button
+                                        onClick={() => router.push("/cart")}
+                                        className="relative font-medium bg-transparent transition-colors duration-200 text-foreground hover:text-white"
+                                        size="icon"
+                                    >
+                                        <ShoppingCart className="h-5 w-5" />
+                                        {countCart > 0 && (
+                                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                                                {countCart}
+                                            </span>
+                                        )}
                                     </Button>
+
                                     <UserMenu user={user} />
                                 </>
                             ) : null}

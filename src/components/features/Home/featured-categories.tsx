@@ -112,7 +112,7 @@ export function FeaturedCategories() {
                                     </div>
 
                                     <Button asChild className="w-full group/btn rounded-xl h-12 text-base font-medium">
-                                        <Link href={`#${category._id}`} className="flex items-center justify-center gap-2">
+                                        <Link href={`/products/${category._id}`} className="flex items-center justify-center gap-2">
                                             Explore {category.title}
                                             <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
                                         </Link>

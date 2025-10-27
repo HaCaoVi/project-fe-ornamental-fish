@@ -7,12 +7,27 @@ import { Button } from "@components/ui/button"
 import { Badge } from "@components/ui/badge"
 import { ShoppingCart } from "lucide-react"
 import { IProduct } from "../../../types/model"
+import { createCartAPI } from "@lib/api/cart"
+import { notify } from "@lib/helpers/notify"
 
 interface ProductCardProps {
     product: IProduct
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+
+    const handleAddToCart = async (productId: string) => {
+        try {
+            const res = await createCartAPI(productId, 1);
+            if (res.statusCode === 201) {
+                notify.success(res.message)
+            } else {
+                notify.warning(res.message)
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
     return (
         <Link href={`/products/detail/${product.code}`}>
             <Card className="group overflow-hidden backdrop-blur-sm bg-card/80 border-border/50 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 cursor-pointer">
@@ -74,10 +89,11 @@ export function ProductCard({ product }: ProductCardProps) {
                         variant={product.stock.quantity > 0 ? "default" : "secondary"}
                         onClick={(e) => {
                             e.preventDefault()
+                            handleAddToCart(product._id)
                         }}
                     >
                         <ShoppingCart className="h-4 w-4" />
-                        {product.stock.quantity > 0 ? "Thêm Vào Giỏ" : "Out of stock"}
+                        {product.stock.quantity > 0 ? "Add to cart" : "Out of stock"}
                     </Button>
                 </CardFooter>
             </Card>
