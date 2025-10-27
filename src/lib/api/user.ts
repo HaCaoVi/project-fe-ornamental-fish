@@ -15,8 +15,8 @@ export const listUserAPI = async (
     sort?: string,
 ) => {
     const query: Record<string, string> = {
-        current: String(current),
-        pageSize: String(pageSize),
+        current: String(current ?? 1),
+        pageSize: String(pageSize ?? 10),
     }
     if (sort) query.sort = sort
     if (filters) query.filters = typeof filters === "string" ? filters : JSON.stringify(filters)

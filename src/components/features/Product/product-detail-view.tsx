@@ -9,6 +9,8 @@ import { ProductImageViewer } from "./product-image-viewer"
 import { IProduct } from "../../../types/model"
 import { createCartAPI } from "@lib/api/cart"
 import { notify } from "@lib/helpers/notify"
+import { usePathname, useRouter } from "next/navigation"
+import { useAuthContext } from "@hooks/app.hook"
 
 interface ProductDetailViewProps {
     product: IProduct
@@ -16,8 +18,18 @@ interface ProductDetailViewProps {
 
 export function ProductDetailView({ product }: ProductDetailViewProps) {
     const [quantity, setQuantity] = useState(1)
+    const { user } = useAuthContext();
+    const router = useRouter();
+    const pathname = usePathname()
 
     const handleAddToCart = async (productId: string) => {
+        if (!user) {
+            const confirmLogin = window.confirm("You need to log in to add products to your cart. Do you want to log in now?")
+            if (confirmLogin) {
+                router.push(`/auth/login?redirect=${encodeURIComponent(pathname)}`)
+            }
+            return
+        }
         try {
             const res = await createCartAPI(productId, quantity);
             if (res.statusCode === 201) {
@@ -163,7 +175,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                 <div className="flex gap-4">
                     <Button onClick={() => handleAddToCart(product._id)} size="lg" className="flex-1 gap-2" disabled={product.stock.quantity === 0}>
                         <ShoppingCart className="h-5 w-5" />
-                        Add to Cart
+                        Add to cart
                     </Button>
                     <Button
                         size="lg"

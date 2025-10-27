@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { ADMIN_ROLE, STAFF_ROLE } from "@lib/constants/constant"
 import { notify } from "@lib/helpers/notify"
 import { useAuthContext } from "@hooks/app.hook"
@@ -34,6 +34,9 @@ const LoginPage = () => {
     const { login } = useAuthContext()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
+    const searchParams = useSearchParams()
+    const redirect = searchParams.get("redirect") || "/"
+
     const {
         getValues,
         register,
@@ -52,7 +55,7 @@ const LoginPage = () => {
                 if (res.data.user.role === ADMIN_ROLE || res.data.user.role === STAFF_ROLE) {
                     router.replace("/dashboard")
                 } else {
-                    router.replace("/")
+                    router.push(redirect)
                 }
             } else {
                 notify.warning(res.message)

@@ -9,14 +9,26 @@ import { ShoppingCart } from "lucide-react"
 import { IProduct } from "../../../types/model"
 import { createCartAPI } from "@lib/api/cart"
 import { notify } from "@lib/helpers/notify"
+import { useAuthContext } from "@hooks/app.hook"
+import { usePathname, useRouter } from "next/navigation"
 
 interface ProductCardProps {
     product: IProduct
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+    const { user } = useAuthContext();
+    const router = useRouter();
+    const pathname = usePathname()
 
     const handleAddToCart = async (productId: string) => {
+        if (!user) {
+            const confirmLogin = window.confirm("You need to log in to add products to your cart. Do you want to log in now?")
+            if (confirmLogin) {
+                router.push(`/auth/login?redirect=${encodeURIComponent(pathname)}`)
+            }
+            return
+        }
         try {
             const res = await createCartAPI(productId, 1);
             if (res.statusCode === 201) {

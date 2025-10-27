@@ -78,3 +78,11 @@ export interface IProduct {
     size: string;
     weight: string;
 }
+
+export interface ICart {
+    _id: string,
+    user: IUser | string,
+    product: IProduct,
+    quantity: number,
+    selected?: boolean
+}

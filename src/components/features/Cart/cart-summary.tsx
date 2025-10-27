@@ -4,31 +4,24 @@ import { Button } from "@components/ui/button"
 import { Card } from "@components/ui/card"
 import { Input } from "@components/ui/input"
 import { Separator } from "@components/ui/separator"
+import { ICart } from "../../../types/model"
 
-interface Product {
-    id: string
-    name: string
-    price: number
-    quantity: number
-    discount?: number
-}
 
 interface CartSummaryProps {
-    items: Product[]
+    items: ICart[]
     promoCode: string
     onPromoCodeChange: (code: string) => void
 }
 
 export function CartSummary({ items, promoCode, onPromoCodeChange }: CartSummaryProps) {
     const subtotal = items.reduce((sum, item) => {
-        const price = item.discount ? item.price * (1 - item.discount / 100) : item.price
+        const price = item.product.discount ? item.product.price * (1 - item.product.discount / 100) : item.product.price
         return sum + price * item.quantity
     }, 0)
 
     // Mock promo code discount (10% for valid codes)
     const promoDiscount = promoCode.toUpperCase() === "SAVE10" ? subtotal * 0.1 : 0
-    const tax = (subtotal - promoDiscount) * 0.1
-    const total = subtotal - promoDiscount + tax
+    const total = subtotal - promoDiscount
 
     return (
         <Card className="p-6 border border-border">
@@ -57,19 +50,19 @@ export function CartSummary({ items, promoCode, onPromoCodeChange }: CartSummary
             <div className="space-y-3 mb-4">
                 <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span className="font-medium">${subtotal.toFixed(2)}</span>
+                    <span className="font-medium">{subtotal.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</span>
                 </div>
 
                 {promoDiscount > 0 && (
                     <div className="flex justify-between text-sm text-green-600">
                         <span>Promo Discount</span>
-                        <span>-${promoDiscount.toFixed(2)}</span>
+                        <span>-{promoDiscount.toFixed(2)}</span>
                     </div>
                 )}
 
                 <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Tax (10%)</span>
-                    <span className="font-medium">${tax.toFixed(2)}</span>
+                    <span className="text-muted-foreground">Delivery fee</span>
+                    <span className="font-medium">--</span>
                 </div>
             </div>
 
@@ -78,7 +71,7 @@ export function CartSummary({ items, promoCode, onPromoCodeChange }: CartSummary
             {/* Total */}
             <div className="flex justify-between mb-6">
                 <span className="font-bold text-foreground">Total</span>
-                <span className="text-2xl font-bold text-primary">${total.toFixed(2)}</span>
+                <span className="text-2xl font-bold text-primary">{total.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</span>
             </div>
 
             {/* Checkout Button */}
@@ -89,9 +82,6 @@ export function CartSummary({ items, promoCode, onPromoCodeChange }: CartSummary
             <Button variant="outline" className="w-full bg-transparent" size="sm">
                 Continue Shopping
             </Button>
-
-            {/* Info */}
-            <p className="text-xs text-muted-foreground text-center mt-4">Free shipping on orders over $100</p>
         </Card>
     )
 }

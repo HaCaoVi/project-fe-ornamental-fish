@@ -6,79 +6,63 @@ import { Button } from "@components/ui/button"
 import { Checkbox } from "@components/ui/checkbox"
 import { CartItem } from "./cart-item"
 import { CartSummary } from "./cart-summary"
+import { ICart } from "../../../types/model"
+import { IMeta } from "../../../types/backend"
+import PaginationCustomize from "@components/lib/Pagination"
+import { deleteCartAPI, updateQuantityAPI } from "@lib/api/cart"
 
-interface Product {
-    id: string
-    name: string
-    price: number
-    image: string
-    quantity: number
-    stock: number
-    discount?: number
-    selected: boolean
+interface IProps {
+    data: ICart[],
+    meta: IMeta
 }
-
-const MOCK_CART_ITEMS: Product[] = [
-    {
-        id: "1",
-        name: "Premium Wireless Headphones",
-        price: 199.99,
-        image: "https://cdn.tgdd.vn/Products/Images/42/332934/oppo-reno13-blue-thumbnew-600x600.jpg",
-        quantity: 1,
-        stock: 5,
-        discount: 20,
-        selected: true,
-    },
-    {
-        id: "2",
-        name: "USB-C Cable (2m)",
-        price: 19.99,
-        image: "https://cdn.tgdd.vn/Products/Images/7077/329160/apple-watch-s10-lte-42mm-vien-titanium-day-thep-thumb-3-1-600x600.jpg",
-        quantity: 2,
-        stock: 10,
-        selected: true,
-    },
-    {
-        id: "3",
-        name: "Phone Case - Black",
-        price: 29.99,
-        image: "https://cdn.tgdd.vn/Products/Images/42/329959/vivo-v40-lite-tim-thumb-600x600.jpg",
-        quantity: 1,
-        stock: 0,
-        selected: false,
-    },
-]
-
-export default function CartPage() {
-    const [items, setItems] = useState<Product[]>(MOCK_CART_ITEMS)
+export default function CartPage({ data, meta }: IProps) {
     const [promoCode, setPromoCode] = useState("")
+    const [items, setItems] = useState(data)
 
-    const handleQuantityChange = useCallback((id: string, quantity: number) => {
-        setItems((prev) => prev.map((item) => (item.id === id ? { ...item, quantity: Math.max(0, quantity) } : item)))
+    const handleQuantityChange = useCallback(async (id: string, quantity: number) => {
+        try {
+            setItems(prev =>
+                prev.map(item =>
+                    item._id === id
+                        ? {
+                            ...item,
+                            quantity: Math.max(1, quantity)
+                        }
+                        : item,
+                ),
+            )
+            await updateQuantityAPI(id, quantity)
+        } catch (error) {
+            console.error("Update quantity failed:", error)
+        }
     }, [])
 
     const handleToggleSelect = useCallback((id: string) => {
-        setItems((prev) => prev.map((item) => (item.id === id ? { ...item, selected: !item.selected } : item)))
+        setItems(prev => prev.map(item => (item._id === id ? { ...item, selected: !item.selected } : item)))
     }, [])
 
     const handleSelectAll = useCallback(() => {
-        const allSelected = items.every((item) => item.selected || item.stock === 0)
-        setItems((prev) =>
-            prev.map((item) => ({
+        const allSelected = items.every(item => item.selected || item.product.stock.quantity === 0)
+        setItems(prev =>
+            prev.map(item => ({
                 ...item,
-                selected: !allSelected && item.stock > 0,
+                selected: !allSelected && item.product.stock.quantity > 0,
             })),
         )
     }, [items])
 
-    const handleRemove = useCallback((id: string) => {
-        setItems((prev) => prev.filter((item) => item.id !== id))
+    const handleRemove = useCallback(async (id: string) => {
+        try {
+            setItems(prev => prev.filter(item => item._id !== id))
+            await deleteCartAPI(id)
+        } catch (error) {
+            console.error("Remove item failed:", error)
+        }
     }, [])
 
-    const selectedItems = items.filter((item) => item.selected)
-    const isEmpty = items.length === 0
+    const selectedItems = items.filter(item => item.selected)
 
-    if (isEmpty) {
+    if (items.length === 0) {
         return (
             <div className="min-h-screen bg-background flex items-center justify-center px-4">
                 <div className="text-center">
@@ -91,6 +75,7 @@ export default function CartPage() {
         )
     }
 
+    // ✅ Main render
     return (
         <div className="min-h-screen bg-background">
             <div className="max-w-7xl mx-auto px-4 py-8">
@@ -102,28 +87,31 @@ export default function CartPage() {
                         {/* Select All */}
                         <div className="flex items-center gap-3 p-4 bg-card rounded-lg border border-border">
                             <Checkbox
-                                checked={items.length > 0 && items.every((item) => item.selected || item.stock === 0)}
+                                checked={items.length > 0 && items.every(item => item.selected || item.product.stock.quantity === 0)}
                                 onCheckedChange={handleSelectAll}
                             />
                             <span className="text-sm font-medium">
-                                Select All ({selectedItems.length}/{items.filter((i) => i.stock > 0).length})
+                                Select All ({selectedItems.length}/{items.filter(i => i.product.stock.quantity > 0).length})
                             </span>
                         </div>
-
                         {/* Items List */}
-                        <div className="space-y-3">
-                            {items.map((item) => (
-                                <CartItem
-                                    key={item.id}
-                                    item={item}
-                                    onQuantityChange={handleQuantityChange}
-                                    onToggleSelect={handleToggleSelect}
-                                    onRemove={handleRemove}
-                                />
-                            ))}
+                        <div className="space-y-8">
+                            <div className="grid grid-rows-1 sm:grid-rows-2 lg:grid-rows-4 gap-6">
+                                {items && items.length > 0 && items.map(item => (
+                                    <CartItem
+                                        key={item._id}
+                                        item={item}
+                                        onQuantityChange={handleQuantityChange}
+                                        onToggleSelect={handleToggleSelect}
+                                        onRemove={handleRemove}
+                                    />
+                                ))}
+                            </div>
+
+                            {/* Pagination */}
+                            <PaginationCustomize meta={meta} />
                         </div>
                     </div>
-
                     {/* Sticky Summary */}
                     <div className="lg:col-span-1">
                         <div className="sticky top-4">
