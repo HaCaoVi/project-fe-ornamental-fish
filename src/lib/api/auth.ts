@@ -1,6 +1,6 @@
 "use server";
 
-import { RegisterFormData } from "@app/(client)/auth/register/page";
+import { RegisterFormData } from "@app/(client)/(guest)/auth/register/page";
 import { IBackendRes, ILogin, IUserLogin } from "../../types/backend";
 import sendRequest from "@config/fetch.config";
 import { cookies } from "next/headers";

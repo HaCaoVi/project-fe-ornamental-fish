@@ -2,6 +2,11 @@
 
 import { ProfilePage } from "@components/features/Profile/profile-page";
 import { viewProfileAPI } from "@lib/api/auth";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Profile Page",
+};
 
 const ProfileRoot = async () => {
     const res = await viewProfileAPI();

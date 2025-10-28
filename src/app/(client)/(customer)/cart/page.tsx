@@ -2,6 +2,11 @@
 
 import CartPage from "@components/features/Cart/cart-page";
 import { listCartAPI } from "@lib/api/cart";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Cart Page",
+};
 
 const CartRoot = async ({ searchParams }: any) => {
     const { current, pageSize } = await searchParams;

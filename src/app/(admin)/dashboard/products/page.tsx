@@ -2,6 +2,12 @@
 
 import ProductTable from "@components/features/Table/product.table";
 import { listProductAPI } from "@lib/api/product";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Product Page",
+};
+
 
 const ProductDashboard = async ({ searchParams }: any) => {
     const { current, pageSize, sort, search, filters, category } = await searchParams;

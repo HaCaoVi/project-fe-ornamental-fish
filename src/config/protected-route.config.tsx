@@ -1,8 +1,9 @@
 "use client";
 
+import ModelAuthRoute from "@components/lib/ModalAuthRoute";
 import { useAuthContext } from "@hooks/app.hook";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
     allowedRoles: string[];
@@ -12,17 +13,29 @@ interface Props {
 const ProtectedRoute = ({ allowedRoles, children }: Props) => {
     const { user, isLoading } = useAuthContext()!;
     const router = useRouter();
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         if (!isLoading) {
-            if (!user) router.push("/auth/login");
-
-            else if (!allowedRoles.includes(user.role)) router.push("/unauthorized");
+            if (!user) {
+                setShowModal(true);
+            } else if (!allowedRoles.includes(user.role)) {
+                router.push("/unauthorized");
+            }
         }
-    }, [user, isLoading]);
+    }, [user, isLoading, allowedRoles, router]);
 
-    if (isLoading || !user || !allowedRoles.includes(user.role)) return null;
+    if (isLoading) return null;
+
+    if (!user) {
+        return <ModelAuthRoute open={showModal} onOpenChange={setShowModal} />;
+    }
+
+    if (!allowedRoles.includes(user.role)) {
+        return null;
+    }
 
     return <>{children}</>;
-}
+};
+
 export default ProtectedRoute;

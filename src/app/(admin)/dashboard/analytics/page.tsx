@@ -1,4 +1,12 @@
+"use server"
+
 import { DashboardContent } from "@components/layout/Test/dashboard-content"
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Analytic Page",
+};
+
 
 const AnalyticsPage = () => {
     return (

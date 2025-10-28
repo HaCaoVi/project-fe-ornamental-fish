@@ -1,5 +1,6 @@
 export const ADMIN_ROLE = "ADMIN";
 export const STAFF_ROLE = "STAFF";
+export const CUSTOMER_ROLE = "CUSTOMER";
 export const CATE_FISH = "68dbf1f8a9ab2fed98a56fee";
 export const CATE_FOOD = "68dbf227a9ab2fed98a56ff0";
 export const CATE_ACCESSORY = "68dbf24ba9ab2fed98a56ff2";

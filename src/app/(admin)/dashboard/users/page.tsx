@@ -3,6 +3,12 @@
 import UserTable from "@components/features/Table/user.table"
 import { listUserAPI } from "@lib/api/user"
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "User Page",
+};
+
 const UserDashboard = async ({ searchParams }: any) => {
     const { current, pageSize, sort, search, filters } = await searchParams;
 

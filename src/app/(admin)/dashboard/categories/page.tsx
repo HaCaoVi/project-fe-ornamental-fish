@@ -2,6 +2,12 @@
 
 import CategoryTable from "@components/features/Table/category.table";
 import { listCategoryDetailAPI } from "@lib/api/category"
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Category Page",
+};
+
 
 const CategoryPage = async ({ searchParams }: any) => {
     const { current, pageSize, filters, search } = await searchParams;
