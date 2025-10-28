@@ -23,7 +23,7 @@ const GuestLayout = async ({
     return (
         <div className="min-h-screen bg-background flex flex-col">
             <Header countCart={countCart} />
-            <div className="my-5">
+            <div className="">
                 {children}
             </div>
             <Footer />
