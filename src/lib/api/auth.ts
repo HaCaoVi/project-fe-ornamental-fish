@@ -10,17 +10,6 @@ import { ProfileFormData } from "@components/features/Profile/profile-form";
 import { revalidateTag } from "next/cache";
 import { PROFILE_TAG } from "@lib/constants/tag.constant";
 
-export const getAccountAPI = async () => {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get("access_token")?.value;
-    const refreshToken = cookieStore.get("refresh_token")?.value;
-    if (!accessToken && !refreshToken) return null;
-    return sendRequest<IBackendRes<IUserLogin>>("/api/v1/auth/account", {
-        method: "GET",
-        next: { revalidate: 60 },
-    });
-};
-
 export const logoutAPI = async () => {
     const cookieStore = await cookies();
     const res = await sendRequest<IBackendRes<any>>("/api/v1/auth/logout", {

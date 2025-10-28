@@ -48,3 +48,15 @@ export async function refreshTokenAction(): Promise<string | null> {
     }
     return null;
 }
+
+export const getAccountAPI = async () => {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("access_token")?.value;
+    const refreshToken = cookieStore.get("refresh_token")?.value;
+    if (!accessToken && !refreshToken) return null;
+    const res = await fetch(`${BASE_URL}/api/v1/auth/account`, {
+        method: "GET",
+        next: { revalidate: 60 },
+    });
+    return res.json();
+};

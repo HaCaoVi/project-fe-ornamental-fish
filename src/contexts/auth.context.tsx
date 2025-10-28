@@ -1,9 +1,9 @@
 "use client";
 
-import { getAccountAPI, logoutAPI } from "@lib/api/auth";
+import { logoutAPI } from "@lib/api/auth";
 import type { IBackendRes, ILogin, IUserLogin } from "../types/backend";
 import { createContext, useState, ReactNode, useEffect } from "react";
-import { loginAction } from "@lib/action/auth.action";
+import { getAccountAPI, loginAction } from "@lib/action/auth.action";
 
 interface AuthContextType {
     user: IUserLogin | null;
