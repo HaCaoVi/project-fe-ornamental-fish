@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -11,6 +11,11 @@ import { Input } from "@components/ui/input"
 import { Textarea } from "@components/ui/textarea"
 import { OrderSummary } from "./order-summary"
 import { PaymentMethodSelector } from "./payment-method-selector"
+import AddressCustomize from "@components/lib/AddressSelectGHN"
+import { Label } from "@radix-ui/react-label"
+import { useSearchParams } from "next/navigation"
+import { calculateShippingFee } from "@lib/api/ghn"
+import { ICart } from "../../../types/model"
 
 const paymentSchema = z.object({
     fullName: z.string().min(2, "Full name is required"),
@@ -23,7 +28,11 @@ const paymentSchema = z.object({
 type PaymentFormData = z.infer<typeof paymentSchema>
 
 export function PaymentPage() {
+    const searchParams = useSearchParams()
+    const items: ICart[] = JSON.parse(searchParams.get("items") || "[]")
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [shippingFee, setShippingFee] = useState(0)
+
     const {
         control,
         handleSubmit,
@@ -41,6 +50,32 @@ export function PaymentPage() {
     })
 
     const selectedPaymentMethod = watch("paymentMethod")
+    const address = watch("address")
+
+    const handleCalculateShippingFee = async (districtId: string, wardCode: string) => {
+        try {
+            const listProductOrder = items.map(item => {
+                return {
+                    productId: item.product._id,
+                    quantity: item.quantity
+                }
+            })
+            const res = await calculateShippingFee(listProductOrder, districtId, wardCode)
+            if (res.statusCode === 201 && res.data) {
+                setShippingFee(res.data.total)
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        const [provinceId, districtId, wardCode] = address.split("-");
+        if (provinceId && districtId && wardCode) {
+            handleCalculateShippingFee(districtId, wardCode)
+        }
+    }, [address])
+
 
     const onSubmit = async (data: PaymentFormData) => {
         setIsSubmitting(true)
@@ -77,7 +112,7 @@ export function PaymentPage() {
                         transition={{ duration: 0.5, delay: 0.1 }}
                         className="lg:col-span-1"
                     >
-                        <OrderSummary />
+                        <OrderSummary shippingFee={shippingFee} items={items} />
                     </motion.div>
 
                     {/* Right Column - Payment Form */}
@@ -89,42 +124,39 @@ export function PaymentPage() {
                     >
                         <Card className="p-8 shadow-lg">
                             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                                {/* Full Name */}
-                                <div>
-                                    <label className="block text-sm font-semibold text-foreground mb-2">Full Name</label>
-                                    <Controller
-                                        name="fullName"
-                                        control={control}
-                                        render={({ field }) => <Input {...field} placeholder="John Doe" className="w-full" />}
-                                    />
-                                    {errors.fullName && <p className="text-sm text-destructive">{errors.fullName.message}</p>}
-                                </div>
-
-                                {/* Phone & Address Grid */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-semibold text-foreground mb-2">Phone Number</label>
+                                        <label className="block text-sm font-semibold text-foreground mb-2">Full Name<span className="text-red-500">*</span></label>
+                                        <Controller
+                                            name="fullName"
+                                            control={control}
+                                            render={({ field }) => <Input {...field} placeholder="Enter your fullname" className="w-full" />}
+                                        />
+                                        {errors.fullName && <p className="text-sm text-destructive">{errors.fullName.message}</p>}
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold text-foreground mb-2">Phone Number<span className="text-red-500">*</span></label>
                                         <Controller
                                             name="phone"
                                             control={control}
-                                            render={({ field }) => <Input {...field} placeholder="+1 (555) 000-0000" className="w-full" />}
+                                            render={({ field }) => <Input {...field} placeholder="Enter your phone number" className="w-full" />}
                                         />
                                         {errors.phone && <p className="text-sm text-destructive">{errors.phone.message}</p>}
                                     </div>
-
-                                    <div>
-                                        <label className="block text-sm font-semibold text-foreground mb-2">Address</label>
-                                        <Controller
-                                            name="address"
-                                            control={control}
-                                            render={({ field }) => (
-                                                <Input {...field} placeholder="123 Main St, City, State" className="w-full" />
-                                            )}
-                                        />
-                                        {errors.address && <p className="text-sm text-destructive">{errors.address.message}</p>}
-                                    </div>
                                 </div>
-
+                                <div>
+                                    <Label htmlFor="address" className="text-sm font-bold text-muted-foreground">
+                                        Address<span className="text-red-500">*</span>
+                                    </Label>
+                                    <Controller
+                                        name="address"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <AddressCustomize {...field} />
+                                        )}
+                                    />
+                                    {errors.address && <p className="text-sm text-destructive">{errors.address.message}</p>}
+                                </div>
                                 {/* Note */}
                                 <div>
                                     <label className="block text-sm font-semibold text-foreground mb-2">Order Note (Optional)</label>

@@ -4,7 +4,6 @@ import { useState } from "react"
 import { ProfileHeader } from "./profile-header"
 import { ProfileForm } from "./profile-form"
 import { ChangePasswordModal } from "./change-password-modal"
-import { notify } from "@lib/helpers/notify"
 import { IUser } from "../../../types/model"
 
 export interface ProfileData {
@@ -12,12 +11,6 @@ export interface ProfileData {
 }
 export function ProfilePage({ data }: ProfileData) {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
-
-
-  const handlePasswordChange = () => {
-    setIsPasswordModalOpen(false)
-    notify.success('Profile updated successfully')
-  }
 
   return (
     <main className="min-h-screen bg-background">
@@ -45,7 +38,6 @@ export function ProfilePage({ data }: ProfileData) {
       <ChangePasswordModal
         isOpen={isPasswordModalOpen}
         onClose={() => setIsPasswordModalOpen(false)}
-        onSuccess={handlePasswordChange}
       />
     </main>
   )

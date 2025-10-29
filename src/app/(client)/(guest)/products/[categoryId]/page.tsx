@@ -8,7 +8,7 @@ const ProductsPage = async ({ params, searchParams }: any) => {
     const { categoryId } = await params;
     const { current, pageSize = 20, sort, search, filters } = await searchParams;
 
-    const res = await listProductAPI(current, pageSize, categoryId, filters, search, sort);
+    const res = await listProductAPI(current, pageSize, categoryId, { ...filters, isActivated: true }, search, sort);
 
     const data = res.statusCode === 200 && res.data ? res.data.result : [];
 

@@ -7,7 +7,6 @@ import { Card } from "@components/ui/card"
 import { Input } from "@components/ui/input"
 import { Label } from "@components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
-import { Textarea } from "@components/ui/textarea"
 import { CalendarIcon, Loader2 } from "lucide-react"
 import { useMemo } from "react"
 import { z } from "zod"
@@ -18,6 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover"
 import { Calendar } from "@components/ui/calendar"
 import { cn } from "@components/lib/utils"
 import { format } from "date-fns"
+import AddressCustomize from "../../lib/AddressSelectGHN"
 
 const profileFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
@@ -183,14 +183,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             name="address"
             control={control}
             render={({ field }) => (
-              <Textarea
-                {...field}
-                id="address"
-                rows={3}
-                disabled={isSubmitting}
-                className="mt-2 border-border focus:border-primary"
-                placeholder="Enter your address"
-              />
+              <AddressCustomize {...field} />
             )}
           />
           {errors.address && <p className="mt-1 text-xs text-destructive">{errors.address.message}</p>}

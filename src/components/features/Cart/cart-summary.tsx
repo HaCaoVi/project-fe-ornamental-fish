@@ -5,6 +5,7 @@ import { Card } from "@components/ui/card"
 import { Input } from "@components/ui/input"
 import { Separator } from "@components/ui/separator"
 import { ICart } from "../../../types/model"
+import { useRouter } from "next/navigation"
 
 
 interface CartSummaryProps {
@@ -14,14 +15,23 @@ interface CartSummaryProps {
 }
 
 export function CartSummary({ items, promoCode, onPromoCodeChange }: CartSummaryProps) {
+    const router = useRouter()
     const subtotal = items.reduce((sum, item) => {
-        const price = item.product.discount ? item.product.price * (1 - item.product.discount / 100) : item.product.price
+        const price = item.product.discount ? item.product.price - item.product.discount : item.product.price
         return sum + price * item.quantity
     }, 0)
 
     // Mock promo code discount (10% for valid codes)
     const promoDiscount = promoCode.toUpperCase() === "SAVE10" ? subtotal * 0.1 : 0
     const total = subtotal - promoDiscount
+
+    const handleNavigateToPayment = () => {
+        const query = new URLSearchParams({
+            items: JSON.stringify(items)
+        }).toString()
+
+        router.push(`/payment?${query}`)
+    }
 
     return (
         <Card className="p-6 border border-border">
@@ -75,12 +85,8 @@ export function CartSummary({ items, promoCode, onPromoCodeChange }: CartSummary
             </div>
 
             {/* Checkout Button */}
-            <Button className="w-full mb-3" disabled={items.length === 0} size="lg">
+            <Button onClick={handleNavigateToPayment} className="w-full mb-3" disabled={items.length === 0} size="lg">
                 Proceed to Checkout
-            </Button>
-
-            <Button variant="outline" className="w-full bg-transparent" size="sm">
-                Continue Shopping
             </Button>
         </Card>
     )

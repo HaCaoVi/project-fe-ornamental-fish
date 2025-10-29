@@ -120,12 +120,12 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                     mainVideoUrl: item.mainVideoUrl,
                     isActivated: item.isActivated,
                     categoryDetail: item.categoryDetail._id,
-                    color: item.color ?? "",
+                    color: item.color + "",
                     origin: item.origin,
-                    height: item.height ?? "",
-                    length: item.length ?? "",
-                    width: item.width ?? "",
-                    weight: item.weight ?? "",
+                    height: item.height + "",
+                    length: item.length + "",
+                    width: item.width + "",
+                    weight: item.weight + "",
                 })
             } else {
                 reset({
@@ -218,7 +218,6 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                     <div className="space-y-4">
                         {/* Category-Specific Fields */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-
                             <div className="flex flex-col gap-2">
                                 <Label className="font-semibold" htmlFor="categoryDetail">Category-Specific<span className="text-red-500">*</span></Label>
                                 <Select value={category} onValueChange={setCategory}>

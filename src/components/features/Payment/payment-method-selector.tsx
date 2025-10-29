@@ -9,6 +9,7 @@ interface PaymentMethodSelectorProps {
 }
 
 export function PaymentMethodSelector({ value, onChange }: PaymentMethodSelectorProps) {
+
     const methods = [
         {
             id: "COD",

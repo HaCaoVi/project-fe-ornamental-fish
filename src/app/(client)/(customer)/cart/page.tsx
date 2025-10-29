@@ -1,5 +1,3 @@
-'use server'
-
 import CartPage from "@components/features/Cart/cart-page";
 import { listCartAPI } from "@lib/api/cart";
 import { Metadata } from "next";

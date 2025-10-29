@@ -16,7 +16,7 @@ interface CartItemProps {
 
 export function CartItem({ item, onQuantityChange, onToggleSelect, onRemove }: CartItemProps) {
     const isOutOfStock = item.product.stock.quantity === 0
-    const discountedPrice = item.product.discount ? item.product.price * (1 - item.product.discount / 100) : item.product.price
+    const discountedPrice = item.product.discount ? item.product.price - item.product.discount : item.product.price
     const totalPrice = discountedPrice * item.quantity
 
     return (
