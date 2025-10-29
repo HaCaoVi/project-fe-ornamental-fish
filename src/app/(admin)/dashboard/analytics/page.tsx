@@ -1,5 +1,3 @@
-"use server"
-
 import { DashboardContent } from "@components/layout/Test/dashboard-content"
 import { Metadata } from "next";
 

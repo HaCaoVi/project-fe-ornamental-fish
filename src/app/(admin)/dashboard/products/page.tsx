@@ -1,5 +1,3 @@
-"use server"
-
 import ProductTable from "@components/features/Table/product.table";
 import { listProductAPI } from "@lib/api/product";
 import { Metadata } from "next";

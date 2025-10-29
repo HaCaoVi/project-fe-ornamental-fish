@@ -1,5 +1,3 @@
-"use server"
-
 import UserTable from "@components/features/Table/user.table"
 import { listUserAPI } from "@lib/api/user"
 

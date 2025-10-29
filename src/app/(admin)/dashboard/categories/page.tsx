@@ -1,5 +1,3 @@
-"use server"
-
 import CategoryTable from "@components/features/Table/category.table";
 import { listCategoryDetailAPI } from "@lib/api/category"
 import { Metadata } from "next";

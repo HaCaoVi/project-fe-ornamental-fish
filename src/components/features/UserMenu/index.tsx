@@ -15,6 +15,7 @@ import { notify } from "@lib/helpers/notify"
 import { useRouter } from "next/navigation"
 import { IUserLogin } from "../../../types/backend"
 import { getInitials } from "@lib/helpers/convert.helper"
+import { ADMIN_ROLE, STAFF_ROLE } from "@lib/constants/constant"
 
 interface IProps {
     user: IUserLogin
@@ -35,6 +36,15 @@ const UserMenu = ({ user }: IProps) => {
             console.error("Logout error: ", error);
         }
     }
+    const handleRouteProfile = () => {
+        if (user.role === ADMIN_ROLE || user.role === STAFF_ROLE) {
+            router.push("/dashboard/profile")
+        } else {
+            router.push("/profile")
+        }
+    }
+
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -53,7 +63,7 @@ const UserMenu = ({ user }: IProps) => {
                     </div>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push("/profile")}>
+                <DropdownMenuItem onClick={handleRouteProfile} >
                     <User className="mr-2 h-4 w-4" />
                     <span>View Profile</span>
                 </DropdownMenuItem>
@@ -62,7 +72,7 @@ const UserMenu = ({ user }: IProps) => {
                     <span>Logout</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu >
     )
 }
 
