@@ -1,8 +1,8 @@
 "use server";
 
-import { MAX_AGE_ACCESS_TOKEN, MAX_AGE_REFRESH_TOKEN } from "@lib/constants/constant";
+import { MAX_AGE_ACCESS_TOKEN } from "@lib/constants/constant";
 import { cookies } from "next/headers";
-import { setTokenCookie } from "./set-token.action";
+import { setTokenCookieAction } from "./set-token.action";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
@@ -14,7 +14,7 @@ export async function loginAction(username: string, password: string) {
     });
     const data = await res.json();
     if (res.ok && data?.data) {
-        await setTokenCookie(data.data.access_token, data.data.refresh_token)
+        await setTokenCookieAction(data.data.access_token, data.data.refresh_token)
     }
     return data;
 }
@@ -41,7 +41,7 @@ export async function refreshTokenAction(): Promise<string | null> {
     const data = await res.json();
 
     if (res.ok && data?.data?.access_token) {
-        await setTokenCookie(data.data.access_token, data.data.refresh_token)
+        await setTokenCookieAction(data.data.access_token, data.data.refresh_token)
         return data.data.access_token;
     }
     return null;

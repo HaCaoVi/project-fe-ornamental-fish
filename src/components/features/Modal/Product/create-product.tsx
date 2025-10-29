@@ -46,10 +46,12 @@ const productSchema = z
         mainVideoUrl: z.string().optional(),
         isActivated: z.boolean(),
         categoryDetail: z.string().min(1, "Category detail is required"),
-        color: z.string().optional(),
+        color: z.string().min(1, "Color image required"),
         origin: z.string().min(1, "Origin image required"),
-        size: z.string().optional(),
-        weight: z.string().optional(),
+        height: z.string().min(1, "Height is required"),
+        weight: z.string().min(1, "Weight is required"),
+        length: z.string().min(1, "Length is required"),
+        width: z.string().min(1, "Width is required"),
     })
     .superRefine((data, ctx) => {
         const price = Number(data.price)
@@ -95,8 +97,10 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
             categoryDetail: "",
             color: "",
             origin: "",
-            size: "",
-            weight: ""
+            height: "",
+            weight: "",
+            length: "",
+            width: "",
         },
     })
     const { control, handleSubmit, clearErrors, reset, formState: { isSubmitting } } = form
@@ -118,7 +122,9 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                     categoryDetail: item.categoryDetail._id,
                     color: item.color ?? "",
                     origin: item.origin,
-                    size: item.size ?? "",
+                    height: item.height ?? "",
+                    length: item.length ?? "",
+                    width: item.width ?? "",
                     weight: item.weight ?? "",
                 })
             } else {
@@ -135,8 +141,10 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                     categoryDetail: "",
                     color: "",
                     origin: "",
-                    size: "",
-                    weight: ""
+                    height: "",
+                    length: "",
+                    width: "",
+                    weight: "",
                 });
             }
         }
@@ -315,22 +323,36 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                             )} />
                             <Controller name="color" control={control} render={({ field, fieldState }) => (
                                 <div className="flex flex-col gap-2">
-                                    <Label className="font-semibold" htmlFor="color">Color</Label>
+                                    <Label className="font-semibold" htmlFor="color">Color<span className="text-red-500">*</span></Label>
                                     <Input className="border border-slate-200" onChange={field.onChange} value={field.value ?? ""} placeholder="Enter color" />
                                     {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                 </div>
                             )} />
-                            <Controller name="size" control={control} render={({ field, fieldState }) => (
+                            <Controller name="height" control={control} render={({ field, fieldState }) => (
                                 <div className="flex flex-col gap-2">
-                                    <Label className="font-semibold" htmlFor="size">Size</Label>
-                                    <Input className="border border-slate-200" onChange={field.onChange} value={field.value ?? ""} placeholder="Enter size" />
+                                    <Label className="font-semibold" htmlFor="size">Height (cm)<span className="text-red-500">*</span></Label>
+                                    <PriceInput className="border border-slate-200"  {...field} placeholder="Enter height" />
+                                    {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
+                                </div>
+                            )} />
+                            <Controller name="length" control={control} render={({ field, fieldState }) => (
+                                <div className="flex flex-col gap-2">
+                                    <Label className="font-semibold" htmlFor="size">Length (cm)<span className="text-red-500">*</span></Label>
+                                    <PriceInput className="border border-slate-200"  {...field} placeholder="Enter length" />
+                                    {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
+                                </div>
+                            )} />
+                            <Controller name="width" control={control} render={({ field, fieldState }) => (
+                                <div className="flex flex-col gap-2">
+                                    <Label className="font-semibold" htmlFor="size">Width (cm)<span className="text-red-500">*</span></Label>
+                                    <PriceInput className="border border-slate-200"  {...field} placeholder="Enter width" />
                                     {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                 </div>
                             )} />
                             <Controller name="weight" control={control} render={({ field, fieldState }) => (
                                 <div className="flex flex-col gap-2">
-                                    <Label className="font-semibold" htmlFor="size">Weight</Label>
-                                    <Input className="border border-slate-200" onChange={field.onChange} value={field.value ?? ""} placeholder="Enter weight" />
+                                    <Label className="font-semibold" htmlFor="size">Weight (g)<span className="text-red-500">*</span></Label>
+                                    <PriceInput className="border border-slate-200"  {...field} placeholder="Enter weight" />
                                     {fieldState.error && <p className="text-sm text-red-500">{fieldState.error.message}</p>}
                                 </div>
                             )} />

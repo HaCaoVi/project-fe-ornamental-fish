@@ -49,34 +49,36 @@ export interface ICategoryDetail {
 }
 
 export interface IStock {
-    _id: Types.ObjectId | string;
-    quantity: number;
-    sold: number;
+    _id: Types.ObjectId | string,
+    quantity: number,
+    sold: number,
 }
 
 export interface IProduct {
-    _id: string;
-    name: string;
-    code: string;
-    description: string;
-    price: number;
-    discount: number;
-    mainImageUrl: string;
-    mainVideoUrl: string;
-    isActivated: boolean;
-    isDeleted: boolean;
-    categoryDetail: ICategoryDetail;
-    createdBy: string;
-    updatedBy: string;
-    deletedBy?: string;
-    createdAt: Date | string;
-    updatedAt: Date | string;
-    deletedAt?: Date | string;
-    stock: IStock;
-    color: string;
-    origin: string;
-    size: string;
-    weight: string;
+    _id: string,
+    name: string,
+    code: string,
+    description: string,
+    price: number,
+    discount: number,
+    mainImageUrl: string,
+    mainVideoUrl: string,
+    isActivated: boolean,
+    isDeleted: boolean,
+    categoryDetail: ICategoryDetail,
+    createdBy: string,
+    updatedBy: string,
+    deletedBy?: string,
+    createdAt: Date | string,
+    updatedAt: Date | string,
+    deletedAt?: Date | string,
+    stock: IStock,
+    color: string,
+    origin: string,
+    height: string,
+    weight: string,
+    length: string,
+    width: string,
 }
 
 export interface ICart {

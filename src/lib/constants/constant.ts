@@ -6,5 +6,5 @@ export const CATE_FOOD = "68dbf227a9ab2fed98a56ff0";
 export const CATE_ACCESSORY = "68dbf24ba9ab2fed98a56ff2";
 export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 export const MAX_VIDEO_SIZE = 25 * 1024 * 1024; // 50MB
-export const MAX_AGE_ACCESS_TOKEN = 2 * 60 * 60
+export const MAX_AGE_ACCESS_TOKEN = 24 * 60 * 60
 export const MAX_AGE_REFRESH_TOKEN = 30 * 24 * 60 * 60

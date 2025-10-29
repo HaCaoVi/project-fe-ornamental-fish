@@ -66,7 +66,7 @@ export function Sidebar({ onClose }: SidebarProps) {
 
             {/* Footer */}
             <div className="p-4 border-t border-sidebar-border">
-                <div className="text-xs text-muted-foreground">© 2025 ShopMart. All rights reserved.</div>
+                <div className="text-xs text-muted-foreground">© 2025 IFish. All rights reserved.</div>
             </div>
         </div>
     )
