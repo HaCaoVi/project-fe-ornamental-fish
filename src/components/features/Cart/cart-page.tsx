@@ -10,6 +10,7 @@ import { ICart } from "../../../types/model"
 import { IMeta } from "../../../types/backend"
 import PaginationCustomize from "@components/lib/Pagination"
 import { deleteCartAPI, updateQuantityAPI } from "@lib/api/cart"
+import { notify } from "@lib/helpers/notify"
 
 interface IProps {
     data: ICart[],
@@ -19,19 +20,23 @@ export default function CartPage({ data, meta }: IProps) {
     const [promoCode, setPromoCode] = useState("")
     const [items, setItems] = useState(data)
 
-    const handleQuantityChange = useCallback(async (id: string, quantity: number) => {
+    const handleQuantityChange = useCallback(async (id: string, productId: string, quantity: number) => {
         try {
-            setItems(prev =>
-                prev.map(item =>
-                    item._id === id
-                        ? {
-                            ...item,
-                            quantity: Math.max(1, quantity)
-                        }
-                        : item,
-                ),
-            )
-            await updateQuantityAPI(id, quantity)
+            const res = await updateQuantityAPI(id, productId, quantity);
+            if (res.statusCode === 200) {
+                setItems(prev =>
+                    prev.map(item =>
+                        item._id === id
+                            ? {
+                                ...item,
+                                quantity: Math.max(1, quantity)
+                            }
+                            : item,
+                    ),
+                )
+            } else {
+                notify.warning(res.message)
+            }
         } catch (error) {
             console.error("Update quantity failed:", error)
         }

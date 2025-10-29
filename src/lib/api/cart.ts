@@ -45,12 +45,12 @@ export const listCartAPI = async (
     },)
 }
 
-export const updateQuantityAPI = async (cartId: string, quantity: number) => {
+export const updateQuantityAPI = async (cartId: string, product: string, quantity: number) => {
     const url = `/api/v1/carts/update-quantity/${cartId}`
     const res = await sendRequest<IBackendRes<any>>(url, {
         method: "PATCH",
         body: JSON.stringify({
-            quantity
+            quantity, product
         }),
     })
     if (res.statusCode === 200) {
