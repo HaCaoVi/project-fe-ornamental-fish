@@ -60,6 +60,7 @@ export function ProductImageViewer({
                     src={imageUrl || "/placeholder.svg"}
                     alt={productName}
                     fill
+                    sizes=""
                     className={`object-cover transition-transform duration-300 ${isZooming ? "scale-150" : "scale-100"
                         }`}
                     style={

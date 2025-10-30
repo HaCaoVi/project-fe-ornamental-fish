@@ -54,6 +54,7 @@ export function CartItem({ item, onQuantityChange, onToggleSelect, onRemove }: C
                         src={item.product.mainImageUrl || "/placeholder.svg"}
                         alt={item.product.name}
                         fill
+                        sizes=""
                         className="object-cover"
                     />
                 </div>

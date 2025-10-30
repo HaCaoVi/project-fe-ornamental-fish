@@ -34,10 +34,10 @@ export function BlogCard({ post }: BlogCardProps) {
             src={post.image || "/placeholder.svg"}
             alt={post.title}
             fill
+            sizes="200"
             className="object-cover transition-transform duration-300 group-hover:scale-110"
           />
         </div>
-
         <CardHeader className="pb-3">
           <Badge variant="secondary" className={cn("w-fit mb-2", categoryColors[post.category] || "bg-muted")}>
             {post.category
