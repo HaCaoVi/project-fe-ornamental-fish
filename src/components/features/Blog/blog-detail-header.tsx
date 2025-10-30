@@ -26,7 +26,7 @@ export function BlogDetailHeader({ post }: BlogDetailHeaderProps) {
   return (
     <div className="relative">
       <div className="relative h-[400px] md:h-[500px] overflow-hidden">
-        <Image src={post.image || "/placeholder.svg"} alt={post.title} fill sizes="" className="object-cover" priority />
+        <Image src={post.image || "/placeholder.svg"} alt={post.title} fill sizes="100" className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
       </div>
 

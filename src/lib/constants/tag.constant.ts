@@ -3,3 +3,4 @@ export const LIST_PRODUCT_TAG = "list-product";
 export const LIST_CATEGORY_DETAIL_TAG = "list-category-detail";
 export const PROFILE_TAG = "view-profile"
 export const COUNT_CART_TAG = "count-cart"
+export const LIST_ORDER_OF_USER_TAG = "list-order-of-user"

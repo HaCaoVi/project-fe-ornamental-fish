@@ -49,7 +49,7 @@ export function ProductCard({ product }: ProductCardProps) {
                             src={product.mainImageUrl || "/placeholder.svg"}
                             alt={product.name}
                             fill
-                            sizes=""
+                            sizes="100"
                             className="object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                         {product.stock.quantity === 0 ? (

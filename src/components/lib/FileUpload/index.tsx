@@ -119,7 +119,7 @@ export default function FileUpload({ onChange, value, isImage, isVideo }: IProps
                                 src={preview}
                                 alt="Uploaded preview"
                                 fill
-                                sizes=""
+                                sizes="100"
                                 className="object-cover"
                             />
                         )}

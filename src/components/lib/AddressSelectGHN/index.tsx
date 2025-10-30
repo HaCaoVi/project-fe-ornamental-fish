@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Label } from "@components/ui/label"
 import {
     Command,
     CommandEmpty,
@@ -37,8 +36,7 @@ const AddressCustomize = (field: any) => {
     useEffect(() => {
         const value = field?.value
         if (!value || provinces.length === 0) return
-
-        const [provinceId, districtId, wardCode] = value.split("-")
+        const [provinceId, districtId, wardCode] = value.code.split("-")
 
         const foundProvince = provinces.find((p) => p.ProvinceID == provinceId)
         if (foundProvince) {
@@ -86,11 +84,20 @@ const AddressCustomize = (field: any) => {
 
     useEffect(() => {
         if (selectedProvince && selectedDistrict && selectedWard) {
-            field?.onChange(
-                `${selectedProvince.ProvinceID}-${selectedDistrict.DistrictID}-${selectedWard.WardCode}`
-            )
+            const newValue = {
+                code: `${selectedProvince.ProvinceID}-${selectedDistrict.DistrictID}-${selectedWard.WardCode}`,
+                location: `${selectedProvince.ProvinceName}-${selectedDistrict.DistrictName}-${selectedWard.WardName}`
+            }
+            if (
+                !field?.value ||
+                field.value.code !== newValue.code ||
+                field.value.location !== newValue.location
+            ) {
+                field?.onChange(newValue)
+            }
         }
     }, [selectedProvince, selectedDistrict, selectedWard])
+
 
     return (
         <>

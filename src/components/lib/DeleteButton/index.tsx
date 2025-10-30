@@ -17,19 +17,20 @@ import {
 interface DeleteButtonProps {
     id: string
     onDelete: (id: string) => void,
-
+    className?: string
 }
 
-export function DeleteButton({ id, onDelete }: DeleteButtonProps) {
+export function DeleteButton({ id, onDelete, className }: DeleteButtonProps) {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="h-9 w-9 p-0 text-muted-foreground hover:text-red-600 hover:bg-red-50 
+                    className={`h-9 w-9 p-0 text-muted-foreground hover:text-red-600 hover:bg-red-50 
           dark:hover:bg-red-950/30 dark:hover:text-red-400 transition-all duration-200 
-          rounded-lg group border border-transparent hover:border-red-200 dark:hover:border-red-800"
+          rounded-lg group border border-transparent hover:border-red-200 dark:hover:border-red-800
+         ${className} `}
                     title="Delete item"
                 >
                     <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />

@@ -29,7 +29,17 @@ const profileFormSchema = z.object({
       message: "Birthday must be a past date",
     })),
   gender: z.enum(["MALE", "FEMALE", "OTHER"]),
-  address: z.string().min(5, "Address must be at least 5 characters").max(200, "Address must be less than 200 characters"),
+  address: z.object({
+    code: z
+      .string()
+      .min(1, "Address code is required")
+      .max(20, "Address code must be less than 20 characters"),
+
+    location: z
+      .string()
+      .min(5, "Address location must be at least 5 characters")
+      .max(200, "Address location must be less than 200 characters"),
+  }),
 })
 
 export type ProfileFormData = z.infer<typeof profileFormSchema>

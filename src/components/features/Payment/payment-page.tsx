@@ -13,37 +13,50 @@ import { OrderSummary } from "./order-summary"
 import { PaymentMethodSelector } from "./payment-method-selector"
 import AddressCustomize from "@components/lib/AddressSelectGHN"
 import { Label } from "@radix-ui/react-label"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { calculateShippingFee } from "@lib/api/ghn"
 import { ICart } from "../../../types/model"
+import { createOrderAPI } from "@lib/api/order"
+import { notify } from "@lib/helpers/notify"
 
 const paymentSchema = z.object({
-    fullName: z.string().min(2, "Full name is required"),
-    phone: z.string().regex(/^[0-9+\-\s()]+$/, "Invalid phone number"),
-    address: z.string().min(5, "Address is required"),
+    fullname: z.string().min(2, "Full name is required"),
+    phone: z
+        .string()
+        .regex(/^(0|\+84)[0-9]{8,9}$/, "Invalid Vietnamese phone number"),
+    address: z.object({
+        code: z
+            .string()
+            .min(1, "Address code is required")
+            .max(20, "Address code must be less than 20 characters"),
+
+        location: z
+            .string()
+            .min(5, "Address location must be at least 5 characters")
+            .max(200, "Address location must be less than 200 characters"),
+    }),
     note: z.string().optional(),
     paymentMethod: z.enum(["COD", "VN_PAY"], { message: "Please select a payment method" }),
 })
 
-type PaymentFormData = z.infer<typeof paymentSchema>
+export type PaymentFormData = z.infer<typeof paymentSchema>
 
 export function PaymentPage() {
     const searchParams = useSearchParams()
     const items: ICart[] = JSON.parse(searchParams.get("items") || "[]")
-    const [isSubmitting, setIsSubmitting] = useState(false)
     const [shippingFee, setShippingFee] = useState(0)
-
+    const router = useRouter()
     const {
         control,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         watch,
     } = useForm<PaymentFormData>({
         resolver: zodResolver(paymentSchema),
         defaultValues: {
-            fullName: "",
+            fullname: "",
             phone: "",
-            address: "",
+            address: { code: "", location: "" },
             note: "",
             paymentMethod: "COD",
         },
@@ -70,7 +83,7 @@ export function PaymentPage() {
     }
 
     useEffect(() => {
-        const [provinceId, districtId, wardCode] = address.split("-");
+        const [provinceId, districtId, wardCode] = address.code.split("-");
         if (provinceId && districtId && wardCode) {
             handleCalculateShippingFee(districtId, wardCode)
         }
@@ -78,14 +91,25 @@ export function PaymentPage() {
 
 
     const onSubmit = async (data: PaymentFormData) => {
-        setIsSubmitting(true)
         try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1000))
-            console.log("Order placed:", data)
-            alert("Order placed successfully!")
-        } finally {
-            setIsSubmitting(false)
+            const orderItems = items.map(e => {
+                return {
+                    productId: e.product._id,
+                    name: e.product.name,
+                    quantity: e.quantity
+                }
+            })
+            const listCartId = items.map(e => e._id)
+
+            const res = await createOrderAPI(data, orderItems, listCartId);
+            if (res.statusCode === 201) {
+                notify.success(res.message);
+                router.replace("/orders")
+            } else {
+                notify.warning(res.message)
+            }
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -128,11 +152,11 @@ export function PaymentPage() {
                                     <div>
                                         <label className="block text-sm font-semibold text-foreground mb-2">Full Name<span className="text-red-500">*</span></label>
                                         <Controller
-                                            name="fullName"
+                                            name="fullname"
                                             control={control}
                                             render={({ field }) => <Input {...field} placeholder="Enter your fullname" className="w-full" />}
                                         />
-                                        {errors.fullName && <p className="text-sm text-destructive">{errors.fullName.message}</p>}
+                                        {errors.fullname && <p className="text-sm text-destructive">{errors.fullname.message}</p>}
                                     </div>
                                     <div>
                                         <label className="block text-sm font-semibold text-foreground mb-2">Phone Number<span className="text-red-500">*</span></label>

@@ -1,11 +1,12 @@
 "use client"
 
-import { Minus, Plus, Trash2 } from "lucide-react"
+import { Minus, Plus } from "lucide-react"
 import { Button } from "@components/ui/button"
 import { Card } from "@components/ui/card"
 import { Checkbox } from "@components/ui/checkbox"
 import Image from "next/image"
 import { ICart } from "../../../types/model"
+import { DeleteButton } from "@components/lib/DeleteButton"
 
 interface CartItemProps {
     item: ICart
@@ -18,7 +19,7 @@ export function CartItem({ item, onQuantityChange, onToggleSelect, onRemove }: C
     const isOutOfStock = item.product.stock.quantity === 0
     const discountedPrice = item.product.discount ? item.product.price - item.product.discount : item.product.price
     const totalPrice = discountedPrice * item.quantity
-    const stockNotEnough = item.product.stock.quantity + 1 < item.quantity
+    const stockNotEnough = item.product.stock.quantity < item.quantity
 
     return (
         <Card
@@ -54,7 +55,7 @@ export function CartItem({ item, onQuantityChange, onToggleSelect, onRemove }: C
                         src={item.product.mainImageUrl || "/placeholder.svg"}
                         alt={item.product.name}
                         fill
-                        sizes=""
+                        sizes="100"
                         className="object-cover"
                     />
                 </div>
@@ -138,14 +139,9 @@ export function CartItem({ item, onQuantityChange, onToggleSelect, onRemove }: C
                             })}
                         </p>
                     </div>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onRemove(item._id)}
+                    <DeleteButton
                         className={`text-destructive hover:text-destructive hover:bg-destructive/10 ${stockNotEnough || isOutOfStock ? "z-50" : ""}`}
-                    >
-                        <Trash2 className="w-4 h-4" />
-                    </Button>
+                        id={item._id} onDelete={onRemove} />
                 </div>
             </div>
         </Card>

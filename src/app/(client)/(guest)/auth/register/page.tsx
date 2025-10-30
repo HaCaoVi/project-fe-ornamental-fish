@@ -21,8 +21,7 @@ const registerSchema = z
             .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: "Please enter a valid email address" }),
         phone: z
             .string()
-            .min(8, "Phone number must be at least 8 digits")
-            .regex(/^[0-9]+$/, "Phone number must contain only numbers"),
+            .regex(/^(0|\+84)[0-9]{8,9}$/, "Invalid Vietnamese phone number"),
         password: z.string().min(8, "Password must be at least 8 characters long"),
         confirmPassword: z.string().min(1, "Please confirm your password"),
     })
