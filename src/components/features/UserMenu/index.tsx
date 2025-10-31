@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu"
-import { User, LogOut } from "lucide-react"
+import { User, LogOut, ListOrdered } from "lucide-react"
 import { useAuthContext } from "@hooks/app.hook"
 import { notify } from "@lib/helpers/notify"
 import { useRouter } from "next/navigation"
@@ -44,7 +44,9 @@ const UserMenu = ({ user }: IProps) => {
         }
     }
 
-
+    const handleRouteOrder = () => {
+        router.push("/orders")
+    }
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -66,6 +68,10 @@ const UserMenu = ({ user }: IProps) => {
                 <DropdownMenuItem onClick={handleRouteProfile} >
                     <User className="mr-2 h-4 w-4" />
                     <span>View Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleRouteOrder} >
+                    <ListOrdered className="mr-2 h-4 w-4" />
+                    <span>My order</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />

@@ -102,6 +102,7 @@ interface IOrderItem {
     _id: string,
     product: {
         _id: string,
+        code: string,
         name: string,
         mainImageUrl: string
     },
@@ -121,7 +122,7 @@ export interface IOrder {
     note: string | null,
     totalAmount: number,
     shippingFee: number,
-    status: "PENDING" | "ACCEPTED" | "CANCELLED" | "REJECTED",
+    status: "PENDING" | "ACCEPTED" | "REJECTED",
     createdAt: string,
     updatedAt: string,
     orderItems: IOrderItem[]

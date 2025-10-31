@@ -7,8 +7,8 @@ export const metadata: Metadata = {
 };
 
 const OrderRoot = async ({ searchParams }: any) => {
-    const { current, pageSize } = await searchParams;
-    const res = await listOrderOfUserAPI(current, pageSize)
+    const { current, pageSize, filters } = await searchParams;
+    const res = await listOrderOfUserAPI(current, pageSize, filters)
     const data = res.statusCode === 200 && res.data ? res.data.result : []
     const meta = {
         current: res.data?.meta?.current || 1,

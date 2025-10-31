@@ -26,11 +26,13 @@ export const createOrderAPI = async (info: PaymentFormData, orderItems: any, lis
 export const listOrderOfUserAPI = async (
     current: number,
     pageSize: number,
+    filters?: any,
 ) => {
     const query: Record<string, string> = {
         current: String(current ?? 1),
         pageSize: String(pageSize ?? 10),
     }
+    if (filters) query.filters = typeof filters === "string" ? filters : JSON.stringify(filters)
     const params = new URLSearchParams(query).toString()
     const url = `/api/v1/orders/list-order-of-user?${params}`
     return sendRequest<IBackendRes<IPagination<IOrder[]>>>(url, {
@@ -38,3 +40,14 @@ export const listOrderOfUserAPI = async (
         next: { tags: [LIST_ORDER_OF_USER_TAG], revalidate: 60 },
     },)
 }
+
+export const cancelOrderAPI = async (orderId: string) => {
+    const url = `/api/v1/orders/cancel-order/${orderId}`
+    const res = await sendRequest<IBackendRes<any>>(url, {
+        method: "DELETE",
+    })
+    if (res.statusCode === 200) {
+        revalidateTag(LIST_ORDER_OF_USER_TAG)
+    }
+    return res;
+};

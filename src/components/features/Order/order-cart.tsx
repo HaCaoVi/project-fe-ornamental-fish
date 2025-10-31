@@ -16,20 +16,21 @@ import {
 } from "@components/ui/alert-dialog"
 import { IOrder } from "../../../types/model"
 import { format } from "date-fns"
+import { OrderItem } from "./order-item"
+import { cancelOrderAPI } from "@lib/api/order"
+import { notify } from "@lib/helpers/notify"
 
 interface OrderCardProps {
     order: IOrder
-    onSelect: () => void
 }
 
 const statusConfig = {
     PENDING: { label: "Pending", className: "bg-gray-100 text-gray-800" },
     ACCEPTED: { label: "Accepted", className: "bg-green-100 text-green-800" },
-    CANCELLED: { label: "Cancelled", className: "bg-red-100 text-red-800" },
     REJECTED: { label: "Rejected", className: "bg-red-100 text-red-800" },
 }
 
-export function OrderCard({ order, onSelect }: OrderCardProps) {
+export function OrderCard({ order }: OrderCardProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     const [showCancelDialog, setShowCancelDialog] = useState(false)
     const [isCanceling, setIsCanceling] = useState(false)
@@ -37,9 +38,12 @@ export function OrderCard({ order, onSelect }: OrderCardProps) {
     const handleCancel = async () => {
         setIsCanceling(true)
         try {
-            // Call cancel API
-            await fetch(`/api/orders/${order._id}/cancel`, { method: "POST" })
-            // In a real app, you'd refresh the order list here
+            const res = await cancelOrderAPI(order._id);
+            if (res.statusCode === 200) {
+                notify.success(res.message);
+            } else {
+                notify.warning(res.message);
+            }
         } catch (error) {
             console.error("Failed to cancel order:", error)
         } finally {
@@ -81,25 +85,25 @@ export function OrderCard({ order, onSelect }: OrderCardProps) {
                     {/* Summary Row */}
                     <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
                         <div>
-                            <p className="text-xs text-muted-foreground">Address</p>
+                            <p className="text-xs text-muted-foreground font-semibold">Address</p>
                             <p className="mt-1 text-sm font-medium text-foreground line-clamp-1">{order.address.location
                                 .split("-")
                                 .reverse()
                                 .join(", ")}</p>
                         </div>
                         <div>
-                            <p className="text-xs text-muted-foreground">Shipping</p>
+                            <p className="text-xs text-muted-foreground font-semibold">Shipping</p>
                             <p className="mt-1 text-sm font-medium text-foreground">{order.shippingFee.toLocaleString("vi-VN", {
                                 style: "currency",
                                 currency: "VND",
                             })}</p>
                         </div>
                         <div>
-                            <p className="text-xs text-muted-foreground">Payment</p>
+                            <p className="text-xs text-muted-foreground font-semibold">Payment</p>
                             <p className="mt-1 text-sm font-medium text-foreground">{order.payment.method}</p>
                         </div>
                         <div>
-                            <p className="text-xs text-muted-foreground">Date</p>
+                            <p className="text-xs text-muted-foreground font-semibold">Date</p>
                             <p className="mt-1 text-sm font-medium text-foreground">{format(new Date(order.createdAt), "PPP p")}</p>
                         </div>
                     </div>
@@ -113,32 +117,18 @@ export function OrderCard({ order, onSelect }: OrderCardProps) {
                                     <p className="mt-1 text-sm text-foreground">{order.note}</p>
                                 </div>
                             )}
-
-                            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                                <div>
-                                    <p className="text-xs text-muted-foreground">Payment Status</p>
-                                    <p className="mt-1 text-sm font-medium text-foreground capitalize">{order.payment.status}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-muted-foreground">Transaction ID</p>
-                                    <p className="mt-1 text-sm font-medium text-foreground">{order.payment.transactionId}</p>
-                                </div>
-                            </div>
-
-                            {/* Actions */}
-                            <div className="mt-4 flex flex-wrap gap-2">
-                                <Button variant="outline" size="sm" onClick={onSelect}>
-                                    View Details
-                                </Button>
-                                {order.status === "PENDING" && (
-                                    <Button variant="destructive" size="sm" onClick={() => setShowCancelDialog(true)}>
-                                        <Trash2 className="mr-2 h-4 w-4" />
-                                        Cancel Order
-                                    </Button>
-                                )}
-                            </div>
+                            <OrderItem orderItems={order.orderItems} />
                         </div>
                     )}
+                    {/* Actions */}
+                    <div className="mt-4 flex justify-end flex-wrap gap-2">
+                        {order.status === "PENDING" && (
+                            <Button variant="destructive" size="sm" onClick={() => setShowCancelDialog(true)}>
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Cancel Order
+                            </Button>
+                        )}
+                    </div>
                 </div>
             </Card>
 

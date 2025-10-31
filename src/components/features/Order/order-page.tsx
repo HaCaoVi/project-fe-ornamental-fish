@@ -1,29 +1,45 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Input } from "@components/ui/input"
 import { Button } from "@components/ui/button"
 import { OrderList } from "@components/features/Order/order-list"
-import { OrderDetailsModal } from "@components/features/Order/order-detail"
 import { IOrder } from "../../../types/model"
 import { IMeta } from "../../../types/backend"
+import PaginationCustomize from "@components/lib/Pagination"
+import { useRouter, useSearchParams } from "next/navigation"
 
-type OrderStatus = "all" | "PENDING" | "ACCEPTED" | "CANCELLED"
+type OrderStatus = "*" | "PENDING" | "ACCEPTED"
 interface IProps {
     data: IOrder[],
     meta: IMeta
 }
-export default function OrdersPage({ data, meta }: IProps) {
-    const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null)
-    const [statusFilter, setStatusFilter] = useState<OrderStatus>("all")
-    const [searchQuery, setSearchQuery] = useState("")
 
-    const statuses: { value: OrderStatus; label: string }[] = [
-        { value: "all", label: "All Orders" },
-        { value: "PENDING", label: "Pending" },
-        { value: "ACCEPTED", label: "Accepted" },
-        { value: "CANCELLED", label: "Cancelled" },
-    ]
+const statuses: { value: OrderStatus; label: string }[] = [
+    { value: "*", label: "All Orders" },
+    { value: "PENDING", label: "Pending" },
+    { value: "ACCEPTED", label: "Accepted" },
+]
+
+export default function OrdersPage({ data, meta }: IProps) {
+    const [filters, setFilters] = useState<OrderStatus>("*")
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (filters !== "*") {
+            params.set("filters", JSON.stringify({ status: filters }));
+        } else {
+            params.delete("filters");
+        }
+
+        const newUrl = `?${params.toString()}`;
+        const currentUrl = `?${searchParams.toString()}`;
+        if (newUrl !== currentUrl) {
+            router.replace(newUrl);
+        }
+    }, [filters]);
 
     return (
         <main className="min-h-screen bg-background">
@@ -36,36 +52,25 @@ export default function OrdersPage({ data, meta }: IProps) {
 
                 {/* Filters */}
                 <div className="mb-6 space-y-4">
-                    {/* Search */}
-                    <div>
-                        <Input
-                            placeholder="Search by order code or phone..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="max-w-md"
-                        />
-                    </div>
-
                     {/* Status Filter */}
                     <div className="flex flex-wrap gap-2">
                         {statuses.map((status) => (
                             <Button
                                 key={status.value}
-                                variant={statusFilter === status.value ? "default" : "outline"}
+                                variant={filters === status.value ? "default" : "outline"}
                                 size="sm"
-                                onClick={() => setStatusFilter(status.value)}
+                                onClick={() => setFilters(status.value)}
                             >
                                 {status.label}
                             </Button>
                         ))}
                     </div>
                 </div>
-
                 {/* Order List */}
-                <OrderList orders={data} statusFilter={statusFilter} searchQuery={searchQuery} onSelectOrder={setSelectedOrder} />
-
-                {/* Order Details Modal */}
-                {selectedOrder && <OrderDetailsModal order={selectedOrder} onClose={() => setSelectedOrder(null)} />}
+                <OrderList orders={data} />
+                {/* Pagination */}
+                <div className="my-5"></div>
+                <PaginationCustomize meta={meta} />
             </div>
         </main>
     )
