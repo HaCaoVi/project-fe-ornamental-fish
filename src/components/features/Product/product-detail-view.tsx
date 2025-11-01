@@ -127,8 +127,8 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                                 <Ruler className="h-5 w-5 text-primary" />
                             </div>
                             <div>
-                                <p className="text-sm text-muted-foreground">Size</p>
-                                <p className="font-semibold text-foreground">{product.size}</p>
+                                <p className="text-sm text-muted-foreground">Length</p>
+                                <p className="font-semibold text-foreground">{product.length}</p>
                             </div>
                         </div>
 

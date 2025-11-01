@@ -45,7 +45,17 @@ const createUserSchema = z.object({
     gender: z.enum(["MALE", "FEMALE", "OTHER"], {
         message: "Please select a gender",
     }),
-    address: z.string().min(1, "Address is required"),
+    address: z.object({
+        code: z
+            .string()
+            .min(1, "Address code is required")
+            .max(20, "Address code must be less than 20 characters"),
+
+        location: z
+            .string()
+            .min(5, "Address location must be at least 5 characters")
+            .max(200, "Address location must be less than 200 characters"),
+    }),
     role: z.string().min(1, "Please select a role"),
     isActivated: z.boolean(),
 })
@@ -68,7 +78,7 @@ export function CreateUserModal({ open, onOpenChange, listRole }: CreateUserModa
             email: "",
             password: "",
             gender: "MALE",
-            address: "",
+            address: { code: "", location: "" },
             role: "",
             isActivated: false,
         },

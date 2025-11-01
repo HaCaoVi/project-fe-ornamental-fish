@@ -30,7 +30,7 @@ export const listUserAPI = async (
     },)
 }
 
-export const createUserAPI = async (name: string, email: string, password: string, birthday: Date, gender: string, address: string, role: string, isActivated: boolean) => {
+export const createUserAPI = async (name: string, email: string, password: string, birthday: Date, gender: string, address: { code: string, location: string }, role: string, isActivated: boolean) => {
     const url = `/api/v1/users/create-user`
     const res = await sendRequest<IBackendRes<any>>(url, {
         method: "POST",
@@ -44,7 +44,7 @@ export const createUserAPI = async (name: string, email: string, password: strin
     return res;
 };
 
-export const updateUserAPI = async (userId: string, name: string, birthday: Date, gender: string, address: string, role: string, isActivated: boolean) => {
+export const updateUserAPI = async (userId: string, name: string, birthday: Date, gender: string, address: { code: string, location: string }, role: string, isActivated: boolean) => {
     const url = `/api/v1/users/update-user/${userId}`
     const res = await sendRequest<IBackendRes<any>>(url, {
         method: "PATCH",

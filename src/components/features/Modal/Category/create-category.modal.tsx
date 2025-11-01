@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { notify } from "@lib/helpers/notify"
 import { ICategories, ICategoryDetail } from "../../../../types/model"
 import { createCategoryAPI, updateCategoryAPI } from "@lib/api/category"
+import { IBackendRes } from "../../../../types/backend"
 
 // Validation schema
 const createUserSchema = z.object({
@@ -65,7 +66,7 @@ export function CUCategoryDetailModel({ open, onOpenChange, categories, item }: 
     const onSubmit = async (data: CategoryDetailFormData) => {
         setIsSubmitting(true)
         try {
-            let res = null;
+            let res: any = null;
             if (!item) {
                 res = await createCategoryAPI(data.name, data.category)
             } else {
