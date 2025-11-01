@@ -9,7 +9,7 @@ import { IMeta } from "../../../types/backend"
 import PaginationCustomize from "@components/lib/Pagination"
 import { useRouter, useSearchParams } from "next/navigation"
 
-type OrderStatus = "*" | "PENDING" | "ACCEPTED"
+type OrderStatus = "*" | "PENDING" | "APPROVED"
 interface IProps {
     data: IOrder[],
     meta: IMeta
@@ -18,7 +18,7 @@ interface IProps {
 const statuses: { value: OrderStatus; label: string }[] = [
     { value: "*", label: "All Orders" },
     { value: "PENDING", label: "Pending" },
-    { value: "ACCEPTED", label: "Accepted" },
+    { value: "APPROVED", label: "Approved" },
 ]
 
 export default function OrdersPage({ data, meta }: IProps) {

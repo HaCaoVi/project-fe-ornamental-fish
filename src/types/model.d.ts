@@ -113,7 +113,7 @@ interface IOrderItem {
 
 export interface IOrder {
     _id: string,
-    user: string,
+    user: IUser,
     payment: IPayment,
     fullname: string,
     code: string,
@@ -122,8 +122,9 @@ export interface IOrder {
     note: string | null,
     totalAmount: number,
     shippingFee: number,
-    status: "PENDING" | "ACCEPTED" | "REJECTED",
+    status: "PENDING" | "APPROVED" | "REJECTED",
     createdAt: string,
     updatedAt: string,
-    orderItems: IOrderItem[]
+    orderItems: IOrderItem[],
+    updatedBy: IUser,
 }

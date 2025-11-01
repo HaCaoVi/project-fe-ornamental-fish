@@ -13,14 +13,17 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@components/ui/alert-dialog"
+import { ReactNode } from "react"
 
 interface DeleteButtonProps {
     id: string
     onDelete: (id: string) => void,
     className?: string
+    title?: string,
+    icon?: ReactNode
 }
 
-export function DeleteButton({ id, onDelete, className }: DeleteButtonProps) {
+export function DeleteButton({ id, onDelete, className, title = "Delete item", icon }: DeleteButtonProps) {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -31,23 +34,26 @@ export function DeleteButton({ id, onDelete, className }: DeleteButtonProps) {
           dark:hover:bg-red-950/30 dark:hover:text-red-400 transition-all duration-200 
           rounded-lg group border border-transparent hover:border-red-200 dark:hover:border-red-800
          ${className} `}
-                    title="Delete item"
+                    title={title}
                 >
-                    <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
-                    <span className="sr-only">Delete item</span>
+                    {icon
+                        ? icon :
+                        <Trash2 className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+                    }
+                    <span className="sr-only">{title}</span>
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete the item.
+                        This action cannot be undone. This will permanently {title.toLowerCase()}.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>No</AlertDialogCancel>
                     <AlertDialogAction onClick={() => onDelete(id)}>
-                        Yes, delete
+                        Yes, {title.toLowerCase()}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

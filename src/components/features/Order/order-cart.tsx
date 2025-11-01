@@ -26,7 +26,7 @@ interface OrderCardProps {
 
 const statusConfig = {
     PENDING: { label: "Pending", className: "bg-gray-100 text-gray-800" },
-    ACCEPTED: { label: "Accepted", className: "bg-green-100 text-green-800" },
+    APPROVED: { label: "Approved", className: "bg-green-100 text-green-800" },
     REJECTED: { label: "Rejected", className: "bg-red-100 text-red-800" },
 }
 
@@ -71,7 +71,7 @@ export function OrderCard({ order }: OrderCardProps) {
                         <div className="flex items-center gap-2 sm:flex-col sm:items-end">
                             <div className="text-right">
                                 <p className="text-sm text-muted-foreground">Total</p>
-                                <p className="text-xl font-bold text-foreground">{order.totalAmount.toLocaleString("vi-VN", {
+                                <p className="text-xl font-bold text-foreground">{(order.totalAmount + order.shippingFee).toLocaleString("vi-VN", {
                                     style: "currency",
                                     currency: "VND",
                                 })}</p>
