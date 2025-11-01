@@ -1,6 +1,7 @@
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@components/ui/pagination"
 import { useRouter, useSearchParams } from "next/navigation"
 import { IMeta } from "../../../types/backend"
+import { JSX } from "react"
 
 interface IProps {
     meta: IMeta
@@ -31,7 +32,7 @@ const PaginationCustomize = ({ meta }: IProps) => {
 
                 {/* Page numbers with smart truncation */}
                 {(() => {
-                    const pages = []
+                    const pages: JSX.Element[] = []
                     const totalPages = meta.pages
                     const current = meta.current
 
@@ -39,10 +40,14 @@ const PaginationCustomize = ({ meta }: IProps) => {
                     if (totalPages > 0) {
                         pages.push(
                             <PaginationItem key={1}>
-                                <PaginationLink isActive={1 === current} onClick={() => goToPage(1)} className="cursor-pointer">
+                                <PaginationLink
+                                    isActive={1 === current}
+                                    onClick={() => goToPage(1)}
+                                    className="cursor-pointer"
+                                >
                                     1
                                 </PaginationLink>
-                            </PaginationItem>,
+                            </PaginationItem>
                         )
                     }
 
@@ -54,10 +59,14 @@ const PaginationCustomize = ({ meta }: IProps) => {
                     for (let i = Math.max(2, current - 1); i <= Math.min(totalPages - 1, current + 1); i++) {
                         pages.push(
                             <PaginationItem key={i}>
-                                <PaginationLink isActive={i === current} onClick={() => goToPage(i)} className="cursor-pointer">
+                                <PaginationLink
+                                    isActive={i === current}
+                                    onClick={() => goToPage(i)}
+                                    className="cursor-pointer"
+                                >
                                     {i}
                                 </PaginationLink>
-                            </PaginationItem>,
+                            </PaginationItem>
                         )
                     }
 
@@ -77,12 +86,13 @@ const PaginationCustomize = ({ meta }: IProps) => {
                                 >
                                     {totalPages}
                                 </PaginationLink>
-                            </PaginationItem>,
+                            </PaginationItem>
                         )
                     }
 
                     return pages
                 })()}
+
 
                 {/* Next */}
                 <PaginationItem>

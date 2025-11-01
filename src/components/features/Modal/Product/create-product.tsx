@@ -182,7 +182,7 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                 quantity: Number(quantity),
             };
 
-            let res = null;
+            let res: any = null;
             if (!item) {
                 res = await createProductAPI(payload)
             } else {
