@@ -103,8 +103,12 @@ export function PaymentPage() {
 
             const res = await createOrderAPI(data, orderItems, listCartId);
             if (res.statusCode === 201) {
-                notify.success(res.message);
-                router.replace("/orders")
+                if (selectedPaymentMethod === "VN_PAY") {
+                    window.location.href = res.data.redirectUrl;
+                } else {
+                    notify.success(res.message);
+                    router.replace("/orders")
+                }
             } else {
                 notify.warning(res.message)
             }

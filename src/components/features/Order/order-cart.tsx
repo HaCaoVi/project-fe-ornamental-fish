@@ -56,7 +56,7 @@ export function OrderCard({ order }: OrderCardProps) {
 
     return (
         <>
-            <Card className="overflow-hidden transition-all hover:shadow-md">
+            <Card className="overflow-hidden transition-all hover:shadow-md ">
                 <div className="p-4 sm:p-6">
                     {/* Header Row */}
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -83,7 +83,7 @@ export function OrderCard({ order }: OrderCardProps) {
                     </div>
 
                     {/* Summary Row */}
-                    <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                    <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-5">
                         <div>
                             <p className="text-xs text-muted-foreground font-semibold">Address</p>
                             <p className="mt-1 text-sm font-medium text-foreground line-clamp-1">{order.address.location
@@ -101,6 +101,10 @@ export function OrderCard({ order }: OrderCardProps) {
                         <div>
                             <p className="text-xs text-muted-foreground font-semibold">Payment</p>
                             <p className="mt-1 text-sm font-medium text-foreground">{order.payment.method}</p>
+                        </div>
+                        <div>
+                            <p className="text-xs text-muted-foreground font-semibold">Payment Status</p>
+                            <p className="mt-1 text-sm font-medium text-foreground">{order.payment.status}</p>
                         </div>
                         <div>
                             <p className="text-xs text-muted-foreground font-semibold">Date</p>
