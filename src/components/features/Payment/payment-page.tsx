@@ -78,7 +78,9 @@ export function PaymentPage() {
                 setShippingFee(res.data.total)
             }
         } catch (error) {
-            console.error(error);
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
 
@@ -87,6 +89,7 @@ export function PaymentPage() {
         if (provinceId && districtId && wardCode) {
             handleCalculateShippingFee(districtId, wardCode)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [address])
 
 
@@ -113,7 +116,9 @@ export function PaymentPage() {
                 notify.warning(res.message)
             }
         } catch (error) {
-            console.error(error);
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
 

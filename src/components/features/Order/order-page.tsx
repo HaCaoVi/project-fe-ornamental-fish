@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Input } from "@components/ui/input"
 import { Button } from "@components/ui/button"
 import { OrderList } from "@components/features/Order/order-list"
 import { IOrder } from "../../../types/model"
@@ -39,6 +38,7 @@ export default function OrdersPage({ data, meta }: IProps) {
         if (newUrl !== currentUrl) {
             router.replace(newUrl);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters]);
 
     return (

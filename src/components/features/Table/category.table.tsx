@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { type Column, TableCustomize } from "@components/layout/Table"
 import type { IMeta } from "../../../types/backend"
-import { Pencil, Trash2, Plus, Search, Filter, Fish, Utensils, Package, } from "lucide-react"
+import { Pencil, Plus, Search, Filter, Fish, Utensils, Package, } from "lucide-react"
 import { Button } from "@components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
 import dayjs from 'dayjs';
@@ -83,6 +83,7 @@ const CategoryTable = ({ data, meta }: IProps) => {
         }
 
         router.push(`?${params.toString()}`);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm, categoryFilter]);
 
 
@@ -95,7 +96,9 @@ const CategoryTable = ({ data, meta }: IProps) => {
                 notify.warning(res.message)
             }
         } catch (error) {
-            console.error("Delete category detail error: ", error);
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
 

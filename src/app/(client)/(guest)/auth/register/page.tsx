@@ -45,8 +45,7 @@ const RegisterPage = () => {
 
     const onSubmit = async (data: RegisterFormData) => {
         try {
-            const { confirmPassword, ...rest } = data
-            const res = await registerAPI(rest);
+            const res = await registerAPI(data);
             if (res.statusCode === 201) {
                 setIsModalOpen(true)
                 notify.success(res.message);
@@ -54,7 +53,9 @@ const RegisterPage = () => {
                 notify.warning(res.message)
             }
         } catch (error) {
-            console.error(error);
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
 

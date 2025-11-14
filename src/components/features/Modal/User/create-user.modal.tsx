@@ -96,7 +96,9 @@ export function CreateUserModal({ open, onOpenChange, listRole }: CreateUserModa
             reset()
             onOpenChange(false)
         } catch (error) {
-            console.error("Error creating user:", error)
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         } finally {
             setIsSubmitting(false)
         }

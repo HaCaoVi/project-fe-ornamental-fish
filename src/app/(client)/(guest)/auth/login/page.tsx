@@ -65,7 +65,9 @@ const LoginPage = () => {
                 }
             }
         } catch (error) {
-            console.error("Login error: ", error);
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
 
@@ -78,7 +80,9 @@ const LoginPage = () => {
                 notify.warning(res.message)
             }
         } catch (error) {
-            console.error("Login error: ", error);
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
 

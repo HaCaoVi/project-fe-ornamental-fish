@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { Card } from "@components/ui/card"
 import { OrderCard } from "./order-cart"
 import { IOrder } from "../../../types/model"

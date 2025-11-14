@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { Card } from "@components/ui/card"
 import { ICart } from "../../../types/model"
+import Image from "next/image"
 
 interface IProps {
     items: ICart[]
@@ -27,11 +28,15 @@ export function OrderSummary({ items, shippingFee }: IProps) {
                         transition={{ delay: index * 0.1 }}
                         className="flex gap-4 pb-4 border-b border-border last:border-0"
                     >
-                        <img
-                            src={product.product.mainImageUrl || "/placeholder.svg"}
-                            alt={product.product.name}
-                            className="w-20 h-20 rounded-lg object-cover bg-muted"
-                        />
+                        <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-muted">
+                            <Image
+                                src={product.product.mainImageUrl || "/placeholder.svg"}
+                                alt={product.product.name}
+                                fill
+                                sizes="80px"
+                                className="object-cover"
+                            />
+                        </div>
                         <div className="flex-1">
                             <h3 className="font-semibold text-foreground text-sm">{product.product.name}</h3>
                             <p className="text-xs text-muted-foreground mt-1">Quantity: {product.quantity}</p>

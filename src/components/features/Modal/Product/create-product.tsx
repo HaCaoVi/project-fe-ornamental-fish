@@ -164,6 +164,7 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                 setCachedDetails(prev => ({ ...prev, [category]: res.data!.result }));
             }
         })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [category]);
 
     // Default first category tab
@@ -186,7 +187,7 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
             if (!item) {
                 res = await createProductAPI(payload)
             } else {
-                const { code, ...rest } = payload
+                const { code: _unused, ...rest } = payload
                 res = await updateProductAPI(item._id, rest)
             }
             if (res.statusCode === 201 || res.statusCode === 200) {
@@ -195,11 +196,12 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
                 onOpenChange(false)
             } else {
                 notify.warning(res.message)
-
             }
 
         } catch (error) {
-            console.error("Create product error: ", error);
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
 

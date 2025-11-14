@@ -105,6 +105,9 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
                 notify.warning(res.message)
             }
         } catch (error) {
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
             emailForm.setError("email", { message: "Failed to send code. Please try again." })
         }
     }
@@ -126,6 +129,9 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
                 notify.warning(res.message)
             }
         } catch (error) {
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
             resetForm.setError("code", { message: "Failed to reset password. Please try again." })
         }
     }
@@ -146,7 +152,9 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
                 notify.warning(res.message)
             }
         } catch (error) {
-            console.error("Failed to resend code")
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
 

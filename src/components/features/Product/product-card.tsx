@@ -37,7 +37,9 @@ export function ProductCard({ product }: ProductCardProps) {
                 notify.warning(res.message)
             }
         } catch (error) {
-            console.error(error);
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
     return (

@@ -27,9 +27,13 @@ export function ProductFilters({ categoryId }: any) {
     useEffect(() => {
         if (categories && categories.length > 0) {
             const filterType = categories.find(x => x._id === categoryId);
-            setTypes(filterType?.details!);
+            if (filterType) {
+                setTypes(filterType?.details);
+            } else {
+                setTypes([]);
+            }
         }
-    }, [categories])
+    }, [categories, categoryId])
 
     const handleCheckboxChange = (id: string, checked: boolean) => {
         setCategoryFilter((prev: string[]) => {

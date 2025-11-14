@@ -20,7 +20,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { notify } from "@lib/helpers/notify"
 import { ICategories, ICategoryDetail } from "../../../../types/model"
 import { createCategoryAPI, updateCategoryAPI } from "@lib/api/category"
-import { IBackendRes } from "../../../../types/backend"
 
 // Validation schema
 const createUserSchema = z.object({
@@ -80,7 +79,9 @@ export function CUCategoryDetailModel({ open, onOpenChange, categories, item }: 
                 notify.warning(res.message)
             }
         } catch (error) {
-            console.error("Error creating user:", error)
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         } finally {
             setIsSubmitting(false)
         }

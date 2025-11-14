@@ -57,7 +57,9 @@ export function OrderDetailsModal({ isOpen, onClose, data }: OrderDetailsModalPr
         notify.warning(res.message)
       }
     } catch (error) {
-      console.error(error);
+      if (process.env.NODE_ENV === "development") {
+        console.error(error);
+      }
     }
   }
 

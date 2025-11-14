@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const decodeToken = (token: String) => {
+const decodeToken = (token: string) => {
     try {
         const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
         return payload?.role || "GUEST";
-    } catch (e) {
+    } catch {
         return "GUEST";
     }
 }

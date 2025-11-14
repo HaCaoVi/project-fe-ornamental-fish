@@ -1,5 +1,4 @@
 import OrderTable from "@components/features/Table/order.table";
-import ProductTable from "@components/features/Table/product.table";
 import { listOrderAPI } from "@lib/api/order";
 import { Metadata } from "next";
 

@@ -33,7 +33,9 @@ const UserMenu = ({ user }: IProps) => {
             }
             notify.warning(res.message)
         } catch (error) {
-            console.error("Logout error: ", error);
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
     const handleRouteProfile = () => {

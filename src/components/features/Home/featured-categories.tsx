@@ -29,7 +29,9 @@ export function FeaturedCategories() {
                     setData(data)
                 }
             } catch (error) {
-                console.error("Failed to fetch categories:", error)
+                if (process.env.NODE_ENV === "development") {
+                    console.error(error);
+                }
             }
         })()
     }, [])

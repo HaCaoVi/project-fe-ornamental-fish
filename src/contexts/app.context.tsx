@@ -20,8 +20,13 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
                 const res = await listAllFollowCategoryAPI();
                 if (res.statusCode === 200 && res.data) {
                     setCategories(res.data)
+                } else {
+                    setCategories([])
                 }
             } catch (error) {
+                if (process.env.NODE_ENV === "development") {
+                    console.error(error);
+                }
                 setCategories([])
             }
         })()

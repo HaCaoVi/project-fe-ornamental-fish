@@ -1,7 +1,7 @@
 "use server";
 
 import { RegisterFormData } from "@app/(client)/(guest)/auth/register/page";
-import { IBackendRes, ILogin, IUserLogin } from "../../types/backend";
+import { IBackendRes, ILogin } from "../../types/backend";
 import sendRequest from "@config/fetch.config";
 import { cookies } from "next/headers";
 import { ActivateAccountFormData } from "@components/features/Modal/Auth/auth-code.modal";
@@ -22,10 +22,14 @@ export const logoutAPI = async () => {
     return res;
 };
 
-export const registerAPI = async (data: Omit<RegisterFormData, "confirmPassword">) => {
+export const registerAPI = async (data: RegisterFormData) => {
     const res = await sendRequest<IBackendRes<ILogin>>("/api/v1/auth/register", {
         method: "POST",
-        body: JSON.stringify({ ...data }),
+        body: JSON.stringify({
+            name: data.name,
+            email: data.email,
+            password: data.password,
+        }),
     });
     return res;
 };

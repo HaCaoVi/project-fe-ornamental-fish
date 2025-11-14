@@ -2,7 +2,6 @@
 
 import { FeaturedCategories } from "@components/features/Home/featured-categories";
 import { Hero } from "@components/features/Home/hero";
-import { Newsletter } from "@components/features/Home/newsletter";
 import { SpecialOffers } from "@components/features/Home/special-offers";
 import { Testimonials } from "@components/features/Home/testimonials";
 import Footer from "@components/layout/Footer";
@@ -19,7 +18,6 @@ const Home = async () => {
         <FeaturedCategories />
         <SpecialOffers />
         <Testimonials />
-        {/* <Newsletter /> */}
       </div>
       <Footer />
     </div>

@@ -96,6 +96,7 @@ const AddressCustomize = (field: any) => {
                 field?.onChange(newValue)
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedProvince, selectedDistrict, selectedWard])
 
 

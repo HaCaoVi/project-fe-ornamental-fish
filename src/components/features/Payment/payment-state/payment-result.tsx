@@ -1,7 +1,6 @@
 "use client"
 
-import { useSearchParams, useRouter } from "next/navigation"
-import { useEffect, useState, useRef } from "react"
+import { useRouter } from "next/navigation"
 import PaymentSuccessState from "./success-state"
 import PaymentFailureState from "./fail-state"
 

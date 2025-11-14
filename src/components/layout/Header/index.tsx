@@ -32,12 +32,12 @@ const Header = ({ countCart }: any) => {
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
                     <div className="flex-shrink-0">
-                        <a href="/" className="flex items-center">
+                        <Link href="/" className="flex items-center">
                             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
                                 <span className="text-primary-foreground font-bold text-lg">I</span>
                             </div>
                             <span className="ml-2 text-xl font-bold text-foreground">IFish</span>
-                        </a>
+                        </Link>
                     </div>
 
                     {/* Desktop Navigation */}
@@ -151,30 +151,30 @@ const Header = ({ countCart }: any) => {
                 {isMenuOpen && (
                     <div className="md:hidden">
                         <div className="px-2 pt-2 pb-3 space-y-1 border-t border-border bg-background">
-                            <a
+                            <Link
                                 href="/"
                                 className="block px-3 py-2 text-foreground hover:text-primary hover:bg-muted rounded-md transition-colors duration-200"
                             >
                                 Home
-                            </a>
-                            <a
+                            </Link>
+                            <Link
                                 href="/about"
                                 className="block px-3 py-2 text-foreground hover:text-primary hover:bg-muted rounded-md transition-colors duration-200"
                             >
                                 About
-                            </a>
-                            <a
+                            </Link>
+                            <Link
                                 href="/services"
                                 className="block px-3 py-2 text-foreground hover:text-primary hover:bg-muted rounded-md transition-colors duration-200"
                             >
                                 Services
-                            </a>
-                            <a
+                            </Link>
+                            <Link
                                 href="/contact"
                                 className="block px-3 py-2 text-foreground hover:text-primary hover:bg-muted rounded-md transition-colors duration-200"
                             >
                                 Contact
-                            </a>
+                            </Link>
 
                             {/* Mobile Search */}
                             <div className="px-3 py-2">

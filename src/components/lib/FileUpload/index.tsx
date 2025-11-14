@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { uploadImageAPI, uploadVideoAPI } from "@lib/api/file";
 import { cn } from "@components/lib/utils";

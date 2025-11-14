@@ -42,6 +42,7 @@ const OrderTable = ({ data, meta }: IProps) => {
         } else if (categories?.length) {
             setCategoryFilter(categories[0]._id);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [categories]);
 
     useEffect(() => {
@@ -62,6 +63,7 @@ const OrderTable = ({ data, meta }: IProps) => {
         if (newUrl !== currentUrl) {
             router.replace(newUrl);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm, categoryFilter, categories, filters]);
 
     const handleFilterChange = (value: string) => {
@@ -104,7 +106,9 @@ const OrderTable = ({ data, meta }: IProps) => {
                 notify.warning(res.message)
             }
         } catch (error) {
-            console.error(error);
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
     const columns: Column[] = [
@@ -160,7 +164,7 @@ const OrderTable = ({ data, meta }: IProps) => {
         {
             key: "payment",
             label: "Payment",
-            render: (value, row: IOrder) => {
+            render: (_, row: IOrder) => {
                 return (
                     <div className="max-w-xs text-center">
                         <p className="text-sm font-medium text-foreground leading-relaxed line-clamp-2">{row.payment.method}</p>
@@ -171,7 +175,7 @@ const OrderTable = ({ data, meta }: IProps) => {
         {
             key: "status",
             label: "Status",
-            render: (value, row: IOrder) => {
+            render: (value) => {
                 return (
                     <Badge
                         variant={value ? "default" : "secondary"}
@@ -196,7 +200,7 @@ const OrderTable = ({ data, meta }: IProps) => {
         {
             key: "createdAt",
             label: "Created At",
-            render: (value, row) => {
+            render: (value) => {
                 return (
                     <div className="text-sm text-muted-foreground tabular-nums">
                         {dayjs(value).format("MMM DD, YYYY")}

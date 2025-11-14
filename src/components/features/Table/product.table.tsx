@@ -43,6 +43,7 @@ const ProductTable = ({ data, meta }: IProps) => {
         } else if (categories?.length) {
             setCategoryFilter(categories[0]._id);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [categories]);
 
     useEffect(() => {
@@ -73,6 +74,7 @@ const ProductTable = ({ data, meta }: IProps) => {
         if (newUrl !== currentUrl) {
             router.replace(newUrl);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm, categoryFilter, categories, filters]);
 
     const handleFilterChange = (value: string) => {
@@ -102,7 +104,9 @@ const ProductTable = ({ data, meta }: IProps) => {
                 notify.warning(res.message)
             }
         } catch (error) {
-            console.error("Delete category detail error: ", error);
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
 

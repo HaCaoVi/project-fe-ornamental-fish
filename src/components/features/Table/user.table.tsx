@@ -77,7 +77,9 @@ const UserTable = ({ data, meta }: IProps) => {
                     setListRole(res.data)
                 }
             } catch (error) {
-                console.error("Fetch role error: ", error);
+                if (process.env.NODE_ENV === "development") {
+                    console.error(error);
+                }
             }
         })()
     }, [])
@@ -97,8 +99,8 @@ const UserTable = ({ data, meta }: IProps) => {
         } else {
             params.delete("filters");
         }
-
         router.push(`?${params.toString()}`);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm, statusFilter, roleFilter]);
 
     const resetFilters = () => {
@@ -114,7 +116,9 @@ const UserTable = ({ data, meta }: IProps) => {
             if (res.statusCode !== 200) return notify.error(res.message);
             notify.success(res.message)
         } catch (error) {
-
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
 
@@ -124,7 +128,9 @@ const UserTable = ({ data, meta }: IProps) => {
             if (res.statusCode !== 200) return notify.error(res.message);
             notify.success(res.message)
         } catch (error) {
-
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }
 

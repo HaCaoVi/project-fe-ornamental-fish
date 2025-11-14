@@ -38,7 +38,9 @@ export default function CartPage({ data, meta }: IProps) {
                 notify.warning(res.message)
             }
         } catch (error) {
-            console.error("Update quantity failed:", error)
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }, [])
 
@@ -61,7 +63,9 @@ export default function CartPage({ data, meta }: IProps) {
             setItems(prev => prev.filter(item => item._id !== id))
             await deleteCartAPI(id)
         } catch (error) {
-            console.error("Remove item failed:", error)
+            if (process.env.NODE_ENV === "development") {
+                console.error(error);
+            }
         }
     }, [])
 
