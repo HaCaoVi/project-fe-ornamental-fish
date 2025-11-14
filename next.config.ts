@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  trailingSlash: true,
   experimental: {
     serverActions: {
       bodySizeLimit: '25MB',
@@ -12,11 +13,6 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'storage.googleapis.com',
-        port: '',
-      },
-      {
-        protocol: 'https',
-        hostname: 'cdn.tgdd.vn',
         port: '',
       }
     ],

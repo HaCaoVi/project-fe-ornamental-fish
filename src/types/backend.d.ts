@@ -42,4 +42,10 @@ export interface IRequireCreateProduct {
     mainVideoUrl?: string | undefined,
     isActivated: boolean,
     categoryDetail: string
+    color: string
+    height: string,
+    weight: string,
+    length: string,
+    origin: string,
+    width: string
 }

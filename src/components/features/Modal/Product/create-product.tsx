@@ -187,8 +187,8 @@ export function ProductModal({ open, onOpenChange, categories, item }: ProductMo
             if (!item) {
                 res = await createProductAPI(payload)
             } else {
-                const { code: _unused, ...rest } = payload
-                res = await updateProductAPI(item._id, rest)
+                const { categoryDetail, color, description, discount, height, isActivated, length, mainImageUrl, name, origin, price, quantity, weight, width, mainVideoUrl } = payload
+                res = await updateProductAPI(item._id, { categoryDetail, color, description, discount, height, isActivated, length, mainImageUrl, name, origin, price, quantity, weight, width, mainVideoUrl })
             }
             if (res.statusCode === 201 || res.statusCode === 200) {
                 notify.success(res.message)
