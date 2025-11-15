@@ -1,9 +1,10 @@
 "use client";
 
 import { logoutAPI } from "@lib/api/auth";
-import type { IBackendRes, ILogin, IUserLogin } from "../types/backend";
+import type { IBackendRes, IUserLogin } from "../types/backend";
 import { createContext, useState, ReactNode, useEffect } from "react";
-import { getAccountAPI, loginAction } from "@lib/action/auth.action";
+import { getAccountAPI } from "@lib/action/auth.action";
+import { deleteCookie, setCookie } from "@lib/helpers/cookie.helper";
 
 interface AuthContextType {
     user: IUserLogin | null;
@@ -14,8 +15,6 @@ interface AuthContextType {
     setIsRefreshTokenStatus: (v: boolean) => void;
     message: string;
     setMessage: (v: string) => void;
-    login: (username: string, password: string) => Promise<IBackendRes<ILogin>>;
-    logout: () => Promise<IBackendRes<any>>;
     setRefreshTokenAction: (status: boolean, message: string) => void;
     fetchUser: () => Promise<void>
 }
@@ -33,18 +32,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setMessage(message);
     };
 
-    const login = async (username: string, password: string) => {
-        const res = await loginAction(username, password);
-        if (res.statusCode === 201 && res.data) {
-            setUser(res.data.user);
-        }
-        return res;
-    };
-
     const fetchUser = async () => {
         try {
             const res = await getAccountAPI();
             if (res && res.statusCode === 200 && res.data) {
+                if (res.access_token) {
+                    deleteCookie("access_token")
+                    setCookie("access_token", res.access_token)
+                }
                 setUser(res.data);
             } else {
                 setUser(null);
@@ -61,14 +56,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         fetchUser();
     }, []);
 
-    const logout = async () => {
-        const res = await logoutAPI();
-        if (res.statusCode === 201) {
-            setUser(null);
-        }
-        return res;
-    };
-
     return (
         <AuthContext.Provider
             value={{
@@ -76,8 +63,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 isLoading, setIsLoading,
                 isRefreshTokenStatus, setIsRefreshTokenStatus,
                 message, setMessage,
-                login,
-                logout,
                 setRefreshTokenAction,
                 fetchUser
             }}

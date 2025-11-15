@@ -40,7 +40,7 @@ const ModelAuthRoute = ({ open, onOpenChange }: IProps) => {
                     <AlertDialogAction
                         onClick={() => {
                             onOpenChange(false);
-                            router.push("/auth/login");
+                            router.replace("/auth/login");
                         }}
                     >
                         Log In

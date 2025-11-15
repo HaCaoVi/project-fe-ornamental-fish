@@ -10,6 +10,37 @@ import { ProfileFormData } from "@components/features/Profile/profile-form";
 import { revalidateTag } from "next/cache";
 import { PROFILE_TAG } from "@lib/constants/tag.constant";
 
+export async function refreshTokenAction(): Promise<IBackendRes<any>> {
+    const cookieStore = await cookies();
+    const refreshToken = cookieStore.get("refresh_token")?.value;
+
+    if (!refreshToken) {
+        return { statusCode: 401, message: "No refresh token" };
+    }
+
+    const res = await fetch(`${process.env.BACKEND_URL}/api/v1/auth/refresh`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Cookie: `refresh_token=${refreshToken}`,
+        },
+    });
+
+    const data = await res.json();
+
+    // nếu refresh thành công → set cookie mới
+    if (res.ok && data.data?.refresh_token) {
+        cookieStore.set("refresh_token", data.data.refresh_token, {
+            httpOnly: true,
+            path: "/",
+            sameSite: "strict",
+            secure: process.env.NODE_ENV === "production",
+        });
+    }
+
+    return data;
+}
+
 export const logoutAPI = async () => {
     const cookieStore = await cookies();
     const res = await sendRequest<IBackendRes<any>>("/api/v1/auth/logout", {

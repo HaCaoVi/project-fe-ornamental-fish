@@ -18,6 +18,8 @@ import { useState } from "react"
 import { retryAccountAPI } from "@lib/api/auth"
 import { FcGoogle } from "react-icons/fc"
 import { ForgotPasswordModal } from "@components/features/Modal/Auth/forgot-password.modal"
+import { setCookie } from "@lib/helpers/cookie.helper"
+import { loginAction } from "@lib/action/auth.action"
 // Validation schema with zod
 const loginSchema = z.object({
     email: z.string()
@@ -31,7 +33,7 @@ type LoginFormValues = z.infer<typeof loginSchema>
 
 const LoginPage = () => {
     const router = useRouter()
-    const { login } = useAuthContext()
+    const { setUser } = useAuthContext()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
     const searchParams = useSearchParams()
@@ -49,8 +51,10 @@ const LoginPage = () => {
 
     const onSubmit = async (data: LoginFormValues) => {
         try {
-            const res = await login(data.email, data.password)
+            const res = await loginAction(data.email, data.password);
             if (res.statusCode === 201 && res.data) {
+                setCookie("access_token", res.data.access_token);
+                setUser(res.data.user)
                 notify.success(res.message)
                 if (res.data.user.role === ADMIN_ROLE || res.data.user.role === STAFF_ROLE) {
                     router.replace("/dashboard")

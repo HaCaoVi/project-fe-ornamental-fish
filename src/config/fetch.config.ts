@@ -1,6 +1,4 @@
-"use server";
-
-import { refreshTokenAction } from "@lib/action/auth.action";
+import { refreshTokenAction } from "@lib/api/auth";
 import { Mutex } from "async-mutex";
 import { cookies } from "next/headers";
 
@@ -8,9 +6,13 @@ const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const mutex = new Mutex();
 const NO_RETRY_HEADER = "x-no-retry";
 
-const handleRefreshToken = async (): Promise<string | null> => {
+const handleRefreshToken = async (): Promise<any> => {
     return await mutex.runExclusive(async () => {
-        return refreshTokenAction();
+        const res = await refreshTokenAction();
+        if (res.statusCode === 201 && res.data) {
+            return res.data
+        }
+        return null
     });
 };
 
@@ -24,10 +26,7 @@ const sendRequest = async <T = any>(
 ): Promise<T> => {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("access_token")?.value;
-    const refreshToken = cookieStore.get("refresh_token")?.value;
-
     const isFormData = options.body instanceof FormData;
-
     const headers = new Headers({
         Accept: "application/json",
     });
@@ -50,16 +49,18 @@ const sendRequest = async <T = any>(
         credentials: "include",
     });
 
-    if (refreshToken && res.status === 401 && !headers.has(NO_RETRY_HEADER) && url !== "/api/v1/auth/login") {
+    if (accessToken && res.status === 401 && !headers.has(NO_RETRY_HEADER) && url !== "/api/v1/auth/login") {
         const newToken = await handleRefreshToken();
         if (newToken) {
-            headers.set("Authorization", `Bearer ${newToken}`);
+            cookieStore.delete("access_token")
+            cookieStore.set("access_token", newToken.access_token)
+            headers.set("Authorization", `Bearer ${newToken.access_token}`);
             headers.set(NO_RETRY_HEADER, "true");
 
             res = await fetch(`${BASE_URL}${url}`, {
                 ...options,
                 headers,
-                credentials: "include",
+                credentials: "include"
             });
         }
     }

@@ -16,19 +16,22 @@ import { useRouter } from "next/navigation"
 import { IUserLogin } from "../../../types/backend"
 import { getInitials } from "@lib/helpers/convert.helper"
 import { ADMIN_ROLE, STAFF_ROLE } from "@lib/constants/constant"
+import { logoutAPI } from "@lib/api/auth"
 
 interface IProps {
     user: IUserLogin
 }
 
 const UserMenu = ({ user }: IProps) => {
-    const { logout } = useAuthContext();
+    const { setUser, setIsLoading } = useAuthContext();
     const router = useRouter();
     const handleLogout = async () => {
         try {
-            const res = await logout();
+            setIsLoading(true)
+            const res = await logoutAPI();
             if (res.statusCode === 201) {
                 notify.success(res.message);
+                setUser(null);
                 return router.replace("/")
             }
             notify.warning(res.message)
@@ -36,6 +39,8 @@ const UserMenu = ({ user }: IProps) => {
             if (process.env.NODE_ENV === "development") {
                 console.error(error);
             }
+        } finally {
+            setIsLoading(false)
         }
     }
     const handleRouteProfile = () => {
